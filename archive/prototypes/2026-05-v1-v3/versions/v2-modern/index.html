@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOURDOUGH HOUSE — Bakery</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+    :root {
+      --black: #0A0A0A;
+      --white: #FAFAFA;
+      --gray-100: #F5F5F5;
+      --gray-200: #E8E8E8;
+      --gray-400: #999;
+      --gray-600: #666;
+      --gray-800: #333;
+      --accent: #D4A853;
+      --accent-light: #F0DEB4;
+      --sans: 'Space Grotesk', -apple-system, sans-serif;
+      --serif: 'Instrument Serif', Georgia, serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--white);
+      color: var(--black);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* === NAV === */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: difference;
+    }
+
+    .nav-logo {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .nav-menu-btn {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .menu-line {
+      width: 24px; height: 1px;
+      background: var(--white);
+      transition: width 0.3s;
+    }
+
+    .nav-menu-btn:hover .menu-line { width: 32px; }
+
+    /* === HERO === */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3rem 4rem;
+      background: var(--black);
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--serif);
+      font-size: clamp(12rem, 25vw, 22rem);
+      color: rgba(255, 255, 255, 0.03);
+      white-space: nowrap;
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+    }
+
+    .hero-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-label::before {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      font-weight: 400;
+      line-height: 1.05;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 400px;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .hero-cta a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      padding: 1rem 2.5rem;
+      border: 1px solid var(--white);
+      transition: all 0.3s;
+    }
+
+    .hero-cta a:hover {
+      background: var(--white);
+      color: var(--black);
+    }
+
+    .hero-cta a.accent {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--black);
+    }
+
+    .hero-cta a.accent:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 4rem;
+      right: 3rem;
+      writing-mode: vertical-rl;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* === SECTIONS === */
+    section { padding: 8rem 3rem; }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 4rem;
+    }
+
+    .section-number {
+      font-family: var(--serif);
+      font-size: 5rem;
+      color: var(--gray-200);
+      line-height: 1;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      font-weight: 400;
+      line-height: 1.1;
+    }
+
+    /* === PHILOSOPHY === */
+    .philosophy {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .philosophy-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+    }
+
+    .philosophy-text p {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: var(--gray-600);
+      margin-bottom: 1.5rem;
+    }
+
+    .philosophy-text p strong {
+      color: var(--black);
+      font-weight: 600;
+    }
+
+    .philosophy-values {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .value-item {
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .value-item:last-child { border-bottom: none; }
+
+    .value-item h4 {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .value-item p {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      line-height: 1.6;
+    }
+
+    /* === PRODUCTS === */
+    .products {
+      background: var(--gray-100);
+    }
+
+    .products-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .product-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--gray-200);
+      gap: 4rem;
+      transition: background 0.3s;
+    }
+
+    .product-row:hover {
+      background: var(--white);
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .product-row:last-child { border-bottom: none; }
+
+    .product-info h3 {
+      font-family: var(--serif);
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .product-info p {
+      font-size: 0.95rem;
+      color: var(--gray-600);
+      line-height: 1.7;
+      max-width: 400px;
+    }
+
+    .product-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+
+    .product-price {
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--accent-light);
+      background: rgba(212, 168, 83, 0.05);
+    }
+
+    .product-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+    }
+
+    /* === MARQUEE === */
+    .marquee {
+      padding: 2rem 0;
+      background: var(--black);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-inner {
+      display: inline-block;
+      animation: marqueeScroll 30s linear infinite;
+    }
+
+    .marquee-text {
+      font-family: var(--serif);
+      font-size: 3rem;
+      color: rgba(255, 255, 255, 0.08);
+      display: inline;
+      margin-right: 4rem;
+    }
+
+    .marquee-text .dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin: 0 2rem;
+      vertical-align: middle;
+    }
+
+    @keyframes marqueeScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* === TESTIMONIAL === */
+    .testimonial {
+      background: var(--white);
+    }
+
+    .testimonial-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .testimonial-quote {
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-style: italic;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+      color: var(--black);
+    }
+
+    .testimonial-author {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+    }
+
+    .testimonial-author::before {
+      content: '— ';
+    }
+
+    /* === CTA === */
+    .cta {
+      background: var(--black);
+      color: var(--white);
+      text-align: center;
+      padding: 6rem 3rem;
+    }
+
+    .cta .section-title {
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+
+    .cta p {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 2.5rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta a {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--accent);
+      padding: 1rem 3rem;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .cta a:hover {
+      background: var(--white);
+      transform: translateY(-2px);
+    }
+
+    /* === FOOTER === */
+    footer {
+      background: var(--black);
+      color: rgba(255, 255, 255, 0.4);
+      padding: 3rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand .nav-logo { color: var(--white); }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      margin-top: 1rem;
+      max-width: 280px;
+    }
+
+    .footer-col h5 {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 1rem;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.4);
+      text-decoration: none;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s;
+    }
+
+    .footer-col a:hover { color: var(--accent); }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 0 1.5rem 3rem; }
+      .hero-bottom { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .hero-scroll { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .section-header { grid-template-columns: 1fr; gap: 1rem; }
+      .section-number { font-size: 3rem; }
+      .philosophy-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .product-row { grid-template-columns: 1fr; gap: 1rem; }
+      .product-meta { align-items: flex-start; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Sourdough House</div>
+    <button class="nav-menu-btn">
+      <div class="menu-line"></div>
+      Menu
+    </button>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg-text">SOURDOUGH</div>
+    <div class="hero-content">
+      <div class="hero-label">Handcrafted Bakery</div>
+      <h1>Where patience becomes <em>flavor</em></h1>
+      <div class="hero-bottom">
+        <p class="hero-desc">
+          Slow-fermented sourdough breads, cookies, muffins, and pastries. 
+          Made by hand, from our starter to your table.
+        </p>
+        <div class="hero-cta">
+          <a href="#products" class="accent">Menu</a>
+          <a href="#about">Our Story</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">Scroll Down</div>
+  </section>
+
+  <section class="philosophy" id="about">
+    <div class="section-header">
+      <div class="section-number">01</div>
+      <div>
+        <span class="section-label">Our Philosophy</span>
+        <h2 class="section-title">We believe great bread takes time</h2>
+      </div>
+    </div>
+    <div class="philosophy-grid">
+      <div class="philosophy-text">
+        <p><strong>Sourdough House started with a single jar of starter</strong> and a stubborn belief that the best things in life can't be rushed. Every loaf we bake goes through a long, slow fermentation — because that's where the flavor lives.</p>
+        <p>We don't take shortcuts. We don't use commercial yeast. We let our starter do what it does best, and we think you can taste the difference in every bite — from our crusty boules to our tangy discard cookies.</p>
+      </div>
+      <div class="philosophy-values">
+        <div class="value-item">
+          <h4>72-Hour Fermentation</h4>
+          <p>Long, cold ferments for deeper flavor, better texture, and easier digestion.</p>
+        </div>
+        <div class="value-item">
+          <h4>Organic & Unbleached</h4>
+          <p>We source the best flour we can find — always unbleached, always organic.</p>
+        </div>
+        <div class="value-item">
+          <h4>Small Batch Only</h4>
+          <p>No mass production. Every item is made by hand, in limited quantities.</p>
+        </div>
+        <div class="value-item">
+          <h4>Zero Waste</h4>
+          <p>Our discard becomes cookies, crackers, and more. Nothing goes to waste.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products" id="products">
+    <div class="products-wrapper">
+      <div class="section-header">
+        <div class="section-number">02</div>
+        <div>
+          <span class="section-label">The Menu</span>
+          <h2 class="section-title">What we bake for you</h2>
+        </div>
+      </div>
+      <div class="product-list">
+        <div class="product-row">
+          <div class="product-info">
+            <h3>Artisan Breads</h3>
+            <p>Classic boules, batards, and specialty loaves. Crusty outside, soft and tangy inside. The foundation of everything we do.</p>
+          </div>
+          <div class="product-meta">
+            <div class="product-price">From $8</div>
+            <div class="product-tag">Best Seller</div>
+          </div>
+        </div>
+        <div class="product-row">
+          <div class="product-info">
+            <h3>Sourdough Cookies</h3>
+            <p>Chewy, tangy, and perfectly sweet. Our discard cookies turn what most bakers throw away into your new favorite treat.</p>
+          </div>
+          <div class="product-meta">
+            <div class="product-price">From $6</div>
+            <div class="product-tag">Fan Favorite</div>
+          </div>
+        </div>
+        <div class="product-row">
+          <div class="product-info">
+            <h3>Muffins & Scones</h3>
+            <p>Fluffy muffins and crumbly scones with sourdough depth. Perfect for breakfast or an afternoon pick-me-up.</p>
+          </div>
+          <div class="product-meta">
+            <div class="product-price">From $4</div>
+            <div class="product-tag">Weekend Special</div>
+          </div>
+        </div>
+        <div class="product-row">
+          <div class="product-info">
+            <h3>Pastries & Rolls</h3>
+            <p>Flaky, buttery pastries and soft dinner rolls. Sourdough makes everything better — even the things you didn't expect.</p>
+          </div>
+          <div class="product-meta">
+            <div class="product-price">From $5</div>
+            <div class="product-tag">Seasonal</div>
+          </div>
+        </div>
+        <div class="product-row">
+          <div class="product-info">
+            <h3>Custom Orders</h3>
+            <p>Birthday cakes, event platters, and seasonal specials. Tell us what you dream of — we'll make it happen.</p>
+          </div>
+          <div class="product-meta">
+            <div class="product-price">Get Quote</div>
+            <div class="product-tag">By Request</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee">
+    <div class="marquee-inner">
+      <span class="marquee-text">Sourdough House<span class="dot"></span></span>
+      <span class="marquee-text">Handcrafted With Love<span class="dot"></span></span>
+      <span class="marquee-text">Slow Fermented<span class="dot"></span></span>
+      <span class="marquee-text">Small Batch<span class="dot"></span></span>
+      <span class="marquee-text">Sourdough House<span class="dot"></span></span>
+      <span class="marquee-text">Handcrafted With Love<span class="dot"></span></span>
+      <span class="marquee-text">Slow Fermented<span class="dot"></span></span>
+      <span class="marquee-text">Small Batch<span class="dot"></span></span>
+    </div>
+  </div>
+
+  <section class="testimonial">
+    <div class="testimonial-wrapper">
+      <span class="section-label">Kind Words</span>
+      <blockquote class="testimonial-quote">
+        "I didn't know bread could taste like this. Every loaf from Sourdough House is a reminder that patience is a superpower."
+      </blockquote>
+      <div class="testimonial-author">Sarah M., Regular Customer</div>
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <span class="section-label" style="color: var(--accent);">Order</span>
+    <h2 class="section-title" style="color: var(--white);">Taste the difference</h2>
+    <p>Order for pickup, request a custom bake, or just say hello. We'd love to hear from you.</p>
+    <a href="mailto:hello@sourdoughhouse.com">Get In Touch</a>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">Sourdough House</div>
+        <p>Handcrafted sourdough breads, cookies, muffins, and more. Slow-fermented and made with love.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Menu</h5>
+        <a href="#">Breads</a>
+        <a href="#">Cookies</a>
+        <a href="#">Muffins</a>
+        <a href="#">Custom</a>
+      </div>
+      <div class="footer-col">
+        <h5>Info</h5>
+        <a href="#">Our Story</a>
+        <a href="#">FAQ</a>
+        <a href="#">Ordering</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Follow</h5>
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">TikTok</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2024 Sourdough House Bakery</span>
+      <span>Made with patience</span>
+    </div>
+  </footer>
+
+</body>
+</html>

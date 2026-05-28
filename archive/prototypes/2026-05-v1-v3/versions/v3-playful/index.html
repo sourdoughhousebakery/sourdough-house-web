@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sourdough House Bakery 🍞 Baked With Happy</title>
+  <script src="hotplate-api.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Caveat:wght@400;600;700&display=swap');
+
+    :root {
+      --warm-cream: #FFF8EE;
+      --golden: #F5A623;
+      --golden-dark: #E09510;
+      --rust: #C75B39;
+      --bark: #4A3423;
+      --forest: #2D5016;
+      --sage: #7BA05B;
+      --sky: #5B9BD5;
+      --pink: #E87474;
+      --lavender: #9B7EBD;
+      --white: #FFFFFF;
+      --off-white: #FFFDF7;
+      --dark: #2A1F14;
+      --shadow-lg: 0 20px 60px rgba(74, 52, 35, 0.15);
+      --shadow-sm: 0 4px 12px rgba(74, 52, 35, 0.08);
+      --radius: 24px;
+      --radius-sm: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-cream);
+      color: var(--bark);
+      overflow-x: hidden;
+    }
+
+    /* === FLOATING SHAPES (background deco) === */
+    .bg-shapes {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.07;
+    }
+
+    .bg-shape-1 { width: 400px; height: 400px; background: var(--golden); top: -100px; right: -100px; }
+    .bg-shape-2 { width: 300px; height: 300px; background: var(--rust); top: 40%; left: -80px; }
+    .bg-shape-3 { width: 250px; height: 250px; background: var(--sage); bottom: 10%; right: -50px; }
+
+    /* === NAV === */
+    nav {
+      position: fixed;
+      top: 1rem; left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: rgba(255, 248, 238, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(245, 166, 35, 0.2);
+      border-radius: 100px;
+      padding: 0.75rem 0.75rem 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-logo {
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--bark);
+      white-space: nowrap;
+    }
+
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--bark);
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+
+    .nav-links a:hover { opacity: 1; }
+
+    .nav-cta {
+      background: var(--golden);
+      color: var(--white) !important;
+      padding: 0.6rem 1.5rem;
+      border-radius: 100px;
+      font-weight: 600 !important;
+      opacity: 1 !important;
+      transition: transform 0.3s, background 0.3s;
+    }
+
+    .nav-cta:hover { background: var(--golden-dark); transform: scale(1.05); }
+
+    /* === HERO === */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-inner {
+      max-width: 900px;
+      text-align: center;
+    }
+
+    .hero-emoji-row {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      animation: floatEmoji 3s ease-in-out infinite;
+    }
+
+    @keyframes floatEmoji {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--golden);
+      color: var(--white);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.25rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 .handwritten {
+      font-family: 'Caveat', cursive;
+      color: var(--rust);
+      display: inline;
+    }
+
+    .hero h1 .highlight {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero h1 .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 0.15em;
+      left: -0.05em;
+      right: -0.05em;
+      height: 0.25em;
+      background: var(--golden);
+      opacity: 0.3;
+      z-index: -1;
+      border-radius: 4px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      color: rgba(74, 52, 35, 0.7);
+      max-width: 550px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 1rem 2rem;
+      border-radius: 100px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+    }
+
+    .btn-golden {
+      background: var(--golden);
+      color: var(--white);
+      box-shadow: 0 8px 24px rgba(245, 166, 35, 0.35);
+    }
+
+    .btn-golden:hover {
+      background: var(--golden-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(245, 166, 35, 0.45);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--bark);
+      border: 2px solid var(--bark);
+    }
+
+    .btn-outline:hover {
+      background: var(--bark);
+      color: var(--warm-cream);
+    }
+
+    /* === SECTION === */
+    section { padding: 5rem 2rem; position: relative; z-index: 1; }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--white);
+      border: 1px solid rgba(245, 166, 35, 0.2);
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--golden-dark);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    /* === ABOUT === */
+    .about {
+      background: var(--white);
+      border-radius: var(--radius);
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-visual {
+      background: linear-gradient(135deg, var(--golden) 0%, var(--rust) 100%);
+      border-radius: var(--radius);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-visual-text {
+      font-family: 'Caveat', cursive;
+      font-size: 5rem;
+      color: rgba(255, 255, 255, 0.3);
+      text-align: center;
+      line-height: 1;
+    }
+
+    .about-visual-badge {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--white);
+      color: var(--bark);
+      padding: 0.5rem 1.25rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .about-content p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(74, 52, 35, 0.75);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-content p strong {
+      color: var(--bark);
+    }
+
+    .about-signature {
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      color: var(--rust);
+      margin-top: 0.5rem;
+    }
+
+    /* === PRODUCTS === */
+    .products {
+      text-align: center;
+    }
+
+    .products-subtitle {
+      font-size: 1.1rem;
+      color: rgba(74, 52, 35, 0.65);
+      max-width: 500px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+
+    .product-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 4px;
+      background: var(--golden);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(245, 166, 35, 0.2);
+    }
+
+    .product-card:hover::before { transform: scaleX(1); }
+
+    .product-emoji {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .product-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .product-card p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(74, 52, 35, 0.65);
+      margin-bottom: 1.25rem;
+    }
+
+    .product-price {
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--rust);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: var(--golden);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+    }
+
+    /* === FUN FACTS === */
+    .facts {
+      background: var(--bark);
+      color: var(--warm-cream);
+      border-radius: var(--radius);
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem;
+    }
+
+    .facts-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .fact-item .fact-number {
+      font-family: 'Caveat', cursive;
+      font-size: 3.5rem;
+      color: var(--golden);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .fact-item h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .fact-item p {
+      font-size: 0.8rem;
+      color: rgba(255, 248, 238, 0.6);
+      line-height: 1.5;
+    }
+
+    /* === TESTIMONIAL === */
+    .testimonial {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .testimonial-emoji { font-size: 3rem; margin-bottom: 1rem; }
+
+    .testimonial blockquote {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .testimonial cite {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--rust);
+      letter-spacing: 0.05em;
+    }
+
+    /* === CTA === */
+    .cta-section {
+      text-align: center;
+    }
+
+    .cta-card {
+      background: linear-gradient(135deg, var(--golden) 0%, var(--rust) 100%);
+      border-radius: var(--radius);
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      color: var(--white);
+    }
+
+    .cta-card h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 2.5rem);
+      margin-bottom: 1rem;
+    }
+
+    .cta-card p {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+      max-width: 450px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-white {
+      background: var(--white);
+      color: var(--bark);
+      padding: 1rem 2.5rem;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.3s;
+    }
+
+    .btn-white:hover { transform: scale(1.05); }
+
+    /* === FOOTER === */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-logo {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--bark);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: rgba(74, 52, 35, 0.6);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: var(--rust); }
+
+    .footer-social {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-social a {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s;
+    }
+
+    .footer-social a:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+    /* === HOTPLATE ORDER SECTION === */
+    .hotplate-section {
+      background: var(--white);
+      border-radius: var(--radius);
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .hotplate-section .section-badge { margin-bottom: 1rem; }
+
+    .hotplate-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 2.5rem;
+      text-align: left;
+      align-items: center;
+    }
+
+    .hotplate-info h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .hotplate-info p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: rgba(74, 52, 35, 0.7);
+      margin-bottom: 1rem;
+    }
+
+    .hotplate-features {
+      list-style: none;
+      padding: 0;
+    }
+
+    .hotplate-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: rgba(74, 52, 35, 0.75);
+      margin-bottom: 0.75rem;
+    }
+
+    .hotplate-features li .check {
+      width: 24px;
+      height: 24px;
+      background: var(--sage);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .hotplate-order-card {
+      background: linear-gradient(135deg, var(--golden) 0%, #F0C56D 100%);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      color: var(--bark);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .hotplate-order-card .order-emoji { font-size: 3rem; margin-bottom: 1rem; }
+
+    .hotplate-order-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .hotplate-order-card p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .btn-hotplate {
+      display: inline-block;
+      background: var(--bark);
+      color: var(--warm-cream);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 1rem 2.5rem;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 8px 24px rgba(74, 52, 35, 0.3);
+    }
+
+    .btn-hotplate:hover {
+      background: var(--dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(74, 52, 35, 0.4);
+    }
+
+    .hotplate-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(74, 52, 35, 0.1);
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--bark);
+      margin-top: 1rem;
+    }
+
+    .hotplate-badge img {
+      height: 14px;
+    }
+
+    /* === STICKY ORDER BAR === */
+    .sticky-order {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: rgba(255, 248, 238, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(245, 166, 35, 0.2);
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sticky-order.visible {
+      transform: translateY(0);
+    }
+
+    .sticky-order-text {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--bark);
+    }
+
+    .sticky-order-text strong {
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .btn-sticky-order {
+      background: var(--golden);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.7rem 1.75rem;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(245, 166, 35, 0.4);
+      white-space: nowrap;
+    }
+
+    .btn-sticky-order:hover {
+      background: var(--golden-dark);
+      transform: translateY(-1px);
+    }
+
+    /* === LIVE MENU BADGE === */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #10b981;
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .live-badge .pulse {
+      width: 8px; height: 8px;
+      background: white;
+      border-radius: 50%;
+      animation: livePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .menu-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 3rem 0;
+    }
+
+    .menu-loading .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--golden);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .menu-loading p {
+      font-size: 0.9rem;
+      color: rgba(74, 52, 35, 0.6);
+    }
+
+    .product-sold-badge {
+      position: absolute;
+      top: 1rem; left: 1rem;
+      background: var(--rust);
+      color: var(--white);
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      letter-spacing: 0.03em;
+    }
+
+    .product-unavailable {
+      opacity: 0.6;
+    }
+
+    .product-unavailable .product-emoji {
+      filter: grayscale(1);
+    }
+
+    .product-image-thumb {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+    }
+
+    .fallback-menu {
+      display: none;
+    }
+
+    .fallback-menu.visible {
+      display: block;
+    }
+
+    .hotplate-credit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: rgba(74, 52, 35, 0.5);
+    }
+
+    .hotplate-credit a {
+      color: var(--rust);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .hotplate-credit a:hover { text-decoration: underline; }
+
+    /* Sticky order bar mobile fix */
+    .sticky-order { padding-bottom: env(safe-area-inset-bottom, 0.75rem); }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: rgba(74, 52, 35, 0.4);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .hotplate-grid { grid-template-columns: 1fr; }
+      .hotplate-section { padding: 2rem; }
+      .sticky-order { padding: 0.5rem 1rem; }
+      .sticky-order-text { font-size: 0.75rem; }
+      .btn-sticky-order { padding: 0.6rem 1.25rem; font-size: 0.75rem; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0.5rem 0.5rem 0.5rem 1.25rem; gap: 1rem; }
+      .nav-links { display: none; }
+      .about { padding: 2rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .product-grid { grid-template-columns: 1fr; }
+      .facts { padding: 2rem; }
+      .facts-grid { grid-template-columns: repeat(2, 1fr); }
+      .cta-card { padding: 3rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-shapes">
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+    <div class="bg-shape bg-shape-3"></div>
+  </div>
+
+  <nav>
+    <div class="nav-logo">Sourdough House</div>
+    <div class="nav-links">
+      <a href="#about">Story</a>
+      <a href="#products">Menu</a>
+      <a href="#testimonial">Love</a>
+      <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="nav-cta">Order on Hotplate 🍞</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-emoji-row">🍞 🍪 🧁 🥐</div>
+      <div class="hero-tag">Est. 2024 · Small Batch · Handcrafted</div>
+      <h1>Bread baked with <span class="handwritten">love</span> & <span class="highlight">patience</span></h1>
+      <p class="hero-subtitle">
+        From our starter to your table — authentic sourdough breads, cookies, muffins, and more. Every bite tells a story. 🌾
+      </p>
+      <div class="hero-buttons">
+        <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="btn btn-golden">Order Now 🍞</a>
+        <a href="#about" class="btn btn-outline">Our Story</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="about-visual-text">Sourdough<br>House</div>
+        <div class="about-visual-badge">✨ Since 2024</div>
+      </div>
+      <div class="about-content">
+        <div class="section-badge">👋 Our Story</div>
+        <h2 class="section-title">Born from a starter, raised with love</h2>
+        <p><strong>What started as a pandemic hobby</strong> quickly became a passion — and then a calling. Every loaf from Sourdough House is made with our own carefully nurtured starter, slow-fermented for the best flavor and texture.</p>
+        <p>From artisan boules to sweet muffins and cookies, we believe great baking takes time. No shortcuts, no compromises — just honest, handcrafted goodness that you can taste in every bite.</p>
+        <div class="about-signature">— The Sourdough House Family 💛</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="products" id="products">
+    <div class="section-badge">🍞 Our Menu</div>
+    <h2 class="section-title">What we bake for you</h2>
+    <p class="products-subtitle" id="menu-subtitle">Small-batch, handcrafted, and always made with our signature sourdough starter.</p>
+
+    <div id="live-menu" class="menu-loading">
+      <div class="spinner"></div>
+      <p>Loading today's menu from Hotplate...</p>
+    </div>
+
+    <div id="product-grid" class="product-grid" style="display:none;"></div>
+
+    <!-- Fallback static menu shown if API fails -->
+    <div id="fallback-menu" class="fallback-menu visible">
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-badge">Best Seller</div>
+          <span class="product-emoji">🍞</span>
+          <h3>Artisan Breads</h3>
+          <p>Classic boules, batards, and specialty loaves — slow-fermented, crusty outside, soft and tangy inside.</p>
+          <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="product-price" style="text-decoration:none;">See menu →</a>
+        </div>
+        <div class="product-card">
+          <div class="product-badge">Fan Fave</div>
+          <span class="product-emoji">🍪</span>
+          <h3>Sourdough Cookies</h3>
+          <p>Chewy, tangy, and perfectly sweet. Our discard cookies turn leftovers into your new obsession.</p>
+          <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="product-price" style="text-decoration:none;">See menu →</a>
+        </div>
+        <div class="product-card">
+          <span class="product-emoji">🧁</span>
+          <h3>Muffins & Scones</h3>
+          <p>Fluffy muffins and crumbly scones with sourdough depth. Perfect for breakfast or a snack.</p>
+          <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="product-price" style="text-decoration:none;">See menu →</a>
+        </div>
+        <div class="product-card">
+          <span class="product-emoji">🥐</span>
+          <h3>Pastries & Rolls</h3>
+          <p>Flaky, buttery pastries and soft dinner rolls. Sourdough makes everything better.</p>
+          <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="product-price" style="text-decoration:none;">See menu →</a>
+        </div>
+        <div class="product-card">
+          <span class="product-emoji">🥖</span>
+          <h3>Sandwich Loaves</h3>
+          <p>Soft, sliceable sourdough for your daily sandwiches. Mild tang, great crumb.</p>
+          <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="product-price" style="text-decoration:none;">See menu →</a>
+        </div>
+        <div class="product-card">
+          <span class="product-emoji">🎂</span>
+          <h3>Custom Orders</h3>
+          <p>Birthday cakes, event platters, and seasonal specials. Tell us your dream — we'll bake it!</p>
+          <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="product-price" style="text-decoration:none;">Request a Quote →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="facts">
+    <div class="facts-grid">
+      <div class="fact-item">
+        <div class="fact-number">72h</div>
+        <h4>Slow Ferment</h4>
+        <p>Long, cold ferments for maximum flavor</p>
+      </div>
+      <div class="fact-item">
+        <div class="fact-number">100%</div>
+        <h4>Organic Flour</h4>
+        <p>Unbleached, organic, always</p>
+      </div>
+      <div class="fact-item">
+        <div class="fact-number">0</div>
+        <h4>Shortcuts</h4>
+        <p>Every item made by hand, small batch</p>
+      </div>
+      <div class="fact-item">
+        <div class="fact-number">∞</div>
+        <h4>Love</h4>
+        <p>Baked into every single thing we make</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hotplate Order Section -->
+  <section class="hotplate-section" id="order">
+    <div class="section-badge">🛒 Order Online</div>
+    <h2 class="section-title">Fresh bread, easy ordering</h2>
+    <p class="products-subtitle" style="margin-bottom:0;">Browse our full menu, place your order, and pick up on your schedule. Powered by Hotplate.</p>
+
+    <div class="hotplate-grid">
+      <div class="hotplate-info">
+        <h3>Ordering is simple</h3>
+        <p>Our Hotplate storefront shows what's fresh this week, lets you reserve your favorites, and handles payment — all in one place. No apps to download, no accounts required.</p>
+        <ul class="hotplate-features">
+          <li><span class="check">✓</span> See what's available right now</li>
+          <li><span class="check">✓</span> Reserve items before they sell out</li>
+          <li><span class="check">✓</span> Pay online, pick up at our kitchen</li>
+          <li><span class="check">✓</span> Get notified about new drops</li>
+          <li><span class="check">✓</span> Custom order requests welcome</li>
+        </ul>
+      </div>
+      <div class="hotplate-order-card">
+        <div class="order-emoji">🍞</div>
+        <h3>Ready to order?</h3>
+        <p>Head to our Hotplate page to see this week's menu and place your order.</p>
+        <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="btn-hotplate">Order on Hotplate →</a>
+        <div class="hotplate-badge">
+          🔒 Secure checkout via Hotplate
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonial" id="testimonial">
+    <div class="testimonial-emoji">💛</div>
+    <div class="section-badge">Kind Words</div>
+    <blockquote>"The best bread I've ever had. You can taste the difference that time and care make. Every loaf is a masterpiece."</blockquote>
+    <cite>— Sarah M., Happy Customer</cite>
+  </section>
+
+  <section class="cta-section" id="contact">
+    <div class="cta-card">
+      <h2>Ready to taste the difference? 🍞</h2>
+      <p>Head to our Hotplate storefront to see what's fresh, place an order, and schedule your pickup.</p>
+      <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="btn-white">Order on Hotplate →</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Sourdough House 🍞</div>
+    <div class="footer-links">
+      <a href="#about">Our Story</a>
+      <a href="#products">Menu</a>
+      <a href="#order">Order</a>
+      <a href="#testimonial">Reviews</a>
+      <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener">Hotplate ↗</a>
+    </div>
+    <div class="footer-social">
+      <a href="#">📷</a>
+      <a href="#">📘</a>
+      <a href="#">🎵</a>
+    </div>
+    <div class="footer-copy">&copy; 2024 Sourdough House Bakery. Baked with love. 🤎</div>
+  </footer>
+
+  <!-- Sticky Order Bar -->
+  <div class="sticky-order" id="sticky-order">
+    <div class="sticky-order-text">
+      🍞 <strong>Sourdough House</strong> — Fresh, handcrafted, ready for pickup
+    </div>
+    <a href="https://hotplate.com/sourdoughhouse" target="_blank" rel="noopener" class="btn-sticky-order">Order Now →</a>
+  </div>
+
+  <script>
+    // Sticky order bar
+    const stickyBar = document.getElementById('sticky-order');
+    const hero = document.querySelector('.hero');
+    
+    function checkSticky() {
+      if (!hero) return;
+      const heroBottom = hero.offsetTop + hero.offsetHeight;
+      if (window.scrollY > heroBottom) {
+        stickyBar.classList.add('visible');
+      } else {
+        stickyBar.classList.remove('visible');
+      }
+    }
+
+    window.addEventListener('scroll', checkSticky, { passive: true });
+    checkSticky();
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // === HOTPLATE LIVE MENU ===
+    (async function() {
+      const CHEF_ID = 'sourdoughhouse';
+      const HOTPLATE_URL = 'https://hotplate.com/' + CHEF_ID;
+      const API_BASE = 'https://bets.hotplate.com/trpc';
+
+      async function apiFetch(endpoint, input) {
+        const url = `${API_BASE}/${endpoint}?input=${encodeURIComponent(JSON.stringify(input))}`;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`API ${resp.status}`);
+        const data = await resp.json();
+        if (data.error) throw new Error(data.error.message);
+        return data.result?.data;
+      }
+
+      // Map food words to emojis for visual flair
+      function itemEmoji(name, desc) {
+        const text = (name + ' ' + (desc || '')).toLowerCase();
+        if (text.includes('cookie')) return '🍪';
+        if (text.includes('muffin')) return '🧁';
+        if (text.includes('scone')) return '🧁';
+        if (text.includes('croissant') || text.includes('pastry')) return '🥐';
+        if (text.includes('roll') || text.includes('bun')) return '🥖';
+        if (text.includes('cake')) return '🎂';
+        if (text.includes('bagel')) return '🥯';
+        if (text.includes('cinnamon')) return '🍞';
+        if (text.includes('wheat')) return '🌾';
+        if (text.includes('cheddar') || text.includes('jalapeño') || text.includes('cheese')) return '🧀';
+        if (text.includes('chocolate')) return '🍫';
+        if (text.includes('fruit') || text.includes('berry') || text.includes('blueberry') || text.includes('cranberry')) return '🫐';
+        if (text.includes('garlic')) return '🧄';
+        return '🍞'; // default bread
+      }
+
+      function renderMenu(menu) {
+        const grid = document.getElementById('product-grid');
+        const liveMenu = document.getElementById('live-menu');
+        const fallback = document.getElementById('fallback-menu');
+        const subtitle = document.getElementById('menu-subtitle');
+
+        if (!menu || !menu.items || menu.items.length === 0) {
+          // Show fallback
+          liveMenu.style.display = 'none';
+          fallback.classList.add('visible');
+          return;
+        }
+
+        // Hide loading + fallback, show live grid
+        liveMenu.style.display = 'none';
+        fallback.classList.remove('visible');
+        fallback.style.display = 'none';
+        grid.style.display = 'grid';
+
+        // Update subtitle
+        const statusText = menu.eventStatus === 'complete' ? 'Here\'s what we\'ve been baking' : 'Available now for ordering';
+        subtitle.textContent = statusText + ' · Menu updates automatically from our Hotplate storefront.';
+
+        // Build cards
+        grid.innerHTML = menu.items.map(item => {
+          const isAvailable = item.isAvailable !== false;
+          const soldBadge = item.sold > 0 ? `<div class="product-sold-badge">${item.sold} sold</div>` : '';
+          const imageHtml = item.image ? `<img src="${item.image}" alt="${item.name}" class="product-image-thumb" loading="lazy">` : `<span class="product-emoji">${itemEmoji(item.name, item.description)}</span>`;
+          const priceText = item.price !== 'Price varies' ? item.price : 'See menu';
+          const unavailableClass = isAvailable ? '' : ' product-unavailable';
+          const priceHtml = isAvailable
+            ? `<a href="${HOTPLATE_URL}" target="_blank" rel="noopener" class="product-price" style="text-decoration:none;">${priceText} — Order →</a>`
+            : `<span class="product-price" style="opacity:0.5;">Sold Out</span>`;
+
+          return `
+            <div class="product-card${unavailableClass}">
+              ${soldBadge}
+              ${imageHtml}
+              <h3>${item.name}</h3>
+              <p>${(item.description || '').substring(0, 120)}</p>
+              ${priceHtml}
+            </div>
+          `;
+        }).join('');
+      }
+
+      async function loadMenu() {
+        try {
+          // 1. Try live events first
+          let events = await apiFetch('shop.getPublicLiveEvents', { chefId: CHEF_ID });
+          let source = 'live';
+
+          // 2. If no live events, try past events
+          if (!events || events.length === 0) {
+            const pastData = await apiFetch('shop.getPublicPastEvents', { chefId: CHEF_ID, direction: 'forward' });
+            events = pastData?.pastEvents || [];
+            source = 'past';
+          }
+
+          if (!events || events.length === 0) {
+            renderMenu(null);
+            return;
+          }
+
+          // 3. Get full event details (most recent)
+          const eventId = events[0].id;
+          const detail = await apiFetch('shop.getEvent', { eventId, fulfillmentType: 'ALL' });
+
+          if (!detail) {
+            renderMenu(null);
+            return;
+          }
+
+          // 4. Extract menu items
+          const items = Object.values(detail.menuItems || {})
+            .filter(item => !item.isDeleted)
+            .sort((a, b) => (a.sectionIndex ?? 0) - (b.sectionIndex ?? 0));
+
+          const formattedItems = items.map(item => ({
+            id: item.id,
+            name: item.title || 'Freshly Baked',
+            price: item.price ? `$${item.price}` : 'Price varies',
+            description: item.description || '',
+            image: item.image || null,
+            sold: item.inventoryInfo?.sold || 0,
+            available: item.inventoryInfo?.available === 'Infinity' ? null : item.inventoryInfo?.available,
+            isAvailable: item.inventoryInfo?.available !== 0 && item.inventoryInfo?.available !== '0',
+          }));
+
+          renderMenu({
+            items: formattedItems,
+            eventStatus: detail.status,
+            eventTitle: detail.title,
+          });
+
+          // 5. Also load reviews (fire and forget)
+          loadReviews();
+
+        } catch (err) {
+          console.warn('Hotplate menu load failed:', err);
+          renderMenu(null); // Shows fallback
+        }
+      }
+
+      async function loadReviews() {
+        try {
+          const [reviewData, statsData] = await Promise.all([
+            apiFetch('review.getAllPublic', { chefUsername: CHEF_ID, page: 1 }),
+            apiFetch('review.getChefAggregateStats', { chefUsername: CHEF_ID, isDeleted: false, status: 'APPROVED' }),
+          ]);
+
+          if (!statsData || statsData.totalReviews === 0) return;
+
+          // Update testimonial section with real reviews
+          const reviewSection = document.getElementById('testimonial');
+          if (!reviewSection || !reviewData?.data?.length) return;
+
+          const topReview = reviewData.data[0];
+          const stars = '⭐'.repeat(topReview.rating);
+          const blockquote = reviewSection.querySelector('blockquote');
+          const cite = reviewSection.querySelector('cite');
+          const emoji = reviewSection.querySelector('.testimonial-emoji');
+
+          if (blockquote) blockquote.textContent = `"${topReview.reviewText?.text || 'Amazing bread!'}"`;
+          if (cite) cite.textContent = `— ${statsData.averageRating.toFixed(1)} stars (${statsData.totalReviews} reviews) on Hotplate`;
+          if (emoji) emoji.textContent = stars;
+
+        } catch (err) {
+          console.warn('Hotplate reviews load failed:', err);
+        }
+      }
+
+      // Kick it off
+      loadMenu();
+    })();
+  </script>
+</body>
+</html>
