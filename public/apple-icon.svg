@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Sourdough House Bakery">
+  <rect width="180" height="180" rx="44" fill="#fff7ea"/>
+  <path d="M34 108c0-37 23-65 56-65s56 28 56 65c0 23-22 37-56 37s-56-14-56-37Z" fill="#e6a33a"/>
+  <path d="M52 108c9-23 23-40 38-51M88 142c-6-34 1-62 20-85M128 108c-11-23-25-38-38-51" fill="none" stroke="#39271b" stroke-width="9" stroke-linecap="round"/>
+</svg>
