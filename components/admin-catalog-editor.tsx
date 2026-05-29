@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, RotateCcw, Save, Trash2 } from "lucide-react";
+import { Eye, Plus, RotateCcw, Save, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import type { BakeCatalogItem, PublicCatalogItem } from "@/lib/catalog/types";
@@ -38,6 +38,7 @@ export function AdminCatalogEditor({ defaultItems }: AdminCatalogEditorProps) {
     }
   });
   const [savedAt, setSavedAt] = useState<string | null>(null);
+  const [previewItem, setPreviewItem] = useState<BakeCatalogItem | null>(null);
 
   const publicItems = useMemo(() => toPublicItems(items), [items]);
 
@@ -105,8 +106,18 @@ export function AdminCatalogEditor({ defaultItems }: AdminCatalogEditorProps) {
       <div className="grid gap-5">
         {items.map((item) => (
           <article key={item.id} className="grid gap-5 rounded-[1.5rem] border border-espresso/10 bg-white p-4 shadow-soft md:grid-cols-[180px_1fr]">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] bg-gold/10 md:aspect-auto">
-              <Image src={item.image} alt="" fill sizes="180px" className="object-cover" />
+            <div className="grid gap-3">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] bg-gold/10 md:aspect-auto">
+                <Image src={item.image} alt="" fill sizes="180px" className="object-cover" />
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewItem(item)}
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-espresso/15 bg-white px-4 text-sm font-black text-espresso"
+              >
+                <Eye aria-hidden size={16} />
+                Preview image
+              </button>
             </div>
             <div className="grid gap-4">
               <div className="grid gap-3 md:grid-cols-2">
@@ -205,6 +216,49 @@ export function AdminCatalogEditor({ defaultItems }: AdminCatalogEditorProps) {
           </article>
         ))}
       </div>
+      {previewItem ? (
+        <div
+          className="fixed inset-0 z-[100] grid place-items-center bg-espresso/70 p-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="image-preview-title"
+          onClick={() => setPreviewItem(null)}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setPreviewItem(null);
+          }}
+        >
+          <div
+            className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[2rem] bg-cream shadow-lift"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between gap-4 border-b border-espresso/10 p-4 md:p-5">
+              <div>
+                <h2 id="image-preview-title" className="font-serif text-2xl text-espresso md:text-3xl">
+                  {previewItem.name}
+                </h2>
+                <p className="mt-1 break-all text-xs font-semibold text-espresso/55">{previewItem.image}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewItem(null)}
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-espresso shadow-soft"
+                aria-label="Close image preview"
+              >
+                <X aria-hidden size={20} />
+              </button>
+            </div>
+            <div className="relative h-[72vh] bg-espresso/8">
+              <Image
+                src={previewItem.image}
+                alt={`${previewItem.name} full preview`}
+                fill
+                sizes="min(100vw, 1024px)"
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
