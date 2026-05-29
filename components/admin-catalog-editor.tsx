@@ -106,14 +106,14 @@ export function AdminCatalogEditor({ defaultItems }: AdminCatalogEditorProps) {
       <div className="grid gap-5">
         {items.map((item) => (
           <article key={item.id} className="grid gap-5 rounded-[1.5rem] border border-espresso/10 bg-white p-4 shadow-soft md:grid-cols-[180px_1fr]">
-            <div className="grid gap-3">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[1rem] bg-gold/10 md:aspect-auto">
+            <div className="flex flex-col gap-3 self-start">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[1rem] bg-gold/10">
                 <Image src={item.image} alt="" fill sizes="180px" className="object-cover" />
               </div>
               <button
                 type="button"
                 onClick={() => setPreviewItem(item)}
-                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-espresso/15 bg-white px-4 text-sm font-black text-espresso"
+                className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-espresso/15 bg-white px-4 text-sm font-black text-espresso"
               >
                 <Eye aria-hidden size={16} />
                 Preview image
