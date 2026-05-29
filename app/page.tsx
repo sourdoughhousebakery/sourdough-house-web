@@ -1,4 +1,5 @@
 import { Hero } from "@/components/hero";
+import { CatalogGrid } from "@/components/catalog-grid";
 import { MenuGrid } from "@/components/menu-grid";
 import { MotionSection } from "@/components/motion-section";
 import { OrderPanel } from "@/components/order-panel";
@@ -6,10 +7,12 @@ import { ProcessBand } from "@/components/process-band";
 import { StoryPreview } from "@/components/story-preview";
 import { TestimonialBand } from "@/components/testimonial-band";
 import { ButtonLink } from "@/components/button-link";
+import { getFeaturedCatalogItems } from "@/lib/catalog/catalog";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 
 export default async function HomePage() {
   const menu = await getDisplayMenu(3);
+  const featuredCatalog = getFeaturedCatalogItems(undefined, 3);
 
   return (
     <>
@@ -19,7 +22,7 @@ export default async function HomePage() {
           <div className="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm font-black uppercase tracking-[0.18em] text-rust">
-                {menu.source === "fallback" ? "Bakery favorites" : "Fresh from Hotplate"}
+                {menu.source === "fallback" ? "What we bake" : "Fresh from Hotplate"}
               </p>
               <h2 className="mt-3 font-serif text-5xl leading-none text-espresso">This week&apos;s table.</h2>
             </div>
@@ -27,7 +30,11 @@ export default async function HomePage() {
               View full menu
             </ButtonLink>
           </div>
-          <MenuGrid items={menu.displayItems} compact />
+          {menu.source === "fallback" ? (
+            <CatalogGrid items={featuredCatalog} />
+          ) : (
+            <MenuGrid items={menu.displayItems} compact />
+          )}
         </div>
       </MotionSection>
       <StoryPreview />
@@ -37,4 +44,3 @@ export default async function HomePage() {
     </>
   );
 }
-

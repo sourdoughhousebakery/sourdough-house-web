@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { MenuGrid } from "@/components/menu-grid";
+import { MenuTabs } from "@/components/menu-tabs";
 import { PageIntro } from "@/components/page-intro";
+import { getPublicCatalogItems } from "@/lib/catalog/catalog";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 import { getHotplateUrl } from "@/lib/site";
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export default async function MenuPage() {
   const menu = await getDisplayMenu();
   const event = menu.event;
+  const catalogItems = getPublicCatalogItems();
 
   return (
     <>
@@ -33,10 +35,9 @@ export default async function MenuPage() {
               .
             </div>
           ) : null}
-          <MenuGrid items={menu.displayItems} />
+          <MenuTabs hotplateItems={menu.displayItems} hotplateSource={menu.source} catalogItems={catalogItems} />
         </div>
       </section>
     </>
   );
 }
-

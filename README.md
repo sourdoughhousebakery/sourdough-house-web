@@ -44,6 +44,12 @@ public/       Icons and static assets
 archive/      Preserved prototype versions and screenshots
 ```
 
+## Admin Preview
+
+Open `/admin` locally to preview the future catalog editor. It can toggle whether a typical bake is shown, featured, usually available, and whether its price appears.
+
+Current limitation: this saves to browser `localStorage` only. It is a placeholder workflow until Supabase or another CMS is connected.
+
 ## Verification
 
 ```bash
