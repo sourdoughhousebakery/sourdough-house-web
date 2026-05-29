@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { BakeCatalogItem } from "./types";
-import { getFeaturedCatalogItems, getPublicCatalogItems } from "./catalog";
+import {
+  createCatalogItem,
+  deleteCatalogItem,
+  getFeaturedCatalogItems,
+  getPublicCatalogItems,
+  hydrateCatalogItems,
+  updateCatalogItem
+} from "./catalog";
 
 const items: BakeCatalogItem[] = [
   {
@@ -65,5 +72,62 @@ describe("getPublicCatalogItems", () => {
 describe("getFeaturedCatalogItems", () => {
   it("returns active featured items up to the requested limit", () => {
     expect(getFeaturedCatalogItems(items, 1).map((item) => item.id)).toEqual(["country"]);
+  });
+});
+
+describe("catalog CRUD helpers", () => {
+  it("creates a catalog item with sensible defaults", () => {
+    const nextItems = createCatalogItem(items);
+    const created = nextItems.at(-1);
+
+    expect(nextItems).toHaveLength(items.length + 1);
+    expect(created).toMatchObject({
+      name: "New bake",
+      category: "Bakery",
+      price: "",
+      isActive: true,
+      isFeatured: false,
+      isTypicallyAvailable: false,
+      showPrice: false
+    });
+    expect(created?.id).toMatch(/^catalog-/);
+  });
+
+  it("updates a catalog item by id without mutating other items", () => {
+    const nextItems = updateCatalogItem(items, "country", { name: "Updated Country" });
+
+    expect(nextItems.find((item) => item.id === "country")?.name).toBe("Updated Country");
+    expect(nextItems.find((item) => item.id === "seasonal")?.name).toBe("Seasonal Rolls");
+  });
+
+  it("deletes a catalog item by id", () => {
+    expect(deleteCatalogItem(items, "seasonal").map((item) => item.id)).toEqual(["country", "hidden"]);
+  });
+
+  it("hydrates default and custom persisted catalog items", () => {
+    const persisted = [
+      { ...getPublicCatalogItems(items)[0], name: "Edited Country" },
+      {
+        id: "catalog-custom",
+        name: "Custom Bake",
+        description: "Custom item",
+        category: "Specials",
+        image: "https://example.com/custom.jpg",
+        price: "$7",
+        isActive: true,
+        isFeatured: false,
+        isTypicallyAvailable: false,
+        showPrice: true,
+        displayPrice: "$7",
+        availabilityLabel: "Not always on sale"
+      }
+    ];
+
+    expect(hydrateCatalogItems(items, persisted).map((item) => item.name)).toEqual([
+      "Edited Country",
+      "Seasonal Rolls",
+      "Hidden Bake",
+      "Custom Bake"
+    ]);
   });
 });
