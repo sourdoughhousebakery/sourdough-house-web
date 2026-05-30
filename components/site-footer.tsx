@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { navItems } from "@/content/site-content";
-import { getDefaultAdminContent } from "@/lib/admin-content/content";
+import { diskAdminDataSource } from "@/lib/admin-data/disk";
 import { getHotplateUrl, siteConfig } from "@/lib/site";
 import { AdminPreviewContactIconLinks } from "./admin-preview-content";
 
-export function SiteFooter() {
-  const defaultContent = getDefaultAdminContent();
+export async function SiteFooter() {
+  const [announcement, contact, testimonials] = await Promise.all([
+    diskAdminDataSource.announcement.get(),
+    diskAdminDataSource.contact.get(),
+    diskAdminDataSource.testimonials.list()
+  ]);
+  const defaultContent = { announcement, contact, testimonials };
 
   return (
     <footer className="border-t border-espresso/10 bg-cream px-5 py-10">

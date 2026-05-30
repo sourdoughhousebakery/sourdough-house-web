@@ -7,6 +7,8 @@ import { diskAdminDataSource } from "@/lib/admin-data/disk";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 import { getHotplateUrl } from "@/lib/site";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Menu",
   description: "See the latest Sourdough House Bakery menu and order through Hotplate."

@@ -4,6 +4,8 @@ import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
 import { diskAdminDataSource } from "@/lib/admin-data/disk";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Admin Preview",
   description: "Placeholder admin editor for the Sourdough House Bakery catalog."

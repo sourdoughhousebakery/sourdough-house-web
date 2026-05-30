@@ -12,6 +12,8 @@ import { homeContent } from "@/content/site-content";
 import { diskAdminDataSource } from "@/lib/admin-data/disk";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [menu, featuredCatalog, announcement, contact, testimonials] = await Promise.all([
     getDisplayMenu(3),

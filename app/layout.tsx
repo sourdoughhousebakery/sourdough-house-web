@@ -7,6 +7,8 @@ import { StickyOrder } from "@/components/sticky-order";
 import { siteConfig } from "@/lib/site";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",

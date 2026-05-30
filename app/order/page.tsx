@@ -3,16 +3,23 @@ import { AdminPreviewAnnouncement } from "@/components/admin-preview-content";
 import { OrderPanel } from "@/components/order-panel";
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
-import { getDefaultAdminContent } from "@/lib/admin-content/content";
+import { diskAdminDataSource } from "@/lib/admin-data/disk";
 import { getHotplateUrl } from "@/lib/site";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Order",
   description: "Order Sourdough House Bakery drops through Hotplate for local pickup."
 };
 
-export default function OrderPage() {
-  const defaultContent = getDefaultAdminContent();
+export default async function OrderPage() {
+  const [announcement, contact, testimonials] = await Promise.all([
+    diskAdminDataSource.announcement.get(),
+    diskAdminDataSource.contact.get(),
+    diskAdminDataSource.testimonials.list()
+  ]);
+  const defaultContent = { announcement, contact, testimonials };
 
   return (
     <>

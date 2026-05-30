@@ -3,27 +3,14 @@ import { AdminPreviewContactPillLinks } from "@/components/admin-preview-content
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
 import { diskAdminDataSource } from "@/lib/admin-data/disk";
-import { getHotplateUrl, siteConfig } from "@/lib/site";
+import { getHotplateUrl } from "@/lib/site";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Contact",
   description: "Contact Sourdough House Bakery for orders, custom requests, and local pickup details."
 };
-
-const contactCards = [
-  {
-    title: "Order drops",
-    description: "Use Hotplate for the current weekly menu, checkout, and pickup details.",
-    href: getHotplateUrl(),
-    label: "Open Hotplate"
-  },
-  {
-    title: "Custom requests",
-    description: "Ask about cakes, party boxes, seasonal bakes, or larger pickup orders.",
-    href: `mailto:${siteConfig.email}`,
-    label: siteConfig.email
-  }
-];
 
 export default async function ContactPage() {
   const [announcement, contact, testimonials] = await Promise.all([
@@ -32,6 +19,20 @@ export default async function ContactPage() {
     diskAdminDataSource.testimonials.list()
   ]);
   const defaultContent = { announcement, contact, testimonials };
+  const contactCards = [
+    {
+      title: "Order drops",
+      description: "Use Hotplate for the current weekly menu, checkout, and pickup details.",
+      href: getHotplateUrl(),
+      label: "Open Hotplate"
+    },
+    {
+      title: "Custom requests",
+      description: "Ask about cakes, party boxes, seasonal bakes, or larger pickup orders.",
+      href: `mailto:${contact.email}`,
+      label: contact.email
+    }
+  ];
 
   return (
     <>
