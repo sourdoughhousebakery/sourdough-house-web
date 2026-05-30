@@ -40,7 +40,7 @@ export function Hero() {
         </div>
 
         <div className="relative">
-          <div className="absolute -left-6 top-8 hidden rounded-3xl bg-sage px-5 py-4 text-sm font-black text-white shadow-lift md:block">
+          <div className="absolute -left-6 top-8 z-20 hidden whitespace-nowrap rounded-3xl bg-sage px-5 py-4 text-sm font-black text-white shadow-lift md:block">
             {heroContent.imageBadge}
           </div>
           <div className="overflow-hidden rounded-[2rem] border border-white/70 bg-white p-3 shadow-lift">
