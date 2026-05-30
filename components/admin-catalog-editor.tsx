@@ -173,7 +173,7 @@ export function AdminCatalogEditor({
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+      <div className="grid gap-6">
         <div className="grid gap-5">
           <div className="rounded-[1.5rem] border border-espresso/10 bg-white p-4 shadow-soft">
             <h3 className="font-serif text-2xl text-espresso">Categories</h3>
@@ -282,7 +282,7 @@ export function AdminCatalogEditor({
               <h3 className="mt-1 font-serif text-3xl text-espresso">{selectedItem.name}</h3>
             </div>
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[1rem] bg-gold/10">
-              <Image src={selectedItem.image} alt="" fill sizes="420px" className="object-cover" />
+              <Image src={selectedItem.image} alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
             </div>
             <button
               type="button"
