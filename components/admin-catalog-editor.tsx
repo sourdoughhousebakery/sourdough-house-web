@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import type { BakeCatalogItem, PublicCatalogItem } from "@/lib/catalog/types";
 import { isDataImageSrc } from "@/lib/images";
+import { catalogPreviewStorageKey } from "@/lib/catalog/local-preview";
 import {
   createCatalogItem,
   deleteCatalogItem,
@@ -19,7 +20,6 @@ type AdminCatalogEditorProps = {
   description?: string;
 };
 
-const storageKey = "sourdough-house-bake-catalog";
 const categoryStorageKey = "sourdough-house-bake-categories";
 const starterCategories = ["Bread", "Sweets", "Breakfast", "Specials", "Custom", "Bakery"];
 
@@ -40,7 +40,7 @@ export function AdminCatalogEditor({
 }: AdminCatalogEditorProps) {
   const initialItems = () => {
     if (typeof window === "undefined") return defaultItems;
-    const raw = window.localStorage.getItem(storageKey);
+    const raw = window.localStorage.getItem(catalogPreviewStorageKey);
     if (!raw) return defaultItems;
 
     try {
@@ -48,7 +48,7 @@ export function AdminCatalogEditor({
       if (!Array.isArray(publicItems)) return defaultItems;
       return hydrateCatalogItems(defaultItems, publicItems);
     } catch {
-      window.localStorage.removeItem(storageKey);
+      window.localStorage.removeItem(catalogPreviewStorageKey);
       return defaultItems;
     }
   };
@@ -132,13 +132,13 @@ export function AdminCatalogEditor({
   }
 
   function save() {
-    window.localStorage.setItem(storageKey, JSON.stringify(publicItems));
+    window.localStorage.setItem(catalogPreviewStorageKey, JSON.stringify(publicItems));
     window.localStorage.setItem(categoryStorageKey, JSON.stringify(categories));
     setSavedAt(new Date().toLocaleTimeString());
   }
 
   function reset() {
-    window.localStorage.removeItem(storageKey);
+    window.localStorage.removeItem(catalogPreviewStorageKey);
     window.localStorage.removeItem(categoryStorageKey);
     setItems(defaultItems);
     setSelectedItemId(defaultItems[0]?.id ?? null);

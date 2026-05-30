@@ -3,6 +3,7 @@
 import { ShoppingBag, Wheat } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { PublicCatalogItem } from "@/lib/catalog/types";
+import { catalogPreviewStorageKey } from "@/lib/catalog/local-preview";
 import type { FallbackMenuItem, HotplateMenuItem, MenuResult } from "@/lib/hotplate/types";
 import { CatalogGrid } from "./catalog-grid";
 import { MenuGrid } from "./menu-grid";
@@ -15,20 +16,18 @@ type MenuTabsProps = {
   catalogItems: PublicCatalogItem[];
 };
 
-const catalogStorageKey = "sourdough-house-bake-catalog";
-
 export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTabsProps) {
   const [activeTab, setActiveTab] = useState<"hotplate" | "catalog">("hotplate");
   const [localCatalog] = useState<PublicCatalogItem[] | null>(() => {
     if (typeof window === "undefined") return null;
-    const raw = window.localStorage.getItem(catalogStorageKey);
+    const raw = window.localStorage.getItem(catalogPreviewStorageKey);
     if (!raw) return null;
 
     try {
       const parsed = JSON.parse(raw) as PublicCatalogItem[];
       return Array.isArray(parsed) ? parsed : null;
     } catch {
-      window.localStorage.removeItem(catalogStorageKey);
+      window.localStorage.removeItem(catalogPreviewStorageKey);
       return null;
     }
   });

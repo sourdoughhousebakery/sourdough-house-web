@@ -1,6 +1,6 @@
 import { AdminPreviewAnnouncement } from "@/components/admin-preview-content";
 import { Hero } from "@/components/hero";
-import { CatalogGrid } from "@/components/catalog-grid";
+import { HomeFeaturedCatalog } from "@/components/home-featured-catalog";
 import { MenuGrid } from "@/components/menu-grid";
 import { MotionSection } from "@/components/motion-section";
 import { OrderPanel } from "@/components/order-panel";
@@ -36,7 +36,7 @@ export default async function HomePage() {
             </ButtonLink>
           </div>
           {menu.source === "fallback" ? (
-            <CatalogGrid items={featuredCatalog} />
+            <HomeFeaturedCatalog fallbackItems={featuredCatalog} />
           ) : (
             <MenuGrid items={menu.displayItems} compact />
           )}
