@@ -62,14 +62,18 @@ export function AdminContentEditor({
     };
   }, [dataSource]);
 
-  async function updateAnnouncement(patch: Partial<EditableAnnouncement>) {
+  function changeAnnouncement(patch: Partial<EditableAnnouncement>) {
     setContent((current) => ({
       ...current,
       announcement: { ...current.announcement, ...patch }
     }));
+    setStatus("Unsaved changes");
+  }
+
+  async function saveAnnouncement() {
     setStatus("Saving...");
     try {
-      const announcement = await dataSource.announcement.update(patch);
+      const announcement = await dataSource.announcement.update(content.announcement);
       setContent((current) => ({ ...current, announcement }));
       setStatus("Saved");
     } catch {
@@ -77,14 +81,18 @@ export function AdminContentEditor({
     }
   }
 
-  async function updateContact(patch: Partial<EditableContact>) {
+  function changeContact(patch: Partial<EditableContact>) {
     setContent((current) => ({
       ...current,
       contact: { ...current.contact, ...patch }
     }));
+    setStatus("Unsaved changes");
+  }
+
+  async function saveContact() {
     setStatus("Saving...");
     try {
-      const contact = await dataSource.contact.update(patch);
+      const contact = await dataSource.contact.update(content.contact);
       setContent((current) => ({ ...current, contact }));
       setStatus("Saved");
     } catch {
@@ -103,19 +111,23 @@ export function AdminContentEditor({
     }
   }
 
-  async function updateTestimonial(id: string, patch: Partial<EditableTestimonial>) {
+  function changeTestimonial(id: string, patch: Partial<EditableTestimonial>) {
     setContent((current) => ({
       ...current,
       testimonials: current.testimonials.map((testimonial) =>
         testimonial.id === id ? { ...testimonial, ...patch, id: testimonial.id } : testimonial
       )
     }));
+    setStatus("Unsaved changes");
+  }
+
+  async function saveTestimonial(testimonial: EditableTestimonial) {
     setStatus("Saving...");
     try {
-      const updated = await dataSource.testimonials.update(id, patch);
+      const updated = await dataSource.testimonials.update(testimonial.id, testimonial);
       setContent((current) => ({
         ...current,
-        testimonials: current.testimonials.map((testimonial) => (testimonial.id === id ? updated : testimonial))
+        testimonials: current.testimonials.map((currentTestimonial) => (currentTestimonial.id === testimonial.id ? updated : currentTestimonial))
       }));
       setStatus("Saved");
     } catch {
@@ -145,7 +157,7 @@ export function AdminContentEditor({
             <p className="text-sm font-black uppercase tracking-[0.16em] text-rust">Site content</p>
             <h2 className="mt-2 font-serif text-3xl text-espresso">{title}</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-espresso/68">{description}</p>
-            <p className="mt-3 text-sm font-bold text-espresso/60">Changes save through the admin data API.</p>
+            <p className="mt-3 text-sm font-bold text-espresso/60">Edit fields locally, then use each section&apos;s Save button to publish changes through the admin data API.</p>
           </div>
           <p className="text-sm font-bold text-sage lg:pt-2">{status}</p>
         </div>
@@ -170,14 +182,15 @@ export function AdminContentEditor({
       ) : null}
 
       {currentTab === "announcement" ? (
-        <AnnouncementPanel announcement={content.announcement} onChange={updateAnnouncement} />
+        <AnnouncementPanel announcement={content.announcement} onChange={changeAnnouncement} onSave={saveAnnouncement} />
       ) : null}
-      {currentTab === "contact" ? <ContactPanel contact={content.contact} onChange={updateContact} /> : null}
+      {currentTab === "contact" ? <ContactPanel contact={content.contact} onChange={changeContact} onSave={saveContact} /> : null}
       {currentTab === "testimonials" ? (
         <TestimonialsPanel
           testimonials={content.testimonials}
           onAdd={addTestimonial}
-          onUpdate={updateTestimonial}
+          onUpdate={changeTestimonial}
+          onSave={saveTestimonial}
           onDelete={deleteTestimonial}
         />
       ) : null}
@@ -187,10 +200,12 @@ export function AdminContentEditor({
 
 function AnnouncementPanel({
   announcement,
-  onChange
+  onChange,
+  onSave
 }: {
   announcement: EditableAnnouncement;
   onChange: (patch: Partial<EditableAnnouncement>) => void;
+  onSave: () => void;
 }) {
   return (
     <div className="grid gap-4 rounded-[1.5rem] border border-espresso/10 bg-white p-5 shadow-soft">
@@ -209,16 +224,27 @@ function AnnouncementPanel({
       </div>
       <TextInput label="Button URL" value={announcement.ctaUrl} onChange={(value) => onChange({ ctaUrl: value })} />
       <TextArea label="Message" value={announcement.body} onChange={(value) => onChange({ body: value })} />
+      <div>
+        <button
+          type="button"
+          onClick={onSave}
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-gold px-5 text-sm font-black text-espresso"
+        >
+          Save announcement
+        </button>
+      </div>
     </div>
   );
 }
 
 function ContactPanel({
   contact,
-  onChange
+  onChange,
+  onSave
 }: {
   contact: EditableContact;
   onChange: (patch: Partial<EditableContact>) => void;
+  onSave: () => void;
 }) {
   return (
     <div className="grid gap-4 rounded-[1.5rem] border border-espresso/10 bg-white p-5 shadow-soft">
@@ -229,6 +255,15 @@ function ContactPanel({
       <TextInput label="Instagram URL" value={contact.instagramUrl} onChange={(value) => onChange({ instagramUrl: value })} />
       <TextInput label="Facebook URL" value={contact.facebookUrl} onChange={(value) => onChange({ facebookUrl: value })} />
       <TextInput label="TikTok URL" value={contact.tiktokUrl} onChange={(value) => onChange({ tiktokUrl: value })} />
+      <div>
+        <button
+          type="button"
+          onClick={onSave}
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-gold px-5 text-sm font-black text-espresso"
+        >
+          Save contact
+        </button>
+      </div>
     </div>
   );
 }
@@ -237,11 +272,13 @@ function TestimonialsPanel({
   testimonials,
   onAdd,
   onUpdate,
+  onSave,
   onDelete
 }: {
   testimonials: EditableTestimonial[];
   onAdd: () => void;
   onUpdate: (id: string, patch: Partial<EditableTestimonial>) => void;
+  onSave: (testimonial: EditableTestimonial) => void;
   onDelete: (id: string) => void;
 }) {
   return (
@@ -285,11 +322,18 @@ function TestimonialsPanel({
             value={testimonial.quote}
             onChange={(value) => onUpdate(testimonial.id, { quote: value })}
           />
-          <div>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => onSave(testimonial)}
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-gold px-4 text-sm font-black text-espresso"
+            >
+              Save testimonial
+            </button>
             <button
               type="button"
               onClick={() => onDelete(testimonial.id)}
-              className="inline-flex min-h-10 items-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust"
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust"
             >
               <Trash2 aria-hidden size={16} />
               Delete testimonial

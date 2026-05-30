@@ -51,15 +51,19 @@ export function AdminCatalogEditor({
     };
   }, [dataSource]);
 
-  async function updateItem(id: string, patch: Partial<BakeCatalogItem>) {
+  function changeItem(id: string, patch: Partial<BakeCatalogItem>) {
     setItems((current) => updateCatalogItem(current, id, patch));
+    setStatus("Unsaved changes");
+  }
+
+  async function saveItem(item: BakeCatalogItem) {
     setStatus("Saving...");
     try {
-      const updated = await dataSource.catalog.update(id, patch);
-      setItems((current) => updateCatalogItem(current, id, updated));
+      const updated = await dataSource.catalog.update(item.id, item);
+      setItems((current) => updateCatalogItem(current, item.id, updated));
       setStatus("Saved");
     } catch {
-      setStatus("Could not save changes");
+      setStatus("Could not save item");
     }
   }
 
@@ -124,7 +128,8 @@ export function AdminCatalogEditor({
     setStatus("Saving image...");
     try {
       const asset = await dataSource.assets.upload(file);
-      await updateItem(itemId, { image: asset.url });
+      changeItem(itemId, { image: asset.url });
+      setStatus("Image ready. Save item to publish.");
     } catch {
       setStatus("Could not upload image");
     }
@@ -135,7 +140,7 @@ export function AdminCatalogEditor({
       <div className="rounded-[2rem] border border-rust/15 bg-white p-5 shadow-soft">
         <h2 className="font-serif text-3xl text-espresso">{title}</h2>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-espresso/68">{description}</p>
-        <p className="mt-3 text-sm font-bold text-espresso/60">Changes save through the admin data API.</p>
+        <p className="mt-3 text-sm font-bold text-espresso/60">Edit fields locally, then use Save item to publish changes through the admin data API.</p>
         <div className="mt-5 flex flex-wrap gap-3">
           <button
             type="button"
@@ -289,12 +294,12 @@ export function AdminCatalogEditor({
               Preview image
             </button>
 
-            <TextInput label="Name" value={selectedItem.name} onChange={(value) => updateItem(selectedItem.id, { name: value })} />
+            <TextInput label="Name" value={selectedItem.name} onChange={(value) => changeItem(selectedItem.id, { name: value })} />
             <label className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
               Category
               <select
                 value={selectedItem.category}
-                onChange={(event) => updateItem(selectedItem.id, { category: event.target.value })}
+                onChange={(event) => changeItem(selectedItem.id, { category: event.target.value })}
                 className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case tracking-normal text-espresso"
               >
                 {categories.map((category) => (
@@ -305,11 +310,11 @@ export function AdminCatalogEditor({
               </select>
             </label>
             <div className="grid gap-3 sm:grid-cols-2">
-              <TextInput label="Price" value={selectedItem.price} onChange={(value) => updateItem(selectedItem.id, { price: value })} />
-              <TextInput label="Note" value={selectedItem.note ?? ""} onChange={(value) => updateItem(selectedItem.id, { note: value })} />
+              <TextInput label="Price" value={selectedItem.price} onChange={(value) => changeItem(selectedItem.id, { price: value })} />
+              <TextInput label="Note" value={selectedItem.note ?? ""} onChange={(value) => changeItem(selectedItem.id, { note: value })} />
             </div>
             <div className="grid gap-3">
-              <TextInput label="Image URL" value={selectedItem.image} onChange={(value) => updateItem(selectedItem.id, { image: value })} />
+              <TextInput label="Image URL" value={selectedItem.image} onChange={(value) => changeItem(selectedItem.id, { image: value })} />
               <label className="grid gap-2 text-xs font-black uppercase tracking-[0.12em] text-rust">
                 Upload image
                 <span className="text-sm font-semibold normal-case leading-6 tracking-normal text-espresso/60">
@@ -332,7 +337,7 @@ export function AdminCatalogEditor({
                 </span>
               </label>
             </div>
-            <TextArea label="Description" value={selectedItem.description} onChange={(value) => updateItem(selectedItem.id, { description: value })} />
+            <TextArea label="Description" value={selectedItem.description} onChange={(value) => changeItem(selectedItem.id, { description: value })} />
 
             <div className="grid gap-3">
               {[
@@ -345,21 +350,30 @@ export function AdminCatalogEditor({
                   <input
                     type="checkbox"
                     checked={Boolean(selectedItem[key as keyof BakeCatalogItem])}
-                    onChange={(event) => updateItem(selectedItem.id, { [key]: event.target.checked })}
+                    onChange={(event) => changeItem(selectedItem.id, { [key]: event.target.checked })}
                     className="size-4 accent-rust"
                   />
                   {label}
                 </label>
               ))}
             </div>
-            <button
-              type="button"
-              onClick={() => removeItem(selectedItem.id)}
-              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust"
-            >
-              <Trash2 aria-hidden size={16} />
-              Delete item
-            </button>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => saveItem(selectedItem)}
+                className="inline-flex min-h-11 flex-1 items-center justify-center rounded-full bg-gold px-5 text-sm font-black text-espresso"
+              >
+                Save item
+              </button>
+              <button
+                type="button"
+                onClick={() => removeItem(selectedItem.id)}
+                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust"
+              >
+                <Trash2 aria-hidden size={16} />
+                Delete item
+              </button>
+            </div>
           </article>
         ) : (
           <div className="rounded-[1.5rem] border border-espresso/10 bg-white p-5 text-sm font-semibold text-espresso/60 shadow-soft">
