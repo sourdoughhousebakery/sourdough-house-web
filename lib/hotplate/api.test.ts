@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { formatHotplatePrice, parseMenuFromEventDetail } from "./api";
+import { fallbackMenuItems } from "@/content/site-content";
+import { formatHotplatePrice, parseMenuFromEventDetail, resolveDisplayMenuItems } from "./api";
 
 describe("formatHotplatePrice", () => {
   it("formats numeric Hotplate prices", () => {
@@ -60,5 +61,30 @@ describe("parseMenuFromEventDetail", () => {
     });
 
     expect(items[0]?.isAvailable).toBe(false);
+  });
+});
+
+describe("resolveDisplayMenuItems", () => {
+  it("uses fallback items unless the menu source is live", () => {
+    const pastMenu = {
+      items: [
+        {
+          id: "past",
+          name: "Past Hotplate Item",
+          price: "$10",
+          description: "",
+          image: "https://example.com/past.jpg",
+          sold: 0,
+          available: null,
+          isAvailable: true,
+          category: "Bakery",
+          source: "hotplate" as const
+        }
+      ],
+      event: null,
+      source: "past" as const
+    };
+
+    expect(resolveDisplayMenuItems(pastMenu, 1)).toEqual(fallbackMenuItems.slice(0, 1));
   });
 });

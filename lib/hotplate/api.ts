@@ -119,17 +119,7 @@ export const getHotplateMenu = cache(async (): Promise<MenuResult> => {
   const chefId = siteConfig.hotplateChefId;
 
   try {
-    let events = await hotplateFetch<unknown[]>("shop.getPublicLiveEvents", { chefId });
-    let source: MenuResult["source"] = "live";
-
-    if (!Array.isArray(events) || events.length === 0) {
-      const pastData = await hotplateFetch<UnknownRecord>("shop.getPublicPastEvents", {
-        chefId,
-        direction: "forward"
-      });
-      events = Array.isArray(pastData.pastEvents) ? pastData.pastEvents : [];
-      source = "past";
-    }
+    const events = await hotplateFetch<unknown[]>("shop.getPublicLiveEvents", { chefId });
 
     const event = events.find(isRecord);
     const eventId = event ? asString(event.id) : "";
@@ -144,7 +134,7 @@ export const getHotplateMenu = cache(async (): Promise<MenuResult> => {
     return {
       items,
       event: parseEvent(event, detail),
-      source: items.length > 0 ? source : "fallback"
+      source: items.length > 0 ? "live" : "fallback"
     };
   } catch (error) {
     return {
@@ -156,18 +146,23 @@ export const getHotplateMenu = cache(async (): Promise<MenuResult> => {
   }
 });
 
-export async function getDisplayMenu(limit?: number) {
-  const menu = await getHotplateMenu();
+export function resolveDisplayMenuItems(menu: MenuResult, limit?: number) {
   const items =
-    menu.source === "fallback" || menu.items.length === 0
-      ? fallbackMenuItems
-      : menu.items.map((item) => ({
+    menu.source === "live" && menu.items.length > 0
+      ? menu.items.map((item) => ({
           ...item,
           image: item.image ?? fallbackMenuItems[0].image
-        }));
+        }))
+      : fallbackMenuItems;
+
+  return typeof limit === "number" ? items.slice(0, limit) : items;
+}
+
+export async function getDisplayMenu(limit?: number) {
+  const menu = await getHotplateMenu();
 
   return {
     ...menu,
-    displayItems: typeof limit === "number" ? items.slice(0, limit) : items
+    displayItems: resolveDisplayMenuItems(menu, limit)
   };
 }
