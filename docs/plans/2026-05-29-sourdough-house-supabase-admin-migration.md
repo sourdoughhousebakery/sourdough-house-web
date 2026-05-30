@@ -122,8 +122,8 @@ RLS policy shape:
 
 1. Add required env vars:
    - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_PROJECT_REF`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+   - `SUPABASE_SECRET_KEY`
 2. Implement browser client with `createBrowserClient`.
 3. Implement server client with `createServerClient` and Next cookies.
 4. Add middleware to refresh Supabase sessions.
@@ -309,4 +309,3 @@ Browser QA:
 - Admin mutations require an authenticated approved admin.
 - Code-backed fallback remains available for catalog/content if Supabase is down during development.
 - Generated database types are committed after the Supabase schema exists.
-
