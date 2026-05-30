@@ -12,7 +12,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "**.ucarecdn.com" },
       { protocol: "https", hostname: "**.ucarecd.net" },
       { protocol: "https", hostname: "www.hotplate.com" },
-      { protocol: "https", hostname: "hotplate.com" }
+      { protocol: "https", hostname: "hotplate.com" },
+      { protocol: "https", hostname: "qsbwtmumqifdhckrndiw.supabase.co" }
     ]
   }
 };
