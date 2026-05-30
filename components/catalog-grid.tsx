@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { PublicCatalogItem } from "@/lib/catalog/types";
+import { isDataImageSrc } from "@/lib/images";
 import { ButtonLink } from "./button-link";
 
 type CatalogGridProps = {
@@ -20,6 +21,7 @@ export function CatalogGrid({ items }: CatalogGridProps) {
               alt={`${item.name} from Sourdough House Bakery`}
               fill
               sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+              unoptimized={isDataImageSrc(item.image)}
               className="object-cover transition duration-500 group-hover:scale-[1.04]"
             />
             <span className="absolute left-4 top-4 rounded-full bg-cream px-3 py-1 text-xs font-black text-rust shadow-soft">
@@ -47,4 +49,3 @@ export function CatalogGrid({ items }: CatalogGridProps) {
     </div>
   );
 }
-

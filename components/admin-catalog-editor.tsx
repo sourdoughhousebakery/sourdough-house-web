@@ -1,9 +1,10 @@
 "use client";
 
-import { Eye, Plus, RotateCcw, Save, Trash2, X } from "lucide-react";
+import { Eye, Plus, RotateCcw, Save, Trash2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import type { BakeCatalogItem, PublicCatalogItem } from "@/lib/catalog/types";
+import { isDataImageSrc } from "@/lib/images";
 import {
   createCatalogItem,
   deleteCatalogItem,
@@ -117,6 +118,17 @@ export function AdminCatalogEditor({
       return nextItems;
     });
     setSavedAt(null);
+  }
+
+  function uploadImage(file: File, itemId: string) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        updateItem(itemId, { image: reader.result });
+        setSavedAt(null);
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   function save() {
@@ -282,7 +294,14 @@ export function AdminCatalogEditor({
               <h3 className="mt-1 font-serif text-3xl text-espresso">{selectedItem.name}</h3>
             </div>
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[1rem] bg-gold/10">
-              <Image src={selectedItem.image} alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+              <Image
+                src={selectedItem.image}
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                unoptimized={isDataImageSrc(selectedItem.image)}
+                className="object-cover"
+              />
             </div>
             <button
               type="button"
@@ -312,7 +331,30 @@ export function AdminCatalogEditor({
               <TextInput label="Price" value={selectedItem.price} onChange={(value) => updateItem(selectedItem.id, { price: value })} />
               <TextInput label="Note" value={selectedItem.note ?? ""} onChange={(value) => updateItem(selectedItem.id, { note: value })} />
             </div>
-            <TextInput label="Image URL" value={selectedItem.image} onChange={(value) => updateItem(selectedItem.id, { image: value })} />
+            <div className="grid gap-3">
+              <TextInput label="Image URL" value={selectedItem.image} onChange={(value) => updateItem(selectedItem.id, { image: value })} />
+              <label className="grid gap-2 text-xs font-black uppercase tracking-[0.12em] text-rust">
+                Upload image
+                <span className="text-sm font-semibold normal-case leading-6 tracking-normal text-espresso/60">
+                  Use a hosted image URL above, or upload a local image for this browser preview.
+                </span>
+                <span className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full border border-espresso/15 bg-white px-4 text-sm font-black normal-case tracking-normal text-espresso hover:border-rust/30 hover:text-rust">
+                  <Upload aria-hidden size={16} />
+                  Choose image file
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      event.currentTarget.value = "";
+                      if (!file) return;
+                      uploadImage(file, selectedItem.id);
+                    }}
+                  />
+                </span>
+              </label>
+            </div>
             <TextArea label="Description" value={selectedItem.description} onChange={(value) => updateItem(selectedItem.id, { description: value })} />
 
             <div className="grid gap-3">
@@ -385,6 +427,7 @@ export function AdminCatalogEditor({
                 alt={`${previewItem.name} full preview`}
                 fill
                 sizes="min(100vw, 1024px)"
+                unoptimized={isDataImageSrc(previewItem.image)}
                 className="object-contain"
               />
             </div>
