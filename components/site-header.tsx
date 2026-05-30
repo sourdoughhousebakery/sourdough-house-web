@@ -5,13 +5,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { navItems } from "@/content/site-content";
-import { getHotplateUrl, siteConfig } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
 import { ButtonLink } from "./button-link";
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  hotplateUrl: string;
+};
+
+export function SiteHeader({ hotplateUrl }: SiteHeaderProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const hotplateUrl = getHotplateUrl();
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 px-4 pt-4">
@@ -82,4 +85,3 @@ export function SiteHeader() {
     </header>
   );
 }
-

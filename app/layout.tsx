@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { StickyOrder } from "@/components/sticky-order";
-import { siteConfig } from "@/lib/site";
+import { getHotplateUrl, siteConfig } from "@/lib/site";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -63,13 +63,15 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const hotplateUrl = getHotplateUrl();
+
   return (
     <html lang="en" className={`${dmSans.variable} ${dmSerif.variable} ${caveat.variable}`}>
       <body className="font-sans antialiased">
-        <SiteHeader />
+        <SiteHeader hotplateUrl={hotplateUrl} />
         <main>{children}</main>
         <SiteFooter />
-        <StickyOrder />
+        <StickyOrder hotplateUrl={hotplateUrl} />
       </body>
     </html>
   );

@@ -49,6 +49,35 @@ export const homeContent = {
   }
 };
 
+export const homeNextStepsContent = {
+  eyebrow: "Start here",
+  title: "Choose what you need next.",
+  description: "Jump to today's bake, the bakery story, or the order details without digging around.",
+  items: [
+    {
+      title: "See the menu",
+      description: "Check the current Hotplate drop or browse the regular bakery catalog.",
+      href: "/menu",
+      ctaLabel: "Open menu",
+      icon: "Wheat"
+    },
+    {
+      title: "Meet the bakery",
+      description: "Read the short story behind the starter, small batches, and pickup rhythm.",
+      href: "/story",
+      ctaLabel: "Read story",
+      icon: "BookOpen"
+    },
+    {
+      title: "Plan an order",
+      description: "Find the Hotplate link, pickup details, and the path for custom requests.",
+      href: "/order",
+      ctaLabel: "Order info",
+      icon: "ShoppingBag"
+    }
+  ]
+} as const;
+
 export const heroContent = {
   eyebrow: "Small batch · Slow fermented",
   title: "Bread baked with love and patience.",

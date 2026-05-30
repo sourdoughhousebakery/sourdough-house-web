@@ -1,11 +1,9 @@
 import { AdminPreviewAnnouncement } from "@/components/admin-preview-content";
 import { Hero } from "@/components/hero";
 import { HomeFeaturedCatalog } from "@/components/home-featured-catalog";
+import { HomeNextSteps } from "@/components/home-next-steps";
 import { MenuGrid } from "@/components/menu-grid";
 import { MotionSection } from "@/components/motion-section";
-import { OrderPanel } from "@/components/order-panel";
-import { ProcessBand } from "@/components/process-band";
-import { StoryPreview } from "@/components/story-preview";
 import { TestimonialBand } from "@/components/testimonial-band";
 import { ButtonLink } from "@/components/button-link";
 import { homeContent } from "@/content/site-content";
@@ -48,9 +46,7 @@ export default async function HomePage() {
           )}
         </div>
       </MotionSection>
-      <StoryPreview />
-      <ProcessBand />
-      <OrderPanel />
+      <HomeNextSteps />
       <TestimonialBand />
     </>
   );

@@ -2,9 +2,12 @@
 
 import { ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getHotplateUrl } from "@/lib/site";
 
-export function StickyOrder() {
+type StickyOrderProps = {
+  hotplateUrl: string;
+};
+
+export function StickyOrder({ hotplateUrl }: StickyOrderProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -22,7 +25,7 @@ export function StickyOrder() {
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
       <a
-        href={getHotplateUrl()}
+        href={hotplateUrl}
         target="_blank"
         rel="noreferrer"
         className="mx-auto flex max-w-md items-center justify-center gap-2 rounded-full bg-espresso px-5 py-3 text-sm font-black text-cream"
@@ -33,4 +36,3 @@ export function StickyOrder() {
     </div>
   );
 }
-

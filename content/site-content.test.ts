@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { homeContent, orderPanelContent, pageIntros, processBandContent, storyPreviewContent } from "./site-content";
+import {
+  homeContent,
+  homeNextStepsContent,
+  orderPanelContent,
+  pageIntros,
+  processBandContent,
+  storyPreviewContent
+} from "./site-content";
 
 describe("page content registry", () => {
   it("exposes editable intros for public pages", () => {
@@ -8,6 +15,8 @@ describe("page content registry", () => {
 
   it("keeps homepage section copy in named content objects", () => {
     expect(homeContent.featuredMenu.title).toBe("This week's table.");
+    expect(homeNextStepsContent.items).toHaveLength(3);
+    expect(homeNextStepsContent.items.map((item) => item.href)).toEqual(["/menu", "/story", "/order"]);
     expect(storyPreviewContent.title).toContain("starter");
     expect(processBandContent.title).toContain("better bread");
   });
