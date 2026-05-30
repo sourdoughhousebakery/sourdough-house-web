@@ -13,7 +13,7 @@ export function CatalogGrid({ items }: CatalogGridProps) {
       {items.map((item) => (
         <article
           key={item.id}
-          className="group overflow-hidden rounded-[1.5rem] border border-espresso/10 bg-white shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift"
+          className="group flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-espresso/10 bg-white shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-lift"
         >
           <div className="relative aspect-[4/3] overflow-hidden bg-gold/10">
             <Image
@@ -28,14 +28,16 @@ export function CatalogGrid({ items }: CatalogGridProps) {
               {item.availabilityLabel}
             </span>
           </div>
-          <div className="grid gap-4 p-5">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.14em] text-sage">{item.category}</p>
-              <h2 className="mt-2 font-serif text-2xl leading-tight text-espresso">{item.name}</h2>
+          <div className="flex flex-1 flex-col gap-4 p-5">
+            <div className="grid gap-4">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-sage">{item.category}</p>
+                <h2 className="mt-2 font-serif text-2xl leading-tight text-espresso">{item.name}</h2>
+              </div>
+              <p className="text-sm leading-6 text-espresso/66">{item.description}</p>
+              <p className="min-h-4 text-xs font-bold uppercase tracking-[0.1em] text-rust">{item.note ?? ""}</p>
             </div>
-            <p className="text-sm leading-6 text-espresso/66">{item.description}</p>
-            {item.note ? <p className="text-xs font-bold uppercase tracking-[0.1em] text-rust">{item.note}</p> : null}
-            <div className="flex items-center justify-between gap-4">
+            <div className="mt-auto flex items-center justify-between gap-4 pt-1">
               <span className="font-hand text-2xl font-bold text-rust">
                 {item.displayPrice ?? "Ask for availability"}
               </span>
