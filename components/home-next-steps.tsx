@@ -11,16 +11,12 @@ const iconByName = {
 
 export function HomeNextSteps() {
   return (
-    <MotionSection className="px-5 py-16">
+    <MotionSection className="px-5 py-14">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-7 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-2xl">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-rust">{homeNextStepsContent.eyebrow}</p>
-            <h2 className="mt-3 font-serif text-4xl leading-tight text-espresso md:text-5xl">
-              {homeNextStepsContent.title}
-            </h2>
-          </div>
-          <p className="max-w-xl text-sm font-semibold leading-6 text-espresso/62">{homeNextStepsContent.description}</p>
+        <div className="mx-auto mb-8 max-w-3xl text-center">
+          <p className="text-sm font-black uppercase tracking-[0.18em] text-rust">{homeNextStepsContent.eyebrow}</p>
+          <h2 className="mt-3 font-serif text-4xl leading-tight text-espresso md:text-5xl">{homeNextStepsContent.title}</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm font-semibold leading-6 text-espresso/62">{homeNextStepsContent.description}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {homeNextStepsContent.items.map(({ title, description, href, ctaLabel, icon }) => {
