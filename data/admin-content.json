@@ -1,4 +1,19 @@
 {
+  "hero": {
+    "eyebrow": "Small batch · Slow fermented",
+    "title": "Bread baked with love and patience.",
+    "description": "Handcrafted sourdough breads, cookies, muffins, rolls, and seasonal treats released in fresh local drops.",
+    "primaryCtaLabel": "Order on Hotplate",
+    "primaryCtaUrl": "https://hotplate.com/sourdoughhouse",
+    "secondaryCtaLabel": "Meet the bakery",
+    "secondaryCtaUrl": "/story",
+    "firstHighlight": "72-hour flavor, weekly drops",
+    "secondHighlight": "Easy local pickup",
+    "imageSrc": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1400&q=85",
+    "imageAlt": "Fresh artisan sourdough loaf on a bakery table",
+    "imageBadge": "Fresh stuff",
+    "imageNote": "Starter-fed, dick, baked to share"
+  },
   "announcement": {
     "title": "",
     "body": "",
@@ -7,10 +22,10 @@
     "isActive": false
   },
   "contact": {
-    "email": "hello@sourdoughhouse.com",
-    "instagramUrl": "https://www.instagram.com/",
-    "facebookUrl": "https://www.facebook.com/",
-    "tiktokUrl": "https://www.tiktok.com/",
+    "email": "info@sourdoughhouse.com",
+    "instagramUrl": "https://www.instagram.com/sourdoughhouse",
+    "facebookUrl": "https://www.facebook.com/sourdoughhouse",
+    "tiktokUrl": "https://www.tiktok.com/sourdoughhouse",
     "pickupArea": "Local pickup"
   },
   "testimonials": [
