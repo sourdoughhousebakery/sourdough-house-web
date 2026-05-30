@@ -16,10 +16,17 @@ type MenuTabsProps = {
 };
 
 export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTabsProps) {
-  const [activeTab, setActiveTab] = useState<"hotplate" | "catalog">("hotplate");
+  const hasLiveHotplateItems = hotplateSource === "live" && hotplateItems.length > 0;
+  const [activeTab, setActiveTab] = useState<"hotplate" | "catalog">(hasLiveHotplateItems ? "hotplate" : "catalog");
 
   return (
     <div>
+      {!hasLiveHotplateItems ? (
+        <div className="mb-5 rounded-[1.25rem] border border-gold/25 bg-gold/10 p-4 text-sm font-semibold leading-6 text-espresso/68">
+          No live Hotplate drop is open right now. Browse the regular catalog below, then check Hotplate when the next drop opens.
+        </div>
+      ) : null}
+
       <div className="mb-8 flex flex-col gap-4 rounded-[1.5rem] border border-espresso/10 bg-white/70 p-3 shadow-soft sm:flex-row">
         <button
           type="button"
@@ -46,11 +53,9 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTa
       {activeTab === "hotplate" ? (
         <div>
           <p className="mb-5 text-sm font-semibold text-espresso/62">
-            {hotplateSource === "fallback"
-              ? "Hotplate is not showing a live menu right now."
-              : "These items are loaded from the current Hotplate drop."}
+            {hasLiveHotplateItems ? "These items are loaded from the current Hotplate drop." : "Hotplate is not showing a live menu right now."}
           </p>
-          {hotplateItems.length > 0 ? (
+          {hasLiveHotplateItems ? (
             <MenuGrid items={hotplateItems} />
           ) : (
             <div className="rounded-[1.5rem] border border-espresso/10 bg-white p-5 text-sm font-semibold leading-6 text-espresso/68 shadow-soft">
