@@ -3,6 +3,7 @@
 import { Facebook, Instagram, Mail, Music2, Star } from "lucide-react";
 import { useMemo, useSyncExternalStore } from "react";
 import {
+  adminContentChangeEvent,
   adminContentStorageKey,
   getActiveAnnouncement,
   getActiveTestimonials,
@@ -29,7 +30,11 @@ function useAdminPreviewContent(defaultContent: EditableAdminContent) {
   const raw = useSyncExternalStore(
     (onStoreChange) => {
       window.addEventListener("storage", onStoreChange);
-      return () => window.removeEventListener("storage", onStoreChange);
+      window.addEventListener(adminContentChangeEvent, onStoreChange);
+      return () => {
+        window.removeEventListener("storage", onStoreChange);
+        window.removeEventListener(adminContentChangeEvent, onStoreChange);
+      };
     },
     () => window.localStorage.getItem(adminContentStorageKey),
     () => null

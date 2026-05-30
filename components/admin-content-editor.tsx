@@ -4,6 +4,7 @@ import { Megaphone, MessageSquareQuote, Plus, RotateCcw, Save, Trash2, UserRound
 import { useState } from "react";
 import {
   createEditableTestimonial,
+  adminContentChangeEvent,
   adminContentStorageKey,
   deleteEditableTestimonial,
   hydrateAdminContent,
@@ -28,19 +29,29 @@ const tabs = [
 
 export function AdminContentEditor({ defaultContent }: AdminContentEditorProps) {
   const [activeTab, setActiveTab] = useState<AdminContentTab>("announcement");
-  const [content, setContent] = useState<EditableAdminContent>(() => {
-    if (typeof window === "undefined") return defaultContent;
+  const [previewState, setPreviewState] = useState(() => {
+    if (typeof window === "undefined") return { content: defaultContent, loadedLocalPreview: false };
     const raw = window.localStorage.getItem(adminContentStorageKey);
-    if (!raw) return defaultContent;
+    if (!raw) return { content: defaultContent, loadedLocalPreview: false };
 
     try {
-      return hydrateAdminContent(defaultContent, JSON.parse(raw) as PersistedAdminContent);
+      return {
+        content: hydrateAdminContent(defaultContent, JSON.parse(raw) as PersistedAdminContent),
+        loadedLocalPreview: true
+      };
     } catch {
       window.localStorage.removeItem(adminContentStorageKey);
-      return defaultContent;
+      return { content: defaultContent, loadedLocalPreview: false };
     }
   });
   const [savedAt, setSavedAt] = useState<string | null>(null);
+  const { content, loadedLocalPreview } = previewState;
+  const setContent = (update: (current: EditableAdminContent) => EditableAdminContent) => {
+    setPreviewState((current) => ({
+      ...current,
+      content: update(current.content)
+    }));
+  };
 
   function updateAnnouncement(patch: Partial<EditableAnnouncement>) {
     setContent((current) => ({
@@ -60,12 +71,15 @@ export function AdminContentEditor({ defaultContent }: AdminContentEditorProps) 
 
   function save() {
     window.localStorage.setItem(adminContentStorageKey, JSON.stringify(content));
+    window.dispatchEvent(new Event(adminContentChangeEvent));
+    setPreviewState((current) => ({ ...current, loadedLocalPreview: true }));
     setSavedAt(new Date().toLocaleTimeString());
   }
 
   function reset() {
     window.localStorage.removeItem(adminContentStorageKey);
-    setContent(defaultContent);
+    window.dispatchEvent(new Event(adminContentChangeEvent));
+    setPreviewState({ content: defaultContent, loadedLocalPreview: false });
     setSavedAt(null);
   }
 
@@ -78,6 +92,9 @@ export function AdminContentEditor({ defaultContent }: AdminContentEditorProps) 
             <h2 className="mt-2 font-serif text-3xl text-espresso">Edit the practical stuff.</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-espresso/68">
               Manage the content that changes most often. These changes are saved in this browser only until the shared database admin is connected.
+            </p>
+            <p className="mt-3 text-sm font-bold text-espresso/60">
+              {loadedLocalPreview ? "Loaded saved local preview content from this browser." : "Showing code defaults. Save to create a local preview."}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">

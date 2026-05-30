@@ -38,6 +38,7 @@ export type PersistedAdminContent = {
 };
 
 export const adminContentStorageKey = "sourdough-house-admin-content";
+export const adminContentChangeEvent = "sourdough-house-admin-content-change";
 
 export function getDefaultAdminContent(): EditableAdminContent {
   return {
