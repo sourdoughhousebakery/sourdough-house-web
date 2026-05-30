@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Sourdough House Bakery",
-  shortName: "Sourdough House",
+  shortName: "Sourdough House Bakery",
   description:
     "Small-batch sourdough breads, cookies, muffins, and pastries made with slow fermentation and local pickup.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://sourdough-house-bakery.vercel.app",
