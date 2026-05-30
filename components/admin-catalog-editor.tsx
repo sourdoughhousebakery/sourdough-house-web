@@ -3,6 +3,7 @@
 import { Check, Eye, Pencil, Plus, Trash2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import type { AdminToastInput } from "@/components/admin-toast";
 import type { AdminDataSource } from "@/lib/admin-data/types";
 import type { BakeCatalogItem } from "@/lib/catalog/types";
 import { isDataImageSrc } from "@/lib/images";
@@ -13,13 +14,15 @@ type AdminCatalogEditorProps = {
   defaultItems: BakeCatalogItem[];
   title?: string;
   description?: string;
+  onNotify?: (toast: AdminToastInput) => void;
 };
 
 export function AdminCatalogEditor({
   dataSource,
   defaultItems,
   title = "Menu and catalog",
-  description = "Add, update, feature, or hide the regular bakery items shown in the menu preview."
+  description = "Add, update, feature, or hide the regular bakery items shown in the menu preview.",
+  onNotify
 }: AdminCatalogEditorProps) {
   const [items, setItems] = useState<BakeCatalogItem[]>(defaultItems);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(() => defaultItems[0]?.id ?? null);
@@ -43,13 +46,16 @@ export function AdminCatalogEditor({
     }
 
     loadCatalog().catch(() => {
-      if (isCurrent) setStatus("Could not load catalog");
+      if (isCurrent) {
+        setStatus("Could not load catalog");
+        onNotify?.({ tone: "error", title: "Catalog could not load" });
+      }
     });
 
     return () => {
       isCurrent = false;
     };
-  }, [dataSource]);
+  }, [dataSource, onNotify]);
 
   function changeItem(id: string, patch: Partial<BakeCatalogItem>) {
     setItems((current) => updateCatalogItem(current, id, patch));
@@ -62,8 +68,10 @@ export function AdminCatalogEditor({
       const updated = await dataSource.catalog.update(item.id, item);
       setItems((current) => updateCatalogItem(current, item.id, updated));
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Item saved", message: `${updated.name} is updated.` });
+    } catch (error) {
       setStatus("Could not save item");
+      onNotify?.({ tone: "error", title: "Item was not saved", message: getErrorMessage(error) });
     }
   }
 
@@ -74,8 +82,10 @@ export function AdminCatalogEditor({
       setItems((current) => [...current, created]);
       setSelectedItemId(created.id);
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Item added", message: `${created.name} is ready to edit.` });
+    } catch (error) {
       setStatus("Could not add item");
+      onNotify?.({ tone: "error", title: "Item was not added", message: getErrorMessage(error) });
     }
   }
 
@@ -89,27 +99,36 @@ export function AdminCatalogEditor({
       setCategoryToDelete(category);
       setNewCategory("");
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Category added", message: `${category} is available in the category menu.` });
+    } catch (error) {
       setStatus("Could not add category");
+      onNotify?.({ tone: "error", title: "Category was not added", message: getErrorMessage(error) });
     }
   }
 
   async function deleteCategory() {
     if (!categoryToDelete) return;
     const isInUse = items.some((item) => item.category === categoryToDelete);
-    if (isInUse) return;
+    if (isInUse) {
+      onNotify?.({ tone: "error", title: "Category is still in use", message: "Move items out of this category before deleting it." });
+      return;
+    }
+    const deletedCategory = categoryToDelete;
     setStatus("Saving...");
     try {
-      const nextCategories = await dataSource.categories.delete(categoryToDelete);
+      const nextCategories = await dataSource.categories.delete(deletedCategory);
       setCategories(nextCategories);
       setCategoryToDelete("");
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Category deleted", message: `${deletedCategory} was removed.` });
+    } catch (error) {
       setStatus("Could not delete category");
+      onNotify?.({ tone: "error", title: "Category was not deleted", message: getErrorMessage(error) });
     }
   }
 
   async function removeItem(id: string) {
+    const itemName = items.find((item) => item.id === id)?.name ?? "Item";
     setStatus("Saving...");
     try {
       await dataSource.catalog.delete(id);
@@ -119,8 +138,10 @@ export function AdminCatalogEditor({
         return nextItems;
       });
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Item deleted", message: `${itemName} was removed from the catalog.` });
+    } catch (error) {
       setStatus("Could not delete item");
+      onNotify?.({ tone: "error", title: "Item was not deleted", message: getErrorMessage(error) });
     }
   }
 
@@ -130,8 +151,10 @@ export function AdminCatalogEditor({
       const asset = await dataSource.assets.upload(file);
       changeItem(itemId, { image: asset.url });
       setStatus("Image ready. Save item to publish.");
-    } catch {
+      onNotify?.({ tone: "success", title: "Image uploaded", message: "Save the item to publish the new image." });
+    } catch (error) {
       setStatus("Could not upload image");
+      onNotify?.({ tone: "error", title: "Image was not uploaded", message: getErrorMessage(error) });
     }
   }
 
@@ -424,6 +447,10 @@ export function AdminCatalogEditor({
       ) : null}
     </div>
   );
+}
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Try again or refresh the page.";
 }
 
 function ToggleButton({

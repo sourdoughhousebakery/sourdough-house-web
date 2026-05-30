@@ -1,12 +1,13 @@
 "use client";
 
 import { ImageIcon, Megaphone, MessageSquareQuote, ShoppingBag, UserRoundCog } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import type { EditableAdminContent } from "@/lib/admin-content/content";
 import { HttpAdminDataSource } from "@/lib/admin-data/http";
 import type { BakeCatalogItem } from "@/lib/catalog/types";
 import { AdminCatalogEditor } from "./admin-catalog-editor";
 import { AdminContentEditor, type AdminContentTab } from "./admin-content-editor";
+import { AdminToastStack, type AdminToast, type AdminToastInput } from "./admin-toast";
 
 type AdminWorkspaceProps = {
   defaultCatalogItems: BakeCatalogItem[];
@@ -65,11 +66,25 @@ const adminSections = [
 
 export function AdminWorkspace({ defaultCatalogItems, defaultContent }: AdminWorkspaceProps) {
   const [activeSection, setActiveSection] = useState<AdminSectionId>("catalog");
+  const [toasts, setToasts] = useState<AdminToast[]>([]);
+  const nextToastId = useRef(0);
   const dataSource = useMemo(() => new HttpAdminDataSource(), []);
   const section = adminSections.find((item) => item.id === activeSection) ?? adminSections[0];
 
+  const dismissToast = useCallback((id: number) => {
+    setToasts((current) => current.filter((toast) => toast.id !== id));
+  }, []);
+
+  const notifyAdmin = useCallback((toast: AdminToastInput) => {
+    const id = nextToastId.current + 1;
+    nextToastId.current = id;
+    setToasts((current) => [...current.slice(-2), { ...toast, id }]);
+    window.setTimeout(() => dismissToast(id), 5000);
+  }, [dismissToast]);
+
   return (
     <div className="mx-auto grid max-w-6xl gap-6">
+      <AdminToastStack toasts={toasts} onDismiss={dismissToast} />
       <div className="rounded-[2rem] border border-espresso/10 bg-white p-5 shadow-soft">
         <p className="text-sm font-black uppercase tracking-[0.16em] text-rust">Admin preview</p>
         <h2 className="mt-2 font-serif text-3xl text-espresso">Pick one thing to edit.</h2>
@@ -107,6 +122,7 @@ export function AdminWorkspace({ defaultCatalogItems, defaultContent }: AdminWor
           defaultItems={defaultCatalogItems}
           title="Menu and catalog"
           description="Edit the items customers see in the What we bake menu preview. Use Feature on home for the items you want highlighted on the homepage."
+          onNotify={notifyAdmin}
         />
       ) : (
         <AdminContentEditor
@@ -116,6 +132,7 @@ export function AdminWorkspace({ defaultCatalogItems, defaultContent }: AdminWor
           showTabs={false}
           title={section.title}
           description={section.description}
+          onNotify={notifyAdmin}
         />
       )}
     </div>

@@ -2,6 +2,7 @@
 
 import { Check, ImageIcon, Megaphone, MessageSquareQuote, Plus, Trash2, Upload, UserRoundCog } from "lucide-react";
 import { useEffect, useState } from "react";
+import type { AdminToastInput } from "@/components/admin-toast";
 import type { AdminDataSource } from "@/lib/admin-data/types";
 import {
   type EditableAdminContent,
@@ -18,6 +19,7 @@ type AdminContentEditorProps = {
   title?: string;
   description?: string;
   showTabs?: boolean;
+  onNotify?: (toast: AdminToastInput) => void;
 };
 
 export type AdminContentTab = "hero" | "announcement" | "contact" | "testimonials";
@@ -35,7 +37,8 @@ export function AdminContentEditor({
   activeTab,
   title = "Site content",
   description = "Manage the content that changes most often.",
-  showTabs = true
+  showTabs = true,
+  onNotify
 }: AdminContentEditorProps) {
   const [selectedTab, setSelectedTab] = useState<AdminContentTab>("hero");
   const [content, setContent] = useState(defaultContent);
@@ -57,13 +60,16 @@ export function AdminContentEditor({
     }
 
     loadContent().catch(() => {
-      if (isCurrent) setStatus("Could not load content");
+      if (isCurrent) {
+        setStatus("Could not load content");
+        onNotify?.({ tone: "error", title: "Content could not load" });
+      }
     });
 
     return () => {
       isCurrent = false;
     };
-  }, [dataSource]);
+  }, [dataSource, onNotify]);
 
   function changeHero(patch: Partial<EditableHero>) {
     setContent((current) => ({
@@ -79,8 +85,10 @@ export function AdminContentEditor({
       const hero = await dataSource.hero.update(content.hero);
       setContent((current) => ({ ...current, hero }));
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Hero saved", message: "The homepage hero is updated." });
+    } catch (error) {
       setStatus("Could not save hero");
+      onNotify?.({ tone: "error", title: "Hero was not saved", message: getErrorMessage(error) });
     }
   }
 
@@ -90,8 +98,10 @@ export function AdminContentEditor({
       const asset = await dataSource.assets.upload(file);
       changeHero({ imageSrc: asset.url });
       setStatus("Image ready. Save hero to publish.");
-    } catch {
+      onNotify?.({ tone: "success", title: "Hero image uploaded", message: "Save the hero to publish the new image." });
+    } catch (error) {
       setStatus("Could not upload hero image");
+      onNotify?.({ tone: "error", title: "Hero image was not uploaded", message: getErrorMessage(error) });
     }
   }
 
@@ -109,8 +119,10 @@ export function AdminContentEditor({
       const announcement = await dataSource.announcement.update(content.announcement);
       setContent((current) => ({ ...current, announcement }));
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Announcement saved", message: "The site notice is updated." });
+    } catch (error) {
       setStatus("Could not save announcement");
+      onNotify?.({ tone: "error", title: "Announcement was not saved", message: getErrorMessage(error) });
     }
   }
 
@@ -128,8 +140,10 @@ export function AdminContentEditor({
       const contact = await dataSource.contact.update(content.contact);
       setContent((current) => ({ ...current, contact }));
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Contact saved", message: "The public contact details are updated." });
+    } catch (error) {
       setStatus("Could not save contact");
+      onNotify?.({ tone: "error", title: "Contact was not saved", message: getErrorMessage(error) });
     }
   }
 
@@ -139,8 +153,10 @@ export function AdminContentEditor({
       const testimonial = await dataSource.testimonials.create();
       setContent((current) => ({ ...current, testimonials: [...current.testimonials, testimonial] }));
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Testimonial added", message: "The new quote is ready to edit." });
+    } catch (error) {
       setStatus("Could not add testimonial");
+      onNotify?.({ tone: "error", title: "Testimonial was not added", message: getErrorMessage(error) });
     }
   }
 
@@ -163,12 +179,15 @@ export function AdminContentEditor({
         testimonials: current.testimonials.map((currentTestimonial) => (currentTestimonial.id === testimonial.id ? updated : currentTestimonial))
       }));
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Testimonial saved", message: `${updated.name} is updated.` });
+    } catch (error) {
       setStatus("Could not save testimonial");
+      onNotify?.({ tone: "error", title: "Testimonial was not saved", message: getErrorMessage(error) });
     }
   }
 
   async function deleteTestimonial(id: string) {
+    const testimonialName = content.testimonials.find((testimonial) => testimonial.id === id)?.name ?? "Testimonial";
     setStatus("Saving...");
     try {
       await dataSource.testimonials.delete(id);
@@ -177,8 +196,10 @@ export function AdminContentEditor({
         testimonials: current.testimonials.filter((testimonial) => testimonial.id !== id)
       }));
       setStatus("Saved");
-    } catch {
+      onNotify?.({ tone: "success", title: "Testimonial deleted", message: `${testimonialName} was removed.` });
+    } catch (error) {
       setStatus("Could not delete testimonial");
+      onNotify?.({ tone: "error", title: "Testimonial was not deleted", message: getErrorMessage(error) });
     }
   }
 
@@ -233,6 +254,10 @@ export function AdminContentEditor({
       ) : null}
     </section>
   );
+}
+
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Try again or refresh the page.";
 }
 
 function HeroPanel({

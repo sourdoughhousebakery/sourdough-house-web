@@ -18,7 +18,16 @@ async function api<T>(path: string, init?: RequestInit): Promise<T> {
       ...init?.headers
     }
   });
-  if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+  if (!response.ok) {
+    let message = `API request failed: ${response.status}`;
+    try {
+      const body = (await response.json()) as { error?: string };
+      if (body.error) message = body.error;
+    } catch {
+      // Keep the status-based fallback if the server did not return JSON.
+    }
+    throw new Error(message);
+  }
   if (response.status === 204) return undefined as T;
   return (await response.json()) as T;
 }
