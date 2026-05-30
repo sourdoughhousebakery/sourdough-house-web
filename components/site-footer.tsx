@@ -1,14 +1,18 @@
 import { Facebook, Instagram, Mail, Music2 } from "lucide-react";
 import Link from "next/link";
 import { navItems } from "@/content/site-content";
-import { getHotplateUrl, siteConfig } from "@/lib/site";
+import { getContactLinks, getHotplateUrl, siteConfig, type ContactLink } from "@/lib/site";
 
-const socialLinks = [
-  { href: siteConfig.instagramUrl, label: "Instagram", Icon: Instagram },
-  { href: siteConfig.facebookUrl, label: "Facebook", Icon: Facebook },
-  { href: siteConfig.tiktokUrl, label: "TikTok", Icon: Music2 },
-  { href: `mailto:${siteConfig.email}`, label: "Email", Icon: Mail }
-];
+const iconByLabel = {
+  Instagram,
+  Facebook,
+  TikTok: Music2,
+  Email: Mail
+};
+
+function getLinkIcon(link: ContactLink) {
+  return link.kind === "email" ? iconByLabel.Email : iconByLabel[link.label];
+}
 
 export function SiteFooter() {
   return (
@@ -38,20 +42,24 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h2 className="text-sm font-black uppercase tracking-[0.14em] text-rust">Follow</h2>
+          <h2 className="text-sm font-black uppercase tracking-[0.14em] text-rust">Contact</h2>
           <div className="mt-4 flex gap-3">
-            {socialLinks.map(({ href, label, Icon }) => (
-              <a
-                key={label}
-                href={href}
-                target={href.startsWith("http") ? "_blank" : undefined}
-                rel={href.startsWith("http") ? "noreferrer" : undefined}
-                aria-label={label}
-                className="inline-flex size-11 items-center justify-center rounded-full bg-white text-espresso shadow-soft transition hover:-translate-y-0.5 hover:text-rust"
-              >
-                <Icon aria-hidden size={18} />
-              </a>
-            ))}
+            {getContactLinks().map((link) => {
+              const Icon = getLinkIcon(link);
+
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.href.startsWith("http") ? "_blank" : undefined}
+                  rel={link.href.startsWith("http") ? "noreferrer" : undefined}
+                  aria-label={link.label}
+                  className="inline-flex size-11 items-center justify-center rounded-full bg-white text-espresso shadow-soft transition hover:-translate-y-0.5 hover:text-rust"
+                >
+                  <Icon aria-hidden size={18} />
+                </a>
+              );
+            })}
           </div>
           <p className="mt-5 text-xs text-espresso/50">
             © 2026 {siteConfig.name}. Baked in small batches.
@@ -61,4 +69,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-

@@ -12,7 +12,63 @@ export const siteConfig = {
   pickupArea: "Local pickup"
 };
 
+export type SiteConfig = typeof siteConfig;
+
+export type SocialLink = {
+  label: "Instagram" | "Facebook" | "TikTok";
+  href: string;
+};
+
+export type ContactLink =
+  | (SocialLink & { kind: "social" })
+  | {
+      label: string;
+      href: string;
+      kind: "email";
+    };
+
+const placeholderSocialUrls = new Set([
+  "https://instagram.com",
+  "https://www.instagram.com",
+  "https://facebook.com",
+  "https://www.facebook.com",
+  "https://tiktok.com",
+  "https://www.tiktok.com"
+]);
+
+function isConfiguredUrl(href: string) {
+  const trimmed = href.trim();
+  if (!trimmed) return false;
+
+  const normalized = trimmed.replace(/\/+$/, "");
+  return !placeholderSocialUrls.has(normalized);
+}
+
+export function getSocialLinks(config: SiteConfig = siteConfig): SocialLink[] {
+  return [
+    { href: config.instagramUrl, label: "Instagram" as const },
+    { href: config.facebookUrl, label: "Facebook" as const },
+    { href: config.tiktokUrl, label: "TikTok" as const }
+  ].filter((link) => isConfiguredUrl(link.href));
+}
+
+export function getContactLinks(config: SiteConfig = siteConfig): ContactLink[] {
+  const links: ContactLink[] = getSocialLinks(config).map((link) => ({
+    ...link,
+    kind: "social" as const
+  }));
+
+  if (config.email.trim()) {
+    links.push({
+      label: config.email,
+      href: `mailto:${config.email}`,
+      kind: "email"
+    });
+  }
+
+  return links;
+}
+
 export function getHotplateUrl() {
   return `https://hotplate.com/${siteConfig.hotplateChefId}`;
 }
-
