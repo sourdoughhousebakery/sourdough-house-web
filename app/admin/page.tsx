@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { AdminSignOutButton } from "@/components/admin-sign-out-button";
 import { AdminWorkspace } from "@/components/admin-workspace";
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
+import { getCurrentAdminUser } from "@/lib/admin-auth/admin";
 import { adminDataSource } from "@/lib/admin-data/source";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
+  const admin = await getCurrentAdminUser();
+  if (!admin) redirect("/admin/login?next=/admin");
+
   const [catalogItems, hero, announcement, contact, testimonials] = await Promise.all([
     adminDataSource.catalog.list(),
     adminDataSource.hero.get(),
@@ -25,6 +31,10 @@ export default async function AdminPage() {
     <>
       <PageIntro eyebrow={pageIntros.admin.eyebrow} title={pageIntros.admin.title}>
         <p>{pageIntros.admin.description}</p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm font-bold text-espresso/60">
+          <span>{admin.email}</span>
+          <AdminSignOutButton />
+        </div>
       </PageIntro>
       <section className="px-5 pb-20">
         <AdminWorkspace defaultCatalogItems={catalogItems} defaultContent={defaultContent} />

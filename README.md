@@ -29,9 +29,12 @@ Copy `.env.example` to `.env.local` when local overrides are needed.
 NEXT_PUBLIC_SITE_URL=https://sourdough-house-bakery.vercel.app
 HOTPLATE_CHEF_ID=sourdoughhouse43
 ADMIN_DATA_SOURCE=disk
+ADMIN_EMAILS=owner@example.com
 ```
 
 Use `ADMIN_DATA_SOURCE=disk` for local JSON files, or `ADMIN_DATA_SOURCE=supabase` after the database has been seeded.
+
+Use `ADMIN_EMAILS` as a comma-separated allow-list for accounts that can open `/admin`. Production denies admin access if this is empty.
 
 Supabase-backed admin data also needs:
 
@@ -96,6 +99,7 @@ Then import the GitHub repo into the target Vercel account and set:
 - `NEXT_PUBLIC_SITE_URL`
 - `HOTPLATE_CHEF_ID`
 - `ADMIN_DATA_SOURCE`
+- `ADMIN_EMAILS`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 - `SUPABASE_SECRET_KEY`
