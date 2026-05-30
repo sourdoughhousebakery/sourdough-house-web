@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { AdminPreviewAnnouncement } from "@/components/admin-preview-content";
 import { OrderPanel } from "@/components/order-panel";
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
+import { getDefaultAdminContent } from "@/lib/admin-content/content";
 import { getHotplateUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -10,11 +12,14 @@ export const metadata: Metadata = {
 };
 
 export default function OrderPage() {
+  const defaultContent = getDefaultAdminContent();
+
   return (
     <>
       <PageIntro eyebrow={pageIntros.order.eyebrow} title={pageIntros.order.title}>
         <p>{pageIntros.order.description}</p>
       </PageIntro>
+      <AdminPreviewAnnouncement defaultContent={defaultContent} />
       <OrderPanel />
       <section className="px-5 pb-20">
         <div className="mx-auto max-w-3xl rounded-[2rem] border border-espresso/10 bg-white p-6 text-center shadow-soft md:p-10">

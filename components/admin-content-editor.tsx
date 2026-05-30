@@ -4,6 +4,7 @@ import { Megaphone, MessageSquareQuote, Plus, RotateCcw, Save, Trash2, UserRound
 import { useState } from "react";
 import {
   createEditableTestimonial,
+  adminContentStorageKey,
   deleteEditableTestimonial,
   hydrateAdminContent,
   updateEditableTestimonial,
@@ -19,8 +20,6 @@ type AdminContentEditorProps = {
 
 type AdminContentTab = "announcement" | "contact" | "testimonials";
 
-const storageKey = "sourdough-house-admin-content";
-
 const tabs = [
   { id: "announcement" as const, label: "Announcement", Icon: Megaphone },
   { id: "contact" as const, label: "Contact", Icon: UserRoundCog },
@@ -31,13 +30,13 @@ export function AdminContentEditor({ defaultContent }: AdminContentEditorProps) 
   const [activeTab, setActiveTab] = useState<AdminContentTab>("announcement");
   const [content, setContent] = useState<EditableAdminContent>(() => {
     if (typeof window === "undefined") return defaultContent;
-    const raw = window.localStorage.getItem(storageKey);
+    const raw = window.localStorage.getItem(adminContentStorageKey);
     if (!raw) return defaultContent;
 
     try {
       return hydrateAdminContent(defaultContent, JSON.parse(raw) as PersistedAdminContent);
     } catch {
-      window.localStorage.removeItem(storageKey);
+      window.localStorage.removeItem(adminContentStorageKey);
       return defaultContent;
     }
   });
@@ -60,12 +59,12 @@ export function AdminContentEditor({ defaultContent }: AdminContentEditorProps) 
   }
 
   function save() {
-    window.localStorage.setItem(storageKey, JSON.stringify(content));
+    window.localStorage.setItem(adminContentStorageKey, JSON.stringify(content));
     setSavedAt(new Date().toLocaleTimeString());
   }
 
   function reset() {
-    window.localStorage.removeItem(storageKey);
+    window.localStorage.removeItem(adminContentStorageKey);
     setContent(defaultContent);
     setSavedAt(null);
   }

@@ -37,6 +37,8 @@ export type PersistedAdminContent = {
   testimonials?: EditableTestimonial[];
 };
 
+export const adminContentStorageKey = "sourdough-house-admin-content";
+
 export function getDefaultAdminContent(): EditableAdminContent {
   return {
     announcement: {
@@ -105,4 +107,14 @@ export function updateEditableTestimonial(
 
 export function deleteEditableTestimonial(testimonials: EditableTestimonial[], id: string): EditableTestimonial[] {
   return testimonials.filter((testimonial) => testimonial.id !== id);
+}
+
+export function getActiveAnnouncement(announcement: EditableAnnouncement): EditableAnnouncement | null {
+  if (!announcement.isActive) return null;
+  if (!announcement.title.trim() || !announcement.body.trim()) return null;
+  return announcement;
+}
+
+export function getActiveTestimonials(testimonials: EditableTestimonial[]): EditableTestimonial[] {
+  return testimonials.filter((testimonial) => testimonial.isActive && testimonial.quote.trim() && testimonial.name.trim());
 }

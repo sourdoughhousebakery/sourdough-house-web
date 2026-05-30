@@ -1,3 +1,4 @@
+import { AdminPreviewAnnouncement } from "@/components/admin-preview-content";
 import { Hero } from "@/components/hero";
 import { CatalogGrid } from "@/components/catalog-grid";
 import { MenuGrid } from "@/components/menu-grid";
@@ -9,15 +10,18 @@ import { TestimonialBand } from "@/components/testimonial-band";
 import { ButtonLink } from "@/components/button-link";
 import { homeContent } from "@/content/site-content";
 import { getFeaturedCatalogItems } from "@/lib/catalog/catalog";
+import { getDefaultAdminContent } from "@/lib/admin-content/content";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 
 export default async function HomePage() {
   const menu = await getDisplayMenu(3);
   const featuredCatalog = getFeaturedCatalogItems(undefined, 3);
+  const defaultContent = getDefaultAdminContent();
 
   return (
     <>
       <Hero />
+      <AdminPreviewAnnouncement defaultContent={defaultContent} />
       <MotionSection className="px-5 py-16">
         <div className="mx-auto max-w-6xl">
           <div className="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">

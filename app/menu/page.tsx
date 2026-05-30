@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { AdminPreviewAnnouncement } from "@/components/admin-preview-content";
 import { MenuTabs } from "@/components/menu-tabs";
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
+import { getDefaultAdminContent } from "@/lib/admin-content/content";
 import { getPublicCatalogItems } from "@/lib/catalog/catalog";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 import { getHotplateUrl } from "@/lib/site";
@@ -15,6 +17,7 @@ export default async function MenuPage() {
   const menu = await getDisplayMenu();
   const event = menu.event;
   const catalogItems = getPublicCatalogItems();
+  const defaultContent = getDefaultAdminContent();
 
   return (
     <>
@@ -28,6 +31,7 @@ export default async function MenuPage() {
             : pageIntros.menu.fallbackDescription}
         </p>
       </PageIntro>
+      <AdminPreviewAnnouncement defaultContent={defaultContent} />
       <section className="px-5 pb-20">
         <div className="mx-auto max-w-6xl">
           {menu.error ? (

@@ -1,8 +1,9 @@
-import { Facebook, Instagram, Mail, Music2 } from "lucide-react";
 import type { Metadata } from "next";
+import { AdminPreviewContactPillLinks } from "@/components/admin-preview-content";
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
-import { getContactLinks, getHotplateUrl, siteConfig, type ContactLink } from "@/lib/site";
+import { getDefaultAdminContent } from "@/lib/admin-content/content";
+import { getHotplateUrl, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -24,18 +25,9 @@ const contactCards = [
   }
 ];
 
-const iconByLabel = {
-  Instagram,
-  Facebook,
-  TikTok: Music2,
-  Email: Mail
-};
-
-function getLinkIcon(link: ContactLink) {
-  return link.kind === "email" ? iconByLabel.Email : iconByLabel[link.label];
-}
-
 export default function ContactPage() {
+  const defaultContent = getDefaultAdminContent();
+
   return (
     <>
       <PageIntro eyebrow={pageIntros.contact.eyebrow} title={pageIntros.contact.title}>
@@ -54,22 +46,7 @@ export default function ContactPage() {
           ))}
         </div>
         <div className="mx-auto mt-8 flex max-w-5xl flex-wrap justify-center gap-3">
-          {getContactLinks().map((link) => {
-            const Icon = getLinkIcon(link);
-
-            return (
-              <a
-                key={link.label}
-                href={link.href}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-espresso shadow-soft transition hover:-translate-y-0.5 hover:text-rust"
-              >
-                <Icon aria-hidden size={18} />
-                {link.label}
-              </a>
-            );
-          })}
+          <AdminPreviewContactPillLinks defaultContent={defaultContent} />
         </div>
       </section>
     </>

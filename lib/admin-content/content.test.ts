@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   createEditableTestimonial,
   deleteEditableTestimonial,
+  getActiveAnnouncement,
+  getActiveTestimonials,
   getDefaultAdminContent,
   hydrateAdminContent,
   updateEditableTestimonial
@@ -78,5 +80,37 @@ describe("testimonial helpers", () => {
     const testimonials = getDefaultAdminContent().testimonials;
 
     expect(deleteEditableTestimonial(testimonials, testimonials[0].id)).toHaveLength(testimonials.length - 1);
+  });
+});
+
+describe("public content selectors", () => {
+  it("returns only complete active announcements", () => {
+    expect(
+      getActiveAnnouncement({
+        title: "Friday drop",
+        body: "Orders open at 9am.",
+        ctaLabel: "",
+        ctaUrl: "",
+        isActive: true
+      })
+    ).toMatchObject({ title: "Friday drop" });
+
+    expect(
+      getActiveAnnouncement({
+        title: "Incomplete",
+        body: "",
+        ctaLabel: "",
+        ctaUrl: "",
+        isActive: true
+      })
+    ).toBeNull();
+  });
+
+  it("returns only active testimonials", () => {
+    const testimonials = getDefaultAdminContent().testimonials;
+
+    expect(getActiveTestimonials(updateEditableTestimonial(testimonials, testimonials[0].id, { isActive: false }))).toEqual([
+      testimonials[1]
+    ]);
   });
 });

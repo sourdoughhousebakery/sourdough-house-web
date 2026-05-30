@@ -14,6 +14,8 @@ export const siteConfig = {
 
 export type SiteConfig = typeof siteConfig;
 
+export type ContactConfig = Pick<SiteConfig, "email" | "instagramUrl" | "facebookUrl" | "tiktokUrl">;
+
 export type SocialLink = {
   label: "Instagram" | "Facebook" | "TikTok";
   href: string;
@@ -44,7 +46,7 @@ function isConfiguredUrl(href: string) {
   return !placeholderSocialUrls.has(normalized);
 }
 
-export function getSocialLinks(config: SiteConfig = siteConfig): SocialLink[] {
+export function getSocialLinks(config: ContactConfig = siteConfig): SocialLink[] {
   return [
     { href: config.instagramUrl, label: "Instagram" as const },
     { href: config.facebookUrl, label: "Facebook" as const },
@@ -52,7 +54,7 @@ export function getSocialLinks(config: SiteConfig = siteConfig): SocialLink[] {
   ].filter((link) => isConfiguredUrl(link.href));
 }
 
-export function getContactLinks(config: SiteConfig = siteConfig): ContactLink[] {
+export function getContactLinks(config: ContactConfig = siteConfig): ContactLink[] {
   const links: ContactLink[] = getSocialLinks(config).map((link) => ({
     ...link,
     kind: "social" as const
