@@ -41,9 +41,11 @@ export function CatalogGrid({ items }: CatalogGridProps) {
               <span className="font-hand text-2xl font-bold text-rust">
                 {item.displayPrice ?? "Ask for availability"}
               </span>
-              <ButtonLink href="/order" variant="secondary" className="min-h-10 px-4">
-                Order info
-              </ButtonLink>
+              {item.displayPrice ? (
+                <ButtonLink href="/order" variant="secondary" className="min-h-10 px-4">
+                  Order info
+                </ButtonLink>
+              ) : null}
             </div>
           </div>
         </article>
