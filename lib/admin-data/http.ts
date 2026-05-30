@@ -3,6 +3,7 @@
 import type {
   EditableAnnouncement,
   EditableContact,
+  EditableHero,
   EditableTestimonial
 } from "@/lib/admin-content/content";
 import type { BakeCatalogItem, PublicCatalogItem } from "@/lib/catalog/types";
@@ -49,6 +50,11 @@ export class HttpAdminDataSource implements AdminDataSource {
     list: () => api<string[]>("/api/admin/categories"),
     create: (name) => api<string[]>("/api/admin/categories", { method: "POST", body: JSON.stringify({ name }) }),
     delete: (name) => api<string[]>("/api/admin/categories", { method: "DELETE", body: JSON.stringify({ name }) })
+  };
+
+  readonly hero: SingletonRepository<EditableHero> = {
+    get: () => api<EditableHero>("/api/admin/content/hero"),
+    update: (patch) => api<EditableHero>("/api/admin/content/hero", { method: "PATCH", body: JSON.stringify(patch) })
   };
 
   readonly announcement: SingletonRepository<EditableAnnouncement> = {

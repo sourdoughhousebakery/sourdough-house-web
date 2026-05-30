@@ -15,15 +15,16 @@ export const metadata: Metadata = {
 };
 
 export default async function MenuPage() {
-  const [menu, catalogItems, announcement, contact, testimonials] = await Promise.all([
+  const [menu, catalogItems, hero, announcement, contact, testimonials] = await Promise.all([
     getDisplayMenu(),
     diskAdminDataSource.catalog.listPublic(),
+    diskAdminDataSource.hero.get(),
     diskAdminDataSource.announcement.get(),
     diskAdminDataSource.contact.get(),
     diskAdminDataSource.testimonials.list()
   ]);
   const event = menu.event;
-  const defaultContent = { announcement, contact, testimonials };
+  const defaultContent = { hero, announcement, contact, testimonials };
 
   return (
     <>

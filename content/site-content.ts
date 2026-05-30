@@ -34,9 +34,9 @@ export const pageIntros = {
   },
   admin: {
     eyebrow: "Admin preview",
-    title: "Edit the bakery catalog.",
+    title: "Manage the bakery site.",
     description:
-      "Toggle what appears in the “What we bake” tab, hide prices for items that are not always for sale, and preview the future admin workflow."
+      "Update the homepage hero, menu catalog, announcement, contact details, and customer quotes from one admin workflow."
   }
 };
 

@@ -12,13 +12,14 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
-  const [catalogItems, announcement, contact, testimonials] = await Promise.all([
+  const [catalogItems, hero, announcement, contact, testimonials] = await Promise.all([
     diskAdminDataSource.catalog.list(),
+    diskAdminDataSource.hero.get(),
     diskAdminDataSource.announcement.get(),
     diskAdminDataSource.contact.get(),
     diskAdminDataSource.testimonials.list()
   ]);
-  const defaultContent = { announcement, contact, testimonials };
+  const defaultContent = { hero, announcement, contact, testimonials };
 
   return (
     <>

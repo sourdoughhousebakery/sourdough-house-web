@@ -13,9 +13,11 @@ describe("admin editor save flow", () => {
   });
 
   it("keeps content field edits local until each section is saved", () => {
+    expect(contentEditor).toContain("Save hero");
     expect(contentEditor).toContain("Save announcement");
     expect(contentEditor).toContain("Save contact");
     expect(contentEditor).toContain("Save testimonial");
+    expect(contentEditor).toContain("changeHero");
     expect(contentEditor).toContain("changeAnnouncement");
     expect(contentEditor).toContain("changeContact");
     expect(contentEditor).toContain("changeTestimonial");

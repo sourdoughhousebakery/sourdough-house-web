@@ -1,6 +1,7 @@
 import type {
   EditableAnnouncement,
   EditableContact,
+  EditableHero,
   EditableTestimonial
 } from "@/lib/admin-content/content";
 import type { BakeCatalogItem, PublicCatalogItem } from "@/lib/catalog/types";
@@ -46,6 +47,7 @@ export interface AssetRepository {
 export interface AdminDataSource {
   catalog: CatalogRepository;
   categories: CategoryRepository;
+  hero: SingletonRepository<EditableHero>;
   announcement: SingletonRepository<EditableAnnouncement>;
   contact: SingletonRepository<EditableContact>;
   testimonials: CrudRepository<EditableTestimonial>;

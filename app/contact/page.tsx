@@ -13,12 +13,13 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const [announcement, contact, testimonials] = await Promise.all([
+  const [hero, announcement, contact, testimonials] = await Promise.all([
+    diskAdminDataSource.hero.get(),
     diskAdminDataSource.announcement.get(),
     diskAdminDataSource.contact.get(),
     diskAdminDataSource.testimonials.list()
   ]);
-  const defaultContent = { announcement, contact, testimonials };
+  const defaultContent = { hero, announcement, contact, testimonials };
   const contactCards = [
     {
       title: "Order drops",

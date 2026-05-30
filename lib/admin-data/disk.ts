@@ -6,7 +6,10 @@ import {
   type EditableAdminContent,
   type EditableAnnouncement,
   type EditableContact,
+  type EditableHero,
   type EditableTestimonial,
+  getDefaultAdminContent,
+  hydrateAdminContent,
   updateEditableTestimonial
 } from "@/lib/admin-content/content";
 import {
@@ -37,6 +40,7 @@ async function writeJson(filePath: string, data: unknown) {
 export class DiskAdminDataSource implements AdminDataSource {
   readonly catalog: CatalogRepository;
   readonly categories: CategoryRepository;
+  readonly hero: SingletonRepository<EditableHero>;
   readonly announcement: SingletonRepository<EditableAnnouncement>;
   readonly contact: SingletonRepository<EditableContact>;
   readonly testimonials: CrudRepository<EditableTestimonial>;
@@ -89,6 +93,19 @@ export class DiskAdminDataSource implements AdminDataSource {
         const nextCategories = categories.filter((item) => item !== category);
         await writeJson(categoriesPath, nextCategories);
         return nextCategories;
+      }
+    };
+
+    this.hero = {
+      get: async () => (await this.readContent()).hero,
+      update: async (patch) => {
+        const content = await this.readContent();
+        const nextContent = {
+          ...content,
+          hero: { ...content.hero, ...patch }
+        };
+        await this.writeContent(nextContent);
+        return nextContent.hero;
       }
     };
 
@@ -166,7 +183,7 @@ export class DiskAdminDataSource implements AdminDataSource {
   }
 
   private readContent() {
-    return readJson<EditableAdminContent>(contentPath);
+    return readJson<Partial<EditableAdminContent>>(contentPath).then((content) => hydrateAdminContent(getDefaultAdminContent(), content));
   }
 
   private writeContent(content: EditableAdminContent) {

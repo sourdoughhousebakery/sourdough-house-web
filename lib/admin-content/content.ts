@@ -1,5 +1,21 @@
-import { testimonials } from "@/content/site-content";
-import { siteConfig } from "@/lib/site";
+import { heroContent, testimonials } from "@/content/site-content";
+import { getHotplateUrl, siteConfig } from "@/lib/site";
+
+export type EditableHero = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  primaryCtaLabel: string;
+  primaryCtaUrl: string;
+  secondaryCtaLabel: string;
+  secondaryCtaUrl: string;
+  firstHighlight: string;
+  secondHighlight: string;
+  imageSrc: string;
+  imageAlt: string;
+  imageBadge: string;
+  imageNote: string;
+};
 
 export type EditableAnnouncement = {
   title: string;
@@ -26,12 +42,14 @@ export type EditableTestimonial = {
 };
 
 export type EditableAdminContent = {
+  hero: EditableHero;
   announcement: EditableAnnouncement;
   contact: EditableContact;
   testimonials: EditableTestimonial[];
 };
 
 export type PersistedAdminContent = {
+  hero?: Partial<EditableHero>;
   announcement?: Partial<EditableAnnouncement>;
   contact?: Partial<EditableContact>;
   testimonials?: EditableTestimonial[];
@@ -42,6 +60,21 @@ export const adminContentChangeEvent = "sourdough-house-admin-content-change";
 
 export function getDefaultAdminContent(): EditableAdminContent {
   return {
+    hero: {
+      eyebrow: heroContent.eyebrow,
+      title: heroContent.title,
+      description: heroContent.description,
+      primaryCtaLabel: heroContent.primaryCtaLabel,
+      primaryCtaUrl: getHotplateUrl(),
+      secondaryCtaLabel: heroContent.secondaryCtaLabel,
+      secondaryCtaUrl: "/story",
+      firstHighlight: heroContent.highlights[0],
+      secondHighlight: heroContent.highlights[1],
+      imageSrc: heroContent.image.src,
+      imageAlt: heroContent.image.alt,
+      imageBadge: heroContent.imageBadge,
+      imageNote: heroContent.imageNote
+    },
     announcement: {
       title: "",
       body: "",
@@ -71,6 +104,10 @@ export function hydrateAdminContent(
   persisted: PersistedAdminContent
 ): EditableAdminContent {
   return {
+    hero: {
+      ...defaults.hero,
+      ...persisted.hero
+    },
     announcement: {
       ...defaults.announcement,
       ...persisted.announcement

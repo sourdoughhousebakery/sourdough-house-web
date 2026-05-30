@@ -13,18 +13,19 @@ import { getDisplayMenu } from "@/lib/hotplate/api";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [menu, featuredCatalog, announcement, contact, testimonials] = await Promise.all([
+  const [menu, featuredCatalog, hero, announcement, contact, testimonials] = await Promise.all([
     getDisplayMenu(3),
     diskAdminDataSource.catalog.listFeatured(3),
+    diskAdminDataSource.hero.get(),
     diskAdminDataSource.announcement.get(),
     diskAdminDataSource.contact.get(),
     diskAdminDataSource.testimonials.list()
   ]);
-  const defaultContent = { announcement, contact, testimonials };
+  const defaultContent = { hero, announcement, contact, testimonials };
 
   return (
     <>
-      <Hero />
+      <Hero content={hero} />
       <AdminPreviewAnnouncement defaultContent={defaultContent} />
       <MotionSection className="px-5 py-16">
         <div className="mx-auto max-w-6xl">

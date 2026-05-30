@@ -5,12 +5,13 @@ import { getHotplateUrl, siteConfig } from "@/lib/site";
 import { AdminPreviewContactIconLinks } from "./admin-preview-content";
 
 export async function SiteFooter() {
-  const [announcement, contact, testimonials] = await Promise.all([
+  const [hero, announcement, contact, testimonials] = await Promise.all([
+    diskAdminDataSource.hero.get(),
     diskAdminDataSource.announcement.get(),
     diskAdminDataSource.contact.get(),
     diskAdminDataSource.testimonials.list()
   ]);
-  const defaultContent = { announcement, contact, testimonials };
+  const defaultContent = { hero, announcement, contact, testimonials };
 
   return (
     <footer className="border-t border-espresso/10 bg-cream px-5 py-10">

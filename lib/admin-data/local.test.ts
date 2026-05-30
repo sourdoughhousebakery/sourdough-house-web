@@ -88,9 +88,11 @@ describe("LocalAdminDataSource", () => {
     const dataSource = makeDataSource();
 
     await dataSource.announcement.update({ title: "Friday drop", body: "Orders open at 9am.", isActive: true });
+    await dataSource.hero.update({ title: "Holiday bakes", imageBadge: "Ordering now" });
     await dataSource.contact.update({ email: "orders@example.com" });
 
     expect(await dataSource.announcement.get()).toMatchObject({ title: "Friday drop", isActive: true });
+    expect(await dataSource.hero.get()).toMatchObject({ title: "Holiday bakes", imageBadge: "Ordering now" });
     expect(await dataSource.contact.get()).toMatchObject({ email: "orders@example.com" });
   });
 

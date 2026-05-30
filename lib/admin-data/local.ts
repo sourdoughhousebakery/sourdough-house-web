@@ -8,6 +8,7 @@ import {
   type EditableAdminContent,
   type EditableAnnouncement,
   type EditableContact,
+  type EditableHero,
   type EditableTestimonial,
   type PersistedAdminContent
 } from "@/lib/admin-content/content";
@@ -108,6 +109,7 @@ function fileToDataUrl(file: File) {
 export class LocalAdminDataSource implements AdminDataSource {
   readonly catalog: CatalogRepository;
   readonly categories: CategoryRepository;
+  readonly hero: SingletonRepository<EditableHero>;
   readonly announcement: SingletonRepository<EditableAnnouncement>;
   readonly contact: SingletonRepository<EditableContact>;
   readonly testimonials: CrudRepository<EditableTestimonial>;
@@ -166,6 +168,19 @@ export class LocalAdminDataSource implements AdminDataSource {
         const nextCategories = this.readCategories().filter((item) => item !== category);
         this.writeCategories(nextCategories);
         return nextCategories;
+      }
+    };
+
+    this.hero = {
+      get: async () => this.readContent().hero,
+      update: async (patch) => {
+        const content = this.readContent();
+        const nextContent = {
+          ...content,
+          hero: { ...content.hero, ...patch }
+        };
+        this.writeContent(nextContent);
+        return nextContent.hero;
       }
     };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Megaphone, MessageSquareQuote, ShoppingBag, UserRoundCog } from "lucide-react";
+import { ImageIcon, Megaphone, MessageSquareQuote, ShoppingBag, UserRoundCog } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { EditableAdminContent } from "@/lib/admin-content/content";
 import { HttpAdminDataSource } from "@/lib/admin-data/http";
@@ -16,6 +16,15 @@ type AdminWorkspaceProps = {
 type AdminSectionId = "catalog" | AdminContentTab;
 
 const adminSections = [
+  {
+    id: "hero" as const,
+    label: "Home Hero",
+    eyebrow: "Homepage",
+    title: "Update the first screen.",
+    description:
+      "Use this for the hero headline, buttons, image, badge, and short image note shown at the top of the homepage.",
+    Icon: ImageIcon
+  },
   {
     id: "catalog" as const,
     label: "Menu & Catalog",
@@ -69,7 +78,7 @@ export function AdminWorkspace({ defaultCatalogItems, defaultContent }: AdminWor
         </p>
       </div>
 
-      <div className="grid gap-3 rounded-[1.5rem] border border-espresso/10 bg-white/70 p-3 shadow-soft md:grid-cols-4">
+      <div className="grid gap-3 rounded-[1.5rem] border border-espresso/10 bg-white/70 p-3 shadow-soft md:grid-cols-5">
         {adminSections.map(({ id, label, Icon }) => (
           <button
             key={id}
