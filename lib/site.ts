@@ -4,7 +4,7 @@ export const siteConfig = {
   description:
     "Small-batch sourdough breads, cookies, muffins, and pastries made with slow fermentation and local pickup.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://sourdough-house-bakery.vercel.app",
-  hotplateChefId: process.env.HOTPLATE_CHEF_ID ?? "sourdoughhouse",
+  hotplateChefId: process.env.HOTPLATE_CHEF_ID?.trim() ?? "",
   instagramUrl: "https://www.instagram.com/",
   facebookUrl: "https://www.facebook.com/",
   tiktokUrl: "https://www.tiktok.com/",
@@ -72,5 +72,6 @@ export function getContactLinks(config: ContactConfig = siteConfig): ContactLink
 }
 
 export function getHotplateUrl() {
+  if (!siteConfig.hotplateChefId) return "https://hotplate.com";
   return `https://hotplate.com/${siteConfig.hotplateChefId}`;
 }

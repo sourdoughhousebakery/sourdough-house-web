@@ -117,6 +117,14 @@ async function hotplateFetch<T>(endpoint: string, input: UnknownRecord): Promise
 
 export const getHotplateMenu = cache(async (): Promise<MenuResult> => {
   const chefId = siteConfig.hotplateChefId;
+  if (!chefId) {
+    return {
+      items: [],
+      event: null,
+      source: "fallback",
+      error: "HOTPLATE_CHEF_ID is not configured"
+    };
+  }
 
   try {
     const events = await hotplateFetch<unknown[]>("shop.getPublicLiveEvents", { chefId });
