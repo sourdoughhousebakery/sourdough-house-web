@@ -47,10 +47,16 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTa
         <div>
           <p className="mb-5 text-sm font-semibold text-espresso/62">
             {hotplateSource === "fallback"
-              ? "Hotplate is not showing a live menu right now, so fallback items are displayed."
+              ? "Hotplate is not showing a live menu right now."
               : "These items are loaded from the current Hotplate drop."}
           </p>
-          <MenuGrid items={hotplateItems} />
+          {hotplateItems.length > 0 ? (
+            <MenuGrid items={hotplateItems} />
+          ) : (
+            <div className="rounded-[1.5rem] border border-espresso/10 bg-white p-5 text-sm font-semibold leading-6 text-espresso/68 shadow-soft">
+              No live Hotplate items are available. Use the What we bake tab to view the editable catalog.
+            </div>
+          )}
         </div>
       ) : (
         <div>

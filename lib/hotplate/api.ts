@@ -161,7 +161,7 @@ export function resolveDisplayMenuItems(menu: MenuResult, limit?: number) {
           ...item,
           image: item.image ?? fallbackMenuItems[0].image
         }))
-      : fallbackMenuItems;
+      : [];
 
   return typeof limit === "number" ? items.slice(0, limit) : items;
 }

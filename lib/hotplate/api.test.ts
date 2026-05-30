@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { fallbackMenuItems } from "@/content/site-content";
 import { formatHotplatePrice, parseMenuFromEventDetail, resolveDisplayMenuItems } from "./api";
 
 describe("formatHotplatePrice", () => {
@@ -65,7 +64,7 @@ describe("parseMenuFromEventDetail", () => {
 });
 
 describe("resolveDisplayMenuItems", () => {
-  it("uses fallback items unless the menu source is live", () => {
+  it("does not invent Hotplate items when the menu source is not live", () => {
     const pastMenu = {
       items: [
         {
@@ -85,6 +84,6 @@ describe("resolveDisplayMenuItems", () => {
       source: "past" as const
     };
 
-    expect(resolveDisplayMenuItems(pastMenu, 1)).toEqual(fallbackMenuItems.slice(0, 1));
+    expect(resolveDisplayMenuItems(pastMenu, 1)).toEqual([]);
   });
 });
