@@ -1,0 +1,32 @@
+{
+  "announcement": {
+    "title": "",
+    "body": "",
+    "ctaLabel": "",
+    "ctaUrl": "",
+    "isActive": false
+  },
+  "contact": {
+    "email": "hello@sourdoughhouse.com",
+    "instagramUrl": "https://www.instagram.com/",
+    "facebookUrl": "https://www.facebook.com/",
+    "tiktokUrl": "https://www.tiktok.com/",
+    "pickupArea": "Local pickup"
+  },
+  "testimonials": [
+    {
+      "id": "testimonial-1",
+      "quote": "The best bread I have ever had. You can taste the time and care in every slice.",
+      "name": "Local customer",
+      "source": "Hotplate review",
+      "isActive": true
+    },
+    {
+      "id": "testimonial-2",
+      "quote": "Every drop sells out in our house. The cinnamon rolls are unbelievable.",
+      "name": "Repeat customer",
+      "source": "Pickup note",
+      "isActive": true
+    }
+  ]
+}

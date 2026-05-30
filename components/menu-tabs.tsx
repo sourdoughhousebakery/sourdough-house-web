@@ -1,10 +1,8 @@
 "use client";
 
 import { ShoppingBag, Wheat } from "lucide-react";
-import { useMemo, useState, useSyncExternalStore } from "react";
-import { localCatalogChangeEvent } from "@/lib/admin-data/local";
+import { useState } from "react";
 import type { PublicCatalogItem } from "@/lib/catalog/types";
-import { catalogPreviewStorageKey } from "@/lib/catalog/local-preview";
 import type { FallbackMenuItem, HotplateMenuItem, MenuResult } from "@/lib/hotplate/types";
 import { CatalogGrid } from "./catalog-grid";
 import { MenuGrid } from "./menu-grid";
@@ -19,18 +17,6 @@ type MenuTabsProps = {
 
 export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTabsProps) {
   const [activeTab, setActiveTab] = useState<"hotplate" | "catalog">("hotplate");
-  const rawCatalog = useSyncExternalStore(subscribeToCatalogPreview, getCatalogPreviewSnapshot, getServerCatalogPreviewSnapshot);
-  const visibleCatalog = useMemo(() => {
-    if (!rawCatalog) return catalogItems;
-
-    try {
-      const parsed = JSON.parse(rawCatalog) as PublicCatalogItem[];
-      return Array.isArray(parsed) ? parsed : catalogItems;
-    } catch {
-      window.localStorage.removeItem(catalogPreviewStorageKey);
-      return catalogItems;
-    }
-  }, [catalogItems, rawCatalog]);
 
   return (
     <div>
@@ -71,26 +57,9 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTa
           <p className="mb-5 text-sm font-semibold text-espresso/62">
             These are the regular bakes Sourdough House is known for. Some may not be available in the current Hotplate drop.
           </p>
-          <CatalogGrid items={visibleCatalog} />
+          <CatalogGrid items={catalogItems} />
         </div>
       )}
     </div>
   );
-}
-
-function subscribeToCatalogPreview(onStoreChange: () => void) {
-  window.addEventListener("storage", onStoreChange);
-  window.addEventListener(localCatalogChangeEvent, onStoreChange);
-  return () => {
-    window.removeEventListener("storage", onStoreChange);
-    window.removeEventListener(localCatalogChangeEvent, onStoreChange);
-  };
-}
-
-function getCatalogPreviewSnapshot() {
-  return window.localStorage.getItem(catalogPreviewStorageKey);
-}
-
-function getServerCatalogPreviewSnapshot() {
-  return null;
 }

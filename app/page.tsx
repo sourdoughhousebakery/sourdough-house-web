@@ -9,14 +9,18 @@ import { StoryPreview } from "@/components/story-preview";
 import { TestimonialBand } from "@/components/testimonial-band";
 import { ButtonLink } from "@/components/button-link";
 import { homeContent } from "@/content/site-content";
-import { getFeaturedCatalogItems } from "@/lib/catalog/catalog";
-import { getDefaultAdminContent } from "@/lib/admin-content/content";
+import { diskAdminDataSource } from "@/lib/admin-data/disk";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 
 export default async function HomePage() {
-  const menu = await getDisplayMenu(3);
-  const featuredCatalog = getFeaturedCatalogItems(undefined, 3);
-  const defaultContent = getDefaultAdminContent();
+  const [menu, featuredCatalog, announcement, contact, testimonials] = await Promise.all([
+    getDisplayMenu(3),
+    diskAdminDataSource.catalog.listFeatured(3),
+    diskAdminDataSource.announcement.get(),
+    diskAdminDataSource.contact.get(),
+    diskAdminDataSource.testimonials.list()
+  ]);
+  const defaultContent = { announcement, contact, testimonials };
 
   return (
     <>

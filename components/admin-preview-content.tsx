@@ -1,15 +1,10 @@
 "use client";
 
 import { Facebook, Instagram, Mail, Music2, Star } from "lucide-react";
-import { useMemo, useSyncExternalStore } from "react";
 import {
-  adminContentChangeEvent,
-  adminContentStorageKey,
   getActiveAnnouncement,
   getActiveTestimonials,
-  hydrateAdminContent,
-  type EditableAdminContent,
-  type PersistedAdminContent
+  type EditableAdminContent
 } from "@/lib/admin-content/content";
 import { getContactLinks, type ContactLink } from "@/lib/site";
 import { ButtonLink } from "./button-link";
@@ -26,38 +21,12 @@ const iconByLabel = {
   Email: Mail
 };
 
-function useAdminPreviewContent(defaultContent: EditableAdminContent) {
-  const raw = useSyncExternalStore(
-    (onStoreChange) => {
-      window.addEventListener("storage", onStoreChange);
-      window.addEventListener(adminContentChangeEvent, onStoreChange);
-      return () => {
-        window.removeEventListener("storage", onStoreChange);
-        window.removeEventListener(adminContentChangeEvent, onStoreChange);
-      };
-    },
-    () => window.localStorage.getItem(adminContentStorageKey),
-    () => null
-  );
-
-  return useMemo(() => {
-    if (!raw) return defaultContent;
-    try {
-      return hydrateAdminContent(defaultContent, JSON.parse(raw) as PersistedAdminContent);
-    } catch {
-      window.localStorage.removeItem(adminContentStorageKey);
-      return defaultContent;
-    }
-  }, [defaultContent, raw]);
-}
-
 function getLinkIcon(link: ContactLink) {
   return link.kind === "email" ? iconByLabel.Email : iconByLabel[link.label];
 }
 
 export function AdminPreviewAnnouncement({ defaultContent }: AdminPreviewProps) {
-  const content = useAdminPreviewContent(defaultContent);
-  const announcement = getActiveAnnouncement(content.announcement);
+  const announcement = getActiveAnnouncement(defaultContent.announcement);
 
   if (!announcement) return null;
 
@@ -79,8 +48,7 @@ export function AdminPreviewAnnouncement({ defaultContent }: AdminPreviewProps) 
 }
 
 export function AdminPreviewContactIconLinks({ defaultContent }: AdminPreviewProps) {
-  const content = useAdminPreviewContent(defaultContent);
-  const links = getContactLinks(content.contact);
+  const links = getContactLinks(defaultContent.contact);
 
   return (
     <>
@@ -105,8 +73,7 @@ export function AdminPreviewContactIconLinks({ defaultContent }: AdminPreviewPro
 }
 
 export function AdminPreviewContactPillLinks({ defaultContent }: AdminPreviewProps) {
-  const content = useAdminPreviewContent(defaultContent);
-  const links = getContactLinks(content.contact);
+  const links = getContactLinks(defaultContent.contact);
 
   return (
     <>
@@ -131,8 +98,7 @@ export function AdminPreviewContactPillLinks({ defaultContent }: AdminPreviewPro
 }
 
 export function AdminPreviewTestimonialBand({ defaultContent }: AdminPreviewProps) {
-  const content = useAdminPreviewContent(defaultContent);
-  const [testimonial] = getActiveTestimonials(content.testimonials);
+  const [testimonial] = getActiveTestimonials(defaultContent.testimonials);
 
   if (!testimonial) return null;
 

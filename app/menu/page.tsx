@@ -3,8 +3,7 @@ import { AdminPreviewAnnouncement } from "@/components/admin-preview-content";
 import { MenuTabs } from "@/components/menu-tabs";
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
-import { getDefaultAdminContent } from "@/lib/admin-content/content";
-import { getPublicCatalogItems } from "@/lib/catalog/catalog";
+import { diskAdminDataSource } from "@/lib/admin-data/disk";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 import { getHotplateUrl } from "@/lib/site";
 
@@ -14,10 +13,15 @@ export const metadata: Metadata = {
 };
 
 export default async function MenuPage() {
-  const menu = await getDisplayMenu();
+  const [menu, catalogItems, announcement, contact, testimonials] = await Promise.all([
+    getDisplayMenu(),
+    diskAdminDataSource.catalog.listPublic(),
+    diskAdminDataSource.announcement.get(),
+    diskAdminDataSource.contact.get(),
+    diskAdminDataSource.testimonials.list()
+  ]);
   const event = menu.event;
-  const catalogItems = getPublicCatalogItems();
-  const defaultContent = getDefaultAdminContent();
+  const defaultContent = { announcement, contact, testimonials };
 
   return (
     <>

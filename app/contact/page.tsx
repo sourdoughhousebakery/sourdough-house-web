@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AdminPreviewContactPillLinks } from "@/components/admin-preview-content";
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
-import { getDefaultAdminContent } from "@/lib/admin-content/content";
+import { diskAdminDataSource } from "@/lib/admin-data/disk";
 import { getHotplateUrl, siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -25,8 +25,13 @@ const contactCards = [
   }
 ];
 
-export default function ContactPage() {
-  const defaultContent = getDefaultAdminContent();
+export default async function ContactPage() {
+  const [announcement, contact, testimonials] = await Promise.all([
+    diskAdminDataSource.announcement.get(),
+    diskAdminDataSource.contact.get(),
+    diskAdminDataSource.testimonials.list()
+  ]);
+  const defaultContent = { announcement, contact, testimonials };
 
   return (
     <>

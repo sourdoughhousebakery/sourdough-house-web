@@ -1,9 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { CatalogGrid } from "@/components/catalog-grid";
-import { localCatalogChangeEvent } from "@/lib/admin-data/local";
-import { catalogPreviewStorageKey, getFeaturedLocalCatalogItems } from "@/lib/catalog/local-preview";
 import type { PublicCatalogItem } from "@/lib/catalog/types";
 
 type HomeFeaturedCatalogProps = {
@@ -11,26 +8,6 @@ type HomeFeaturedCatalogProps = {
   limit?: number;
 };
 
-export function HomeFeaturedCatalog({ fallbackItems, limit = 3 }: HomeFeaturedCatalogProps) {
-  const rawCatalog = useSyncExternalStore(subscribeToCatalogPreview, getCatalogPreviewSnapshot, getServerCatalogPreviewSnapshot);
-  const items = getFeaturedLocalCatalogItems(rawCatalog, fallbackItems, limit);
-
-  return <CatalogGrid items={items} />;
-}
-
-function subscribeToCatalogPreview(onStoreChange: () => void) {
-  window.addEventListener("storage", onStoreChange);
-  window.addEventListener(localCatalogChangeEvent, onStoreChange);
-  return () => {
-    window.removeEventListener("storage", onStoreChange);
-    window.removeEventListener(localCatalogChangeEvent, onStoreChange);
-  };
-}
-
-function getCatalogPreviewSnapshot() {
-  return window.localStorage.getItem(catalogPreviewStorageKey);
-}
-
-function getServerCatalogPreviewSnapshot() {
-  return null;
+export function HomeFeaturedCatalog({ fallbackItems }: HomeFeaturedCatalogProps) {
+  return <CatalogGrid items={fallbackItems} />;
 }

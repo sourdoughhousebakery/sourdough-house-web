@@ -3,7 +3,7 @@
 import { Megaphone, MessageSquareQuote, ShoppingBag, UserRoundCog } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { EditableAdminContent } from "@/lib/admin-content/content";
-import { LocalAdminDataSource } from "@/lib/admin-data/local";
+import { HttpAdminDataSource } from "@/lib/admin-data/http";
 import type { BakeCatalogItem } from "@/lib/catalog/types";
 import { AdminCatalogEditor } from "./admin-catalog-editor";
 import { AdminContentEditor, type AdminContentTab } from "./admin-content-editor";
@@ -56,10 +56,7 @@ const adminSections = [
 
 export function AdminWorkspace({ defaultCatalogItems, defaultContent }: AdminWorkspaceProps) {
   const [activeSection, setActiveSection] = useState<AdminSectionId>("catalog");
-  const dataSource = useMemo(
-    () => new LocalAdminDataSource({ defaultCatalogItems, defaultContent }),
-    [defaultCatalogItems, defaultContent]
-  );
+  const dataSource = useMemo(() => new HttpAdminDataSource(), []);
   const section = adminSections.find((item) => item.id === activeSection) ?? adminSections[0];
 
   return (

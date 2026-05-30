@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
 import { AdminWorkspace } from "@/components/admin-workspace";
 import { PageIntro } from "@/components/page-intro";
-import { bakeCatalogItems, pageIntros } from "@/content/site-content";
-import { getDefaultAdminContent } from "@/lib/admin-content/content";
+import { pageIntros } from "@/content/site-content";
+import { diskAdminDataSource } from "@/lib/admin-data/disk";
 
 export const metadata: Metadata = {
   title: "Admin Preview",
   description: "Placeholder admin editor for the Sourdough House Bakery catalog."
 };
 
-export default function AdminPage() {
-  const defaultContent = getDefaultAdminContent();
+export default async function AdminPage() {
+  const [catalogItems, announcement, contact, testimonials] = await Promise.all([
+    diskAdminDataSource.catalog.list(),
+    diskAdminDataSource.announcement.get(),
+    diskAdminDataSource.contact.get(),
+    diskAdminDataSource.testimonials.list()
+  ]);
+  const defaultContent = { announcement, contact, testimonials };
 
   return (
     <>
@@ -18,7 +24,7 @@ export default function AdminPage() {
         <p>{pageIntros.admin.description}</p>
       </PageIntro>
       <section className="px-5 pb-20">
-        <AdminWorkspace defaultCatalogItems={bakeCatalogItems} defaultContent={defaultContent} />
+        <AdminWorkspace defaultCatalogItems={catalogItems} defaultContent={defaultContent} />
       </section>
     </>
   );
