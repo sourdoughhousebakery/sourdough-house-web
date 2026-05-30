@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { diskAdminDataSource } from "@/lib/admin-data/disk";
+import { adminDataSource } from "@/lib/admin-data/source";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  return NextResponse.json(await diskAdminDataSource.announcement.get());
+  return NextResponse.json(await adminDataSource.announcement.get());
 }
 
 export async function PATCH(request: Request) {
-  return NextResponse.json(await diskAdminDataSource.announcement.update(await request.json()));
+  return NextResponse.json(await adminDataSource.announcement.update(await request.json()));
 }

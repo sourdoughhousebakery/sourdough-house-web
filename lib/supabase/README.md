@@ -1,9 +1,19 @@
-# Supabase Boundary
+# Supabase Admin Data Source
 
-Supabase is intentionally not wired yet. When the project has a Supabase account and schema:
+The app has a protocol-style admin data boundary in `lib/admin-data/types.ts`.
 
-1. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-2. Set `SUPABASE_SECRET_KEY` for server-only admin CRUD in API routes.
-3. Generate database types into `types/database.ts`.
-4. Add server/client helpers here using `@supabase/ssr`.
-5. Keep Hotplate as the order source unless the business decides to own ordering data.
+Implementations:
+
+- `lib/admin-data/disk.ts` reads and writes local JSON files in `data/`.
+- `lib/admin-data/supabase.ts` reads and writes Supabase tables and the `site-assets` storage bucket.
+- `lib/admin-data/source.ts` chooses the implementation from `ADMIN_DATA_SOURCE`.
+
+Setup:
+
+1. Run `supabase/schema.sql` in the Supabase SQL editor.
+2. Create a public storage bucket named `site-assets`.
+3. Set `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY`.
+4. Run `npm run seed:supabase` to copy the current JSON data into Supabase.
+5. Set `ADMIN_DATA_SOURCE=supabase`.
+
+`SUPABASE_SECRET_KEY` must stay server-only. Do not expose it with a `NEXT_PUBLIC_` prefix.

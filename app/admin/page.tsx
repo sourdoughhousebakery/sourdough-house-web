@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AdminWorkspace } from "@/components/admin-workspace";
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
-import { diskAdminDataSource } from "@/lib/admin-data/disk";
+import { adminDataSource } from "@/lib/admin-data/source";
 
 export const dynamic = "force-dynamic";
 
@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 
 export default async function AdminPage() {
   const [catalogItems, hero, announcement, contact, testimonials] = await Promise.all([
-    diskAdminDataSource.catalog.list(),
-    diskAdminDataSource.hero.get(),
-    diskAdminDataSource.announcement.get(),
-    diskAdminDataSource.contact.get(),
-    diskAdminDataSource.testimonials.list()
+    adminDataSource.catalog.list(),
+    adminDataSource.hero.get(),
+    adminDataSource.announcement.get(),
+    adminDataSource.contact.get(),
+    adminDataSource.testimonials.list()
   ]);
   const defaultContent = { hero, announcement, contact, testimonials };
 

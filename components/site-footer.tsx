@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { navItems } from "@/content/site-content";
-import { diskAdminDataSource } from "@/lib/admin-data/disk";
+import { adminDataSource } from "@/lib/admin-data/source";
 import { getHotplateUrl, siteConfig } from "@/lib/site";
 import { AdminPreviewContactIconLinks } from "./admin-preview-content";
 
 export async function SiteFooter() {
   const [hero, announcement, contact, testimonials] = await Promise.all([
-    diskAdminDataSource.hero.get(),
-    diskAdminDataSource.announcement.get(),
-    diskAdminDataSource.contact.get(),
-    diskAdminDataSource.testimonials.list()
+    adminDataSource.hero.get(),
+    adminDataSource.announcement.get(),
+    adminDataSource.contact.get(),
+    adminDataSource.testimonials.list()
   ]);
   const defaultContent = { hero, announcement, contact, testimonials };
 

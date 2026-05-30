@@ -7,7 +7,7 @@ import { MotionSection } from "@/components/motion-section";
 import { TestimonialBand } from "@/components/testimonial-band";
 import { ButtonLink } from "@/components/button-link";
 import { homeContent } from "@/content/site-content";
-import { diskAdminDataSource } from "@/lib/admin-data/disk";
+import { adminDataSource } from "@/lib/admin-data/source";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 
 export const dynamic = "force-dynamic";
@@ -15,11 +15,11 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const [menu, featuredCatalog, hero, announcement, contact, testimonials] = await Promise.all([
     getDisplayMenu(3),
-    diskAdminDataSource.catalog.listFeatured(3),
-    diskAdminDataSource.hero.get(),
-    diskAdminDataSource.announcement.get(),
-    diskAdminDataSource.contact.get(),
-    diskAdminDataSource.testimonials.list()
+    adminDataSource.catalog.listFeatured(3),
+    adminDataSource.hero.get(),
+    adminDataSource.announcement.get(),
+    adminDataSource.contact.get(),
+    adminDataSource.testimonials.list()
   ]);
   const defaultContent = { hero, announcement, contact, testimonials };
 

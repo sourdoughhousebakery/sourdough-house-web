@@ -10,7 +10,7 @@ Production Next.js site for Sourdough House Bakery, rebuilt from the v3 static p
 - Tailwind CSS v4
 - Motion
 - Hotplate public menu data
-- Supabase-ready boundary for future data ownership
+- Disk or Supabase-backed admin data source
 
 ## Local Development
 
@@ -27,10 +27,19 @@ Copy `.env.example` to `.env.local` when local overrides are needed.
 
 ```bash
 NEXT_PUBLIC_SITE_URL=https://sourdough-house-bakery.vercel.app
-HOTPLATE_CHEF_ID=sourdoughhouse
+HOTPLATE_CHEF_ID=sourdoughhouse43
+ADMIN_DATA_SOURCE=disk
 ```
 
-Supabase variables are intentionally commented out until the account and schema exist.
+Use `ADMIN_DATA_SOURCE=disk` for local JSON files, or `ADMIN_DATA_SOURCE=supabase` after the database has been seeded.
+
+Supabase-backed admin data also needs:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SECRET_KEY=
+```
 
 ## Project Structure
 
@@ -38,7 +47,7 @@ Supabase variables are intentionally commented out until the account and schema 
 app/          Routes, metadata, sitemap, robots
 components/   Reusable UI and animated sections
 content/      Static editable copy and fallback menu content
-lib/          Site config, Hotplate adapter, future Supabase boundary
+lib/          Site config, Hotplate adapter, admin data source boundary
 types/        Shared TypeScript types
 public/       Icons and static assets
 archive/      Preserved prototype versions and screenshots
@@ -46,9 +55,21 @@ archive/      Preserved prototype versions and screenshots
 
 ## Admin Preview
 
-Open `/admin` locally to preview the future catalog editor. It can toggle whether a typical bake is shown, featured, usually available, and whether its price appears.
+Open `/admin` locally to edit the catalog, hero, announcement, contact details, and testimonials.
 
-Current limitation: this saves to browser `localStorage` only. It is a placeholder workflow until Supabase or another CMS is connected.
+By default, local edits persist to JSON files under `data/`. Set `ADMIN_DATA_SOURCE=supabase` to use the Supabase implementation instead.
+
+## Supabase Setup
+
+Run `supabase/schema.sql` in the Supabase SQL editor, then create a public storage bucket named `site-assets`.
+
+Seed the current local JSON data into Supabase:
+
+```bash
+npm run seed:supabase
+```
+
+After seeding, change `ADMIN_DATA_SOURCE` to `supabase` locally or in Vercel.
 
 ## Verification
 
@@ -74,6 +95,10 @@ Then import the GitHub repo into the target Vercel account and set:
 
 - `NEXT_PUBLIC_SITE_URL`
 - `HOTPLATE_CHEF_ID`
+- `ADMIN_DATA_SOURCE`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+- `SUPABASE_SECRET_KEY`
 
 ## Prototype Archive
 
