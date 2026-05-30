@@ -19,9 +19,17 @@ type AdminCatalogEditorProps = {
 };
 
 const storageKey = "sourdough-house-bake-catalog";
+const categoryStorageKey = "sourdough-house-bake-categories";
+const starterCategories = ["Bread", "Sweets", "Breakfast", "Specials", "Custom", "Bakery"];
 
 function toPublicItems(items: BakeCatalogItem[]): PublicCatalogItem[] {
   return getPublicCatalogItems(items);
+}
+
+function getCatalogCategories(items: BakeCatalogItem[]) {
+  return Array.from(new Set([...starterCategories, ...items.map((item) => item.category).filter(Boolean)])).sort((a, b) =>
+    a.localeCompare(b)
+  );
 }
 
 export function AdminCatalogEditor({
@@ -29,7 +37,7 @@ export function AdminCatalogEditor({
   title = "Menu and catalog",
   description = "Add, update, feature, or hide the regular bakery items shown in the menu preview."
 }: AdminCatalogEditorProps) {
-  const [items, setItems] = useState<BakeCatalogItem[]>(() => {
+  const initialItems = () => {
     if (typeof window === "undefined") return defaultItems;
     const raw = window.localStorage.getItem(storageKey);
     if (!raw) return defaultItems;
@@ -42,34 +50,89 @@ export function AdminCatalogEditor({
       window.localStorage.removeItem(storageKey);
       return defaultItems;
     }
+  };
+
+  const [items, setItems] = useState<BakeCatalogItem[]>(initialItems);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(() => initialItems()[0]?.id ?? null);
+  const [categories, setCategories] = useState<string[]>(() => {
+    if (typeof window === "undefined") return getCatalogCategories(defaultItems);
+    const raw = window.localStorage.getItem(categoryStorageKey);
+    if (!raw) return getCatalogCategories(initialItems());
+
+    try {
+      const parsed = JSON.parse(raw) as unknown;
+      return Array.isArray(parsed)
+        ? Array.from(new Set(parsed.filter((value): value is string => typeof value === "string" && value.trim().length > 0)))
+        : getCatalogCategories(initialItems());
+    } catch {
+      window.localStorage.removeItem(categoryStorageKey);
+      return getCatalogCategories(initialItems());
+    }
   });
+  const [newCategory, setNewCategory] = useState("");
+  const [categoryToDelete, setCategoryToDelete] = useState("");
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [previewItem, setPreviewItem] = useState<BakeCatalogItem | null>(null);
 
   const publicItems = useMemo(() => toPublicItems(items), [items]);
+  const selectedItem = items.find((item) => item.id === selectedItemId) ?? items[0] ?? null;
 
   function updateItem(id: string, patch: Partial<BakeCatalogItem>) {
     setItems((current) => updateCatalogItem(current, id, patch));
   }
 
   function addItem() {
-    setItems((current) => createCatalogItem(current));
+    const id = `catalog-${Date.now().toString(36)}`;
+    setItems((current) => {
+      const nextItems = createCatalogItem(current, id);
+      const created = nextItems.at(-1);
+      return created && categories[0] ? updateCatalogItem(nextItems, created.id, { category: categories[0] }) : nextItems;
+    });
+    setSelectedItemId(id);
+    setSavedAt(null);
+  }
+
+  function addCategory() {
+    const category = newCategory.trim();
+    if (!category || categories.includes(category)) return;
+    setCategories((current) => [...current, category].sort((a, b) => a.localeCompare(b)));
+    setCategoryToDelete(category);
+    setNewCategory("");
+    setSavedAt(null);
+  }
+
+  function deleteCategory() {
+    if (!categoryToDelete) return;
+    const isInUse = items.some((item) => item.category === categoryToDelete);
+    if (isInUse) return;
+    setCategories((current) => current.filter((category) => category !== categoryToDelete));
+    setCategoryToDelete("");
     setSavedAt(null);
   }
 
   function removeItem(id: string) {
-    setItems((current) => deleteCatalogItem(current, id));
+    setItems((current) => {
+      const nextItems = deleteCatalogItem(current, id);
+      if (selectedItemId === id) setSelectedItemId(nextItems[0]?.id ?? null);
+      return nextItems;
+    });
     setSavedAt(null);
   }
 
   function save() {
     window.localStorage.setItem(storageKey, JSON.stringify(publicItems));
+    window.localStorage.setItem(categoryStorageKey, JSON.stringify(categories));
     setSavedAt(new Date().toLocaleTimeString());
   }
 
   function reset() {
     window.localStorage.removeItem(storageKey);
+    window.localStorage.removeItem(categoryStorageKey);
     setItems(defaultItems);
+    setSelectedItemId(defaultItems[0]?.id ?? null);
+    setCategories(getCatalogCategories(defaultItems));
+    setNewCategory("");
+    setCategoryToDelete("");
     setSavedAt(null);
   }
 
@@ -110,118 +173,180 @@ export function AdminCatalogEditor({
         </div>
       </div>
 
-      <div className="grid gap-5">
-        {items.map((item) => (
-          <article key={item.id} className="grid gap-5 rounded-[1.5rem] border border-espresso/10 bg-white p-4 shadow-soft md:grid-cols-[180px_1fr]">
-            <div className="flex flex-col gap-3 self-start">
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[1rem] bg-gold/10">
-                <Image src={item.image} alt="" fill sizes="180px" className="object-cover" />
-              </div>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
+        <div className="grid gap-5">
+          <div className="rounded-[1.5rem] border border-espresso/10 bg-white p-4 shadow-soft">
+            <h3 className="font-serif text-2xl text-espresso">Categories</h3>
+            <p className="mt-1 text-sm font-semibold text-espresso/60">
+              Categories keep the menu organized. Delete is available only for categories no item is using.
+            </p>
+            <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto]">
+              <input
+                value={newCategory}
+                onChange={(event) => setNewCategory(event.target.value)}
+                placeholder="Add a category"
+                className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold text-espresso"
+              />
               <button
                 type="button"
-                onClick={() => setPreviewItem(item)}
-                className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-espresso/15 bg-white px-4 text-sm font-black text-espresso"
+                onClick={addCategory}
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-gold px-4 text-sm font-black text-espresso"
               >
-                <Eye aria-hidden size={16} />
-                Preview image
+                <Plus aria-hidden size={16} />
+                Add category
               </button>
             </div>
-            <div className="grid gap-4">
-              <div className="grid gap-3 md:grid-cols-2">
-                <label htmlFor={`${item.id}-name`} className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
-                  Name
-                  <input
-                    id={`${item.id}-name`}
-                    aria-label="Name"
-                    value={item.name}
-                    onChange={(event) => updateItem(item.id, { name: event.target.value })}
-                    className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case tracking-normal text-espresso"
-                  />
-                </label>
-                <label htmlFor={`${item.id}-category`} className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
-                  Category
-                  <input
-                    id={`${item.id}-category`}
-                    aria-label="Category"
-                    value={item.category}
-                    onChange={(event) => updateItem(item.id, { category: event.target.value })}
-                    className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case tracking-normal text-espresso"
-                  />
-                </label>
-              </div>
-              <div className="grid gap-3 md:grid-cols-2">
-                <label htmlFor={`${item.id}-price`} className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
-                  Price
-                  <input
-                    id={`${item.id}-price`}
-                    aria-label="Price"
-                    value={item.price}
-                    onChange={(event) => updateItem(item.id, { price: event.target.value })}
-                    className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case tracking-normal text-espresso"
-                  />
-                </label>
-                <label htmlFor={`${item.id}-note`} className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
-                  Note
-                  <input
-                    id={`${item.id}-note`}
-                    aria-label="Note"
-                    value={item.note ?? ""}
-                    onChange={(event) => updateItem(item.id, { note: event.target.value })}
-                    className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case tracking-normal text-espresso"
-                  />
-                </label>
-              </div>
-              <label htmlFor={`${item.id}-image`} className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
-                Image URL
-                <input
-                  id={`${item.id}-image`}
-                  aria-label="Image URL"
-                  value={item.image}
-                  onChange={(event) => updateItem(item.id, { image: event.target.value })}
-                  className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case tracking-normal text-espresso"
-                />
-              </label>
-              <label htmlFor={`${item.id}-description`} className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
-                Description
-                <textarea
-                  id={`${item.id}-description`}
-                  aria-label="Description"
-                  value={item.description}
-                  onChange={(event) => updateItem(item.id, { description: event.target.value })}
-                  className="min-h-24 rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case leading-6 tracking-normal text-espresso"
-                />
-              </label>
-              <div className="flex flex-wrap gap-4">
-                {[
-                  ["isActive", "Show item"],
-                  ["showPrice", "Show price"],
-                  ["isTypicallyAvailable", "Usually available"],
-                  ["isFeatured", "Feature on home"]
-                ].map(([key, label]) => (
-                  <label key={key} className="inline-flex items-center gap-2 text-sm font-bold text-espresso/72">
-                    <input
-                      type="checkbox"
-                      checked={Boolean(item[key as keyof BakeCatalogItem])}
-                      onChange={(event) => updateItem(item.id, { [key]: event.target.checked })}
-                      className="size-4 accent-rust"
-                    />
-                    {label}
-                  </label>
-                ))}
-              </div>
-              <div>
-                <button
-                  type="button"
-                  onClick={() => removeItem(item.id)}
-                  className="inline-flex min-h-10 items-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust"
-                >
-                  <Trash2 aria-hidden size={16} />
-                  Delete item
-                </button>
-              </div>
+            <div className="mt-3 grid gap-3 md:grid-cols-[1fr_auto]">
+              <select
+                value={categoryToDelete}
+                onChange={(event) => setCategoryToDelete(event.target.value)}
+                className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold text-espresso"
+              >
+                <option value="">Choose unused category to delete</option>
+                {categories.map((category) => {
+                  const inUse = items.some((item) => item.category === category);
+
+                  return (
+                    <option key={category} value={category} disabled={inUse}>
+                      {category}
+                      {inUse ? " (in use)" : ""}
+                    </option>
+                  );
+                })}
+              </select>
+              <button
+                type="button"
+                onClick={deleteCategory}
+                disabled={!categoryToDelete || items.some((item) => item.category === categoryToDelete)}
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                <Trash2 aria-hidden size={16} />
+                Delete category
+              </button>
             </div>
+          </div>
+
+          <div className="overflow-hidden rounded-[1.5rem] border border-espresso/10 bg-white shadow-soft">
+            <div className="border-b border-espresso/10 p-4">
+              <h3 className="font-serif text-2xl text-espresso">All items</h3>
+              <p className="mt-1 text-sm font-semibold text-espresso/60">Pick one item to edit. The selected row opens in the form.</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[760px] border-collapse text-left">
+                <thead className="bg-cream/70 text-xs font-black uppercase tracking-[0.12em] text-rust">
+                  <tr>
+                    <th className="px-4 py-3">Item</th>
+                    <th className="px-4 py-3">Category</th>
+                    <th className="px-4 py-3">Price</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Homepage</th>
+                    <th className="px-4 py-3 text-right">Edit</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-espresso/8 text-sm">
+                  {items.map((item) => (
+                    <tr key={item.id} className={selectedItem?.id === item.id ? "bg-gold/12" : "bg-white"}>
+                      <td className="px-4 py-3">
+                        <div className="font-black text-espresso">{item.name}</div>
+                        <div className="mt-1 max-w-xs truncate text-xs font-semibold text-espresso/55">{item.note || item.description}</div>
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-espresso/70">{item.category}</td>
+                      <td className="px-4 py-3 font-hand text-xl font-bold text-rust">{item.showPrice ? item.price || "No price" : "Hidden"}</td>
+                      <td className="px-4 py-3">
+                        <span className={`rounded-full px-3 py-1 text-xs font-black ${item.isActive ? "bg-sage/12 text-sage" : "bg-rust/10 text-rust"}`}>
+                          {item.isActive ? "Visible" : "Hidden"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-espresso/70">{item.isFeatured ? "Featured" : "No"}</td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedItemId(item.id)}
+                          className="inline-flex min-h-10 items-center justify-center rounded-full border border-espresso/15 bg-white px-4 text-sm font-black text-espresso hover:border-rust/30 hover:text-rust"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {selectedItem ? (
+          <article className="grid gap-5 rounded-[1.5rem] border border-espresso/10 bg-white p-4 shadow-soft">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.12em] text-rust">Editing</p>
+              <h3 className="mt-1 font-serif text-3xl text-espresso">{selectedItem.name}</h3>
+            </div>
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[1rem] bg-gold/10">
+              <Image src={selectedItem.image} alt="" fill sizes="420px" className="object-cover" />
+            </div>
+            <button
+              type="button"
+              onClick={() => setPreviewItem(selectedItem)}
+              className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full border border-espresso/15 bg-white px-4 text-sm font-black text-espresso"
+            >
+              <Eye aria-hidden size={16} />
+              Preview image
+            </button>
+
+            <TextInput label="Name" value={selectedItem.name} onChange={(value) => updateItem(selectedItem.id, { name: value })} />
+            <label className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
+              Category
+              <select
+                value={selectedItem.category}
+                onChange={(event) => updateItem(selectedItem.id, { category: event.target.value })}
+                className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case tracking-normal text-espresso"
+              >
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <TextInput label="Price" value={selectedItem.price} onChange={(value) => updateItem(selectedItem.id, { price: value })} />
+              <TextInput label="Note" value={selectedItem.note ?? ""} onChange={(value) => updateItem(selectedItem.id, { note: value })} />
+            </div>
+            <TextInput label="Image URL" value={selectedItem.image} onChange={(value) => updateItem(selectedItem.id, { image: value })} />
+            <TextArea label="Description" value={selectedItem.description} onChange={(value) => updateItem(selectedItem.id, { description: value })} />
+
+            <div className="grid gap-3">
+              {[
+                ["isActive", "Show item"],
+                ["showPrice", "Show price"],
+                ["isTypicallyAvailable", "Usually available"],
+                ["isFeatured", "Feature on home"]
+              ].map(([key, label]) => (
+                <label key={key} className="inline-flex items-center gap-2 text-sm font-bold text-espresso/72">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(selectedItem[key as keyof BakeCatalogItem])}
+                    onChange={(event) => updateItem(selectedItem.id, { [key]: event.target.checked })}
+                    className="size-4 accent-rust"
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => removeItem(selectedItem.id)}
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust"
+            >
+              <Trash2 aria-hidden size={16} />
+              Delete item
+            </button>
           </article>
-        ))}
+        ) : (
+          <div className="rounded-[1.5rem] border border-espresso/10 bg-white p-5 text-sm font-semibold text-espresso/60 shadow-soft">
+            Add an item or select one from the table to edit it.
+          </div>
+        )}
       </div>
       {previewItem ? (
         <div
@@ -267,5 +392,31 @@ export function AdminCatalogEditor({
         </div>
       ) : null}
     </div>
+  );
+}
+
+function TextInput({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <label className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
+      {label}
+      <input
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case tracking-normal text-espresso"
+      />
+    </label>
+  );
+}
+
+function TextArea({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <label className="grid gap-1 text-xs font-black uppercase tracking-[0.12em] text-rust">
+      {label}
+      <textarea
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="min-h-24 rounded-xl border border-espresso/12 px-3 py-2 text-sm font-semibold normal-case leading-6 tracking-normal text-espresso"
+      />
+    </label>
   );
 }

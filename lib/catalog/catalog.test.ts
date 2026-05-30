@@ -93,6 +93,12 @@ describe("catalog CRUD helpers", () => {
     expect(created?.id).toMatch(/^catalog-/);
   });
 
+  it("creates a catalog item with a provided id", () => {
+    const nextItems = createCatalogItem(items, "catalog-known");
+
+    expect(nextItems.at(-1)?.id).toBe("catalog-known");
+  });
+
   it("updates a catalog item by id without mutating other items", () => {
     const nextItems = updateCatalogItem(items, "country", { name: "Updated Country" });
 

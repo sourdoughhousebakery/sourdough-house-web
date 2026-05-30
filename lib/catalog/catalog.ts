@@ -17,9 +17,7 @@ export function getFeaturedCatalogItems(items: BakeCatalogItem[] = bakeCatalogIt
     .slice(0, limit);
 }
 
-export function createCatalogItem(items: BakeCatalogItem[]): BakeCatalogItem[] {
-  const id = `catalog-${Date.now().toString(36)}`;
-
+export function createCatalogItem(items: BakeCatalogItem[], id = `catalog-${Date.now().toString(36)}`): BakeCatalogItem[] {
   return [
     ...items,
     {
