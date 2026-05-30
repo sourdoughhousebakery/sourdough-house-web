@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, Plus, RotateCcw, Save, Trash2, Upload, X } from "lucide-react";
+import { Eye, Pencil, Plus, RotateCcw, Save, Trash2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import type { BakeCatalogItem, PublicCatalogItem } from "@/lib/catalog/types";
@@ -252,7 +252,7 @@ export function AdminCatalogEditor({
                     <th className="px-4 py-3">Price</th>
                     <th className="px-4 py-3">Status</th>
                     <th className="px-4 py-3">Homepage</th>
-                    <th className="px-4 py-3 text-right">Edit</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-espresso/8 text-sm">
@@ -270,14 +270,27 @@ export function AdminCatalogEditor({
                         </span>
                       </td>
                       <td className="px-4 py-3 font-semibold text-espresso/70">{item.isFeatured ? "Featured" : "No"}</td>
-                      <td className="px-4 py-3 text-right">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedItemId(item.id)}
-                          className="inline-flex min-h-10 items-center justify-center rounded-full border border-espresso/15 bg-white px-4 text-sm font-black text-espresso hover:border-rust/30 hover:text-rust"
-                        >
-                          Edit
-                        </button>
+                      <td className="px-4 py-3">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedItemId(item.id)}
+                            className="inline-flex size-10 items-center justify-center rounded-full border border-espresso/15 bg-white text-espresso hover:border-rust/30 hover:text-rust"
+                            aria-label={`Edit ${item.name}`}
+                            title={`Edit ${item.name}`}
+                          >
+                            <Pencil aria-hidden size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeItem(item.id)}
+                            className="inline-flex size-10 items-center justify-center rounded-full border border-rust/20 bg-rust/8 text-rust hover:bg-rust/12"
+                            aria-label={`Delete ${item.name}`}
+                            title={`Delete ${item.name}`}
+                          >
+                            <Trash2 aria-hidden size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
