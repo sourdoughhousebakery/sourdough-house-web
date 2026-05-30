@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AdminCatalogEditor } from "@/components/admin-catalog-editor";
 import { PageIntro } from "@/components/page-intro";
-import { bakeCatalogItems } from "@/content/site-content";
+import { bakeCatalogItems, pageIntros } from "@/content/site-content";
 
 export const metadata: Metadata = {
   title: "Admin Preview",
@@ -11,10 +11,8 @@ export const metadata: Metadata = {
 export default function AdminPage() {
   return (
     <>
-      <PageIntro eyebrow="Admin preview" title="Edit the bakery catalog.">
-        <p>
-          Toggle what appears in the “What we bake” tab, hide prices for items that are not always for sale, and preview the future admin workflow.
-        </p>
+      <PageIntro eyebrow={pageIntros.admin.eyebrow} title={pageIntros.admin.title}>
+        <p>{pageIntros.admin.description}</p>
       </PageIntro>
       <section className="px-5 pb-20">
         <div className="mx-auto max-w-6xl">

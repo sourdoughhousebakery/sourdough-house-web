@@ -8,6 +8,62 @@ export const navItems = [
   { href: "/contact", label: "Contact" }
 ];
 
+export const pageIntros = {
+  menu: {
+    fallbackEyebrow: "Bakery menu",
+    liveEyebrow: "Live menu",
+    title: "What we bake for you.",
+    fallbackDescription: "Browse the bakery favorites, then open Hotplate for the current drop and checkout."
+  },
+  story: {
+    eyebrow: "Our story",
+    title: "Born from a starter, raised with love.",
+    description: "Small-batch baking with patient fermentation, honest ingredients, and a weekly rhythm customers can count on."
+  },
+  order: {
+    eyebrow: "Order online",
+    title: "Fresh drops, simple checkout.",
+    description:
+      "Ordering runs through Hotplate so the current menu, inventory, payment, pickup details, and drop notifications stay in one reliable place."
+  },
+  contact: {
+    eyebrow: "Contact",
+    title: "Questions, custom bakes, and pickup details.",
+    description:
+      "Start with Hotplate for ordering. For custom requests or event-sized bakes, send a note and include your date, quantity, and pickup needs."
+  },
+  admin: {
+    eyebrow: "Admin preview",
+    title: "Edit the bakery catalog.",
+    description:
+      "Toggle what appears in the “What we bake” tab, hide prices for items that are not always for sale, and preview the future admin workflow."
+  }
+};
+
+export const homeContent = {
+  featuredMenu: {
+    fallbackEyebrow: "What we bake",
+    liveEyebrow: "Fresh from Hotplate",
+    title: "This week's table.",
+    ctaLabel: "View full menu"
+  }
+};
+
+export const heroContent = {
+  eyebrow: "Small batch · Slow fermented",
+  title: "Bread baked with love and patience.",
+  description: "Handcrafted sourdough breads, cookies, muffins, rolls, and seasonal treats released in fresh local drops.",
+  primaryCtaLabel: "Order on Hotplate",
+  secondaryCtaLabel: "Meet the bakery",
+  highlights: ["72-hour flavor, weekly drops", "Easy local pickup"],
+  image: {
+    src: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1400&q=85",
+    alt: "Fresh artisan sourdough loaf on a bakery table"
+  },
+  imageBadge: "Fresh this week",
+  imageNote: "Starter-fed, hand-shaped, baked to share"
+};
+
 export const fallbackMenuItems: FallbackMenuItem[] = [
   {
     id: "country-sourdough",
@@ -191,6 +247,36 @@ export const processSteps: ProcessStep[] = [
       "Fresh bakes are released through Hotplate drops and picked up close to home."
   }
 ];
+
+export const processBandContent = {
+  eyebrow: "The rhythm",
+  title: "No shortcuts. Just better bread.",
+  description: "The site can get flashier, but the bakery should stay honest: starter, time, heat, and pickup that works."
+};
+
+export const storyPreviewContent = {
+  eyebrow: "Our story",
+  title: "Born from a starter, raised with care.",
+  ctaLabel: "Read the story",
+  image: {
+    src: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=1400&q=85",
+    alt: "Baker shaping dough on a floured work surface"
+  }
+};
+
+export const orderPanelContent = {
+  eyebrow: "Order online",
+  title: "Fresh bread, easy pickup.",
+  description:
+    "Hotplate keeps the weekly menu current, handles payment, and makes it easy to get notified when the next bake opens.",
+  ctaLabel: "Open Hotplate",
+  steps: [
+    { title: "Watch the drop", description: "Hotplate shows what is available this week.", icon: "Bell" },
+    { title: "Reserve favorites", description: "Pick bread, sweets, and seasonal specials before they sell out.", icon: "ShoppingBag" },
+    { title: "Pay securely", description: "Checkout runs through Hotplate, not a loose form or DM thread.", icon: "CreditCard" },
+    { title: "Pickup fresh", description: "Arrive at the pickup window and take home the good stuff.", icon: "Timer" }
+  ]
+} as const;
 
 export const testimonials: Testimonial[] = [
   {

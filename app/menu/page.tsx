@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { MenuTabs } from "@/components/menu-tabs";
 import { PageIntro } from "@/components/page-intro";
+import { pageIntros } from "@/content/site-content";
 import { getPublicCatalogItems } from "@/lib/catalog/catalog";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 import { getHotplateUrl } from "@/lib/site";
@@ -17,11 +18,14 @@ export default async function MenuPage() {
 
   return (
     <>
-      <PageIntro eyebrow={menu.source === "fallback" ? "Bakery menu" : "Live menu"} title="What we bake for you.">
+      <PageIntro
+        eyebrow={menu.source === "fallback" ? pageIntros.menu.fallbackEyebrow : pageIntros.menu.liveEyebrow}
+        title={pageIntros.menu.title}
+      >
         <p>
           {event?.title
             ? `${event.title} is loaded from Hotplate.`
-            : "Browse the bakery favorites, then open Hotplate for the current drop and checkout."}
+            : pageIntros.menu.fallbackDescription}
         </p>
       </PageIntro>
       <section className="px-5 pb-20">

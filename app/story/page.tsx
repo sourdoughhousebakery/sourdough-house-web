@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { PageIntro } from "@/components/page-intro";
 import { ProcessBand } from "@/components/process-band";
-import { storyParagraphs } from "@/content/site-content";
+import { pageIntros, storyParagraphs } from "@/content/site-content";
 
 export const metadata: Metadata = {
   title: "Story",
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 export default function StoryPage() {
   return (
     <>
-      <PageIntro eyebrow="Our story" title="Born from a starter, raised with love.">
-        <p>Small-batch baking with patient fermentation, honest ingredients, and a weekly rhythm customers can count on.</p>
+      <PageIntro eyebrow={pageIntros.story.eyebrow} title={pageIntros.story.title}>
+        <p>{pageIntros.story.description}</p>
       </PageIntro>
       <section className="px-5 pb-12">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.9fr_1fr] lg:items-center">
@@ -40,4 +40,3 @@ export default function StoryPage() {
     </>
   );
 }
-

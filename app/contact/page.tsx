@@ -1,6 +1,7 @@
 import { Facebook, Instagram, Mail, Music2 } from "lucide-react";
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/page-intro";
+import { pageIntros } from "@/content/site-content";
 import { getContactLinks, getHotplateUrl, siteConfig, type ContactLink } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -37,8 +38,8 @@ function getLinkIcon(link: ContactLink) {
 export default function ContactPage() {
   return (
     <>
-      <PageIntro eyebrow="Contact" title="Questions, custom bakes, and pickup details.">
-        <p>Start with Hotplate for ordering. For custom requests or event-sized bakes, send a note and include your date, quantity, and pickup needs.</p>
+      <PageIntro eyebrow={pageIntros.contact.eyebrow} title={pageIntros.contact.title}>
+        <p>{pageIntros.contact.description}</p>
       </PageIntro>
       <section className="px-5 pb-20">
         <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">

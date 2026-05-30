@@ -1,4 +1,4 @@
-import { processSteps } from "@/content/site-content";
+import { processBandContent, processSteps } from "@/content/site-content";
 import { MotionSection } from "./motion-section";
 
 export function ProcessBand() {
@@ -7,12 +7,10 @@ export function ProcessBand() {
       <div className="mx-auto max-w-6xl rounded-[2rem] bg-espresso p-6 text-cream shadow-lift md:p-10">
         <div className="grid gap-6 md:grid-cols-[0.8fr_1.2fr] md:items-end">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-gold">The rhythm</p>
-            <h2 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">No shortcuts. Just better bread.</h2>
+            <p className="text-sm font-black uppercase tracking-[0.18em] text-gold">{processBandContent.eyebrow}</p>
+            <h2 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">{processBandContent.title}</h2>
           </div>
-          <p className="text-base leading-7 text-cream/70">
-            The site can get flashier, but the bakery should stay honest: starter, time, heat, and pickup that works.
-          </p>
+          <p className="text-base leading-7 text-cream/70">{processBandContent.description}</p>
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-4">
           {processSteps.map((step) => (
@@ -27,4 +25,3 @@ export function ProcessBand() {
     </MotionSection>
   );
 }
-

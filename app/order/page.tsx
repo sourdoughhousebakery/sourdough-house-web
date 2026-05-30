@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { OrderPanel } from "@/components/order-panel";
 import { PageIntro } from "@/components/page-intro";
+import { pageIntros } from "@/content/site-content";
 import { getHotplateUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -11,10 +12,8 @@ export const metadata: Metadata = {
 export default function OrderPage() {
   return (
     <>
-      <PageIntro eyebrow="Order online" title="Fresh drops, simple checkout.">
-        <p>
-          Ordering runs through Hotplate so the current menu, inventory, payment, pickup details, and drop notifications stay in one reliable place.
-        </p>
+      <PageIntro eyebrow={pageIntros.order.eyebrow} title={pageIntros.order.title}>
+        <p>{pageIntros.order.description}</p>
       </PageIntro>
       <OrderPanel />
       <section className="px-5 pb-20">
@@ -36,4 +35,3 @@ export default function OrderPage() {
     </>
   );
 }
-

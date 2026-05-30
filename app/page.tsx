@@ -7,6 +7,7 @@ import { ProcessBand } from "@/components/process-band";
 import { StoryPreview } from "@/components/story-preview";
 import { TestimonialBand } from "@/components/testimonial-band";
 import { ButtonLink } from "@/components/button-link";
+import { homeContent } from "@/content/site-content";
 import { getFeaturedCatalogItems } from "@/lib/catalog/catalog";
 import { getDisplayMenu } from "@/lib/hotplate/api";
 
@@ -22,12 +23,12 @@ export default async function HomePage() {
           <div className="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-sm font-black uppercase tracking-[0.18em] text-rust">
-                {menu.source === "fallback" ? "What we bake" : "Fresh from Hotplate"}
+                {menu.source === "fallback" ? homeContent.featuredMenu.fallbackEyebrow : homeContent.featuredMenu.liveEyebrow}
               </p>
-              <h2 className="mt-3 font-serif text-5xl leading-none text-espresso">This week&apos;s table.</h2>
+              <h2 className="mt-3 font-serif text-5xl leading-none text-espresso">{homeContent.featuredMenu.title}</h2>
             </div>
             <ButtonLink href="/menu" variant="secondary">
-              View full menu
+              {homeContent.featuredMenu.ctaLabel}
             </ButtonLink>
           </div>
           {menu.source === "fallback" ? (
