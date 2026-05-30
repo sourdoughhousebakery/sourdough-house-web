@@ -12,7 +12,22 @@ describe("getSocialLinks", () => {
         ...siteConfig,
         instagramUrl: "https://www.instagram.com/sourdoughhouse/"
       })
-    ).toEqual([{ label: "Instagram", href: "https://www.instagram.com/sourdoughhouse/" }]);
+    ).toEqual([{ label: "Instagram", href: "https://www.instagram.com/sourdoughhouse" }]);
+  });
+
+  it("normalizes social URLs for app-friendly universal links", () => {
+    expect(
+      getSocialLinks({
+        ...siteConfig,
+        instagramUrl: "instagram.com/sourdoughhouse",
+        facebookUrl: "https://facebook.com/sourdoughhouse/",
+        tiktokUrl: "https://www.tiktok.com/sourdoughhouse"
+      })
+    ).toEqual([
+      { label: "Instagram", href: "https://www.instagram.com/sourdoughhouse" },
+      { label: "Facebook", href: "https://www.facebook.com/sourdoughhouse" },
+      { label: "TikTok", href: "https://www.tiktok.com/@sourdoughhouse" }
+    ]);
   });
 });
 

@@ -1,11 +1,14 @@
 "use client";
 
 import { Facebook, Instagram, Mail, Music2, Star } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   getActiveAnnouncement,
   getActiveTestimonials,
-  type EditableAdminContent
+  type EditableAdminContent,
+  type EditableContact
 } from "@/lib/admin-content/content";
+import { adminContactChangeEvent } from "@/lib/admin-data/events";
 import { getContactLinks, type ContactLink } from "@/lib/site";
 import { ButtonLink } from "./button-link";
 import { MotionSection } from "./motion-section";
@@ -23,6 +26,30 @@ const iconByLabel = {
 
 function getLinkIcon(link: ContactLink) {
   return link.kind === "email" ? iconByLabel.Email : iconByLabel[link.label];
+}
+
+function useApiContact(fallbackContact: EditableContact) {
+  const [contact, setContact] = useState(fallbackContact);
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    async function loadContact() {
+      const response = await fetch("/api/admin/content/contact", { cache: "no-store" });
+      if (!response.ok) return;
+      const nextContact = (await response.json()) as EditableContact;
+      if (isCurrent) setContact(nextContact);
+    }
+
+    loadContact();
+    window.addEventListener(adminContactChangeEvent, loadContact);
+    return () => {
+      isCurrent = false;
+      window.removeEventListener(adminContactChangeEvent, loadContact);
+    };
+  }, []);
+
+  return contact;
 }
 
 export function AdminPreviewAnnouncement({ defaultContent }: AdminPreviewProps) {
@@ -48,7 +75,8 @@ export function AdminPreviewAnnouncement({ defaultContent }: AdminPreviewProps) 
 }
 
 export function AdminPreviewContactIconLinks({ defaultContent }: AdminPreviewProps) {
-  const links = getContactLinks(defaultContent.contact);
+  const contact = useApiContact(defaultContent.contact);
+  const links = getContactLinks(contact);
 
   return (
     <>
@@ -73,7 +101,8 @@ export function AdminPreviewContactIconLinks({ defaultContent }: AdminPreviewPro
 }
 
 export function AdminPreviewContactPillLinks({ defaultContent }: AdminPreviewProps) {
-  const links = getContactLinks(defaultContent.contact);
+  const contact = useApiContact(defaultContent.contact);
+  const links = getContactLinks(contact);
 
   return (
     <>

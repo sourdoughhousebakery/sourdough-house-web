@@ -46,12 +46,43 @@ function isConfiguredUrl(href: string) {
   return !placeholderSocialUrls.has(normalized);
 }
 
+function normalizeSocialHref(platform: SocialLink["label"], value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  const withProtocol = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed.replace(/^@/, "")}`;
+
+  try {
+    const url = new URL(withProtocol);
+    url.protocol = "https:";
+    url.hash = "";
+    url.search = "";
+
+    if (platform === "Instagram") {
+      url.hostname = "www.instagram.com";
+    }
+    if (platform === "Facebook") {
+      url.hostname = "www.facebook.com";
+    }
+    if (platform === "TikTok") {
+      url.hostname = "www.tiktok.com";
+      const handle = url.pathname.replace(/^\/+/, "").replace(/^@/, "").replace(/\/+$/, "");
+      if (handle) url.pathname = `/@${handle}`;
+    }
+
+    const normalized = url.toString().replace(/\/$/, "");
+    return isConfiguredUrl(normalized) ? normalized : null;
+  } catch {
+    return null;
+  }
+}
+
 export function getSocialLinks(config: ContactConfig = siteConfig): SocialLink[] {
   return [
-    { href: config.instagramUrl, label: "Instagram" as const },
-    { href: config.facebookUrl, label: "Facebook" as const },
-    { href: config.tiktokUrl, label: "TikTok" as const }
-  ].filter((link) => isConfiguredUrl(link.href));
+    { href: normalizeSocialHref("Instagram", config.instagramUrl), label: "Instagram" as const },
+    { href: normalizeSocialHref("Facebook", config.facebookUrl), label: "Facebook" as const },
+    { href: normalizeSocialHref("TikTok", config.tiktokUrl), label: "TikTok" as const }
+  ].filter((link): link is SocialLink => Boolean(link.href));
 }
 
 export function getContactLinks(config: ContactConfig = siteConfig): ContactLink[] {

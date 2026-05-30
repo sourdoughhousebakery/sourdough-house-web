@@ -6,6 +6,7 @@ import type {
   EditableTestimonial
 } from "@/lib/admin-content/content";
 import type { BakeCatalogItem, PublicCatalogItem } from "@/lib/catalog/types";
+import { adminContactChangeEvent } from "./events";
 import type { AdminDataSource, AssetRepository, CatalogRepository, CategoryRepository, CrudRepository, ImageAsset, SingletonRepository } from "./types";
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
@@ -57,7 +58,11 @@ export class HttpAdminDataSource implements AdminDataSource {
 
   readonly contact: SingletonRepository<EditableContact> = {
     get: () => api<EditableContact>("/api/admin/content/contact"),
-    update: (patch) => api<EditableContact>("/api/admin/content/contact", { method: "PATCH", body: JSON.stringify(patch) })
+    update: async (patch) => {
+      const contact = await api<EditableContact>("/api/admin/content/contact", { method: "PATCH", body: JSON.stringify(patch) });
+      window.dispatchEvent(new Event(adminContactChangeEvent));
+      return contact;
+    }
   };
 
   readonly testimonials: CrudRepository<EditableTestimonial> = {
