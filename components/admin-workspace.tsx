@@ -76,7 +76,7 @@ export function AdminWorkspace({ defaultCatalogItems, defaultContent }: AdminWor
             type="button"
             onClick={() => setActiveSection(id)}
             className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-[1.1rem] px-4 text-sm font-black transition ${
-              activeSection === id ? "bg-espresso text-cream" : "text-espresso/68 hover:bg-white"
+              activeSection === id ? "bg-espresso text-cream shadow-soft ring-2 ring-gold/60" : "text-espresso/68 hover:bg-white"
             }`}
             aria-pressed={activeSection === id}
           >

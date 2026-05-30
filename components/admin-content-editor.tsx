@@ -1,6 +1,6 @@
 "use client";
 
-import { Megaphone, MessageSquareQuote, Plus, Trash2, UserRoundCog } from "lucide-react";
+import { Check, Megaphone, MessageSquareQuote, Plus, Trash2, UserRoundCog } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { AdminDataSource } from "@/lib/admin-data/types";
 import {
@@ -171,8 +171,9 @@ export function AdminContentEditor({
               type="button"
               onClick={() => setSelectedTab(id)}
               className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-[1.1rem] px-4 text-sm font-black transition ${
-                currentTab === id ? "bg-espresso text-cream" : "text-espresso/68 hover:bg-white"
+                currentTab === id ? "bg-espresso text-cream shadow-soft ring-2 ring-gold/60" : "text-espresso/68 hover:bg-white"
               }`}
+              aria-pressed={currentTab === id}
             >
               <Icon aria-hidden size={18} />
               {label}
@@ -209,15 +210,7 @@ function AnnouncementPanel({
 }) {
   return (
     <div className="grid gap-4 rounded-[1.5rem] border border-espresso/10 bg-white p-5 shadow-soft">
-      <label className="inline-flex items-center gap-2 text-sm font-bold text-espresso/72">
-        <input
-          type="checkbox"
-          checked={announcement.isActive}
-          onChange={(event) => onChange({ isActive: event.target.checked })}
-          className="size-4 accent-rust"
-        />
-        Show announcement
-      </label>
+      <ToggleButton label="Show announcement" pressed={announcement.isActive} onChange={(pressed) => onChange({ isActive: pressed })} />
       <div className="grid gap-3 md:grid-cols-2">
         <TextInput label="Title" value={announcement.title} onChange={(value) => onChange({ title: value })} />
         <TextInput label="Button label" value={announcement.ctaLabel} onChange={(value) => onChange({ ctaLabel: value })} />
@@ -228,7 +221,7 @@ function AnnouncementPanel({
         <button
           type="button"
           onClick={onSave}
-          className="inline-flex min-h-11 items-center justify-center rounded-full bg-gold px-5 text-sm font-black text-espresso"
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-gold px-6 text-sm font-black text-espresso shadow-soft transition active:translate-y-px"
         >
           Save announcement
         </button>
@@ -259,7 +252,7 @@ function ContactPanel({
         <button
           type="button"
           onClick={onSave}
-          className="inline-flex min-h-11 items-center justify-center rounded-full bg-gold px-5 text-sm font-black text-espresso"
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-gold px-6 text-sm font-black text-espresso shadow-soft transition active:translate-y-px"
         >
           Save contact
         </button>
@@ -296,15 +289,11 @@ function TestimonialsPanel({
 
       {testimonials.map((testimonial) => (
         <article key={testimonial.id} className="grid gap-4 rounded-[1.5rem] border border-espresso/10 bg-white p-5 shadow-soft">
-          <label className="inline-flex items-center gap-2 text-sm font-bold text-espresso/72">
-            <input
-              type="checkbox"
-              checked={testimonial.isActive}
-              onChange={(event) => onUpdate(testimonial.id, { isActive: event.target.checked })}
-              className="size-4 accent-rust"
-            />
-            Show testimonial
-          </label>
+          <ToggleButton
+            label="Show testimonial"
+            pressed={testimonial.isActive}
+            onChange={(pressed) => onUpdate(testimonial.id, { isActive: pressed })}
+          />
           <div className="grid gap-3 md:grid-cols-2">
             <TextInput
               label="Name"
@@ -322,18 +311,18 @@ function TestimonialsPanel({
             value={testimonial.quote}
             onChange={(value) => onUpdate(testimonial.id, { quote: value })}
           />
-          <div className="flex flex-col gap-3 sm:flex-row">
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
               onClick={() => onSave(testimonial)}
-              className="inline-flex min-h-10 items-center justify-center rounded-full bg-gold px-4 text-sm font-black text-espresso"
+              className="inline-flex min-h-10 items-center justify-center rounded-full bg-gold px-5 text-sm font-black text-espresso shadow-soft transition active:translate-y-px"
             >
               Save testimonial
             </button>
             <button
               type="button"
               onClick={() => onDelete(testimonial.id)}
-              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust"
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-5 text-sm font-black text-rust transition hover:bg-rust/12 active:translate-y-px"
             >
               <Trash2 aria-hidden size={16} />
               Delete testimonial
@@ -342,6 +331,38 @@ function TestimonialsPanel({
         </article>
       ))}
     </div>
+  );
+}
+
+function ToggleButton({
+  label,
+  pressed,
+  onChange
+}: {
+  label: string;
+  pressed: boolean;
+  onChange: (pressed: boolean) => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={pressed}
+      onClick={() => onChange(!pressed)}
+      className={`inline-flex min-h-11 w-fit items-center justify-between gap-3 rounded-full border px-4 text-sm font-black transition active:translate-y-px ${
+        pressed
+          ? "border-espresso bg-espresso text-cream shadow-soft"
+          : "border-espresso/15 bg-white text-espresso/68 hover:border-rust/30 hover:text-rust"
+      }`}
+    >
+      <span>{label}</span>
+      <span
+        className={`inline-flex size-6 items-center justify-center rounded-full ${
+          pressed ? "bg-gold text-espresso" : "border border-espresso/18 bg-cream text-transparent"
+        }`}
+      >
+        <Check aria-hidden size={14} />
+      </span>
+    </button>
   );
 }
 

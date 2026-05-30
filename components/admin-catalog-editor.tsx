@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, Pencil, Plus, Trash2, Upload, X } from "lucide-react";
+import { Check, Eye, Pencil, Plus, Trash2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { AdminDataSource } from "@/lib/admin-data/types";
@@ -313,7 +313,7 @@ export function AdminCatalogEditor({
               <TextInput label="Price" value={selectedItem.price} onChange={(value) => changeItem(selectedItem.id, { price: value })} />
               <TextInput label="Note" value={selectedItem.note ?? ""} onChange={(value) => changeItem(selectedItem.id, { note: value })} />
             </div>
-            <div className="grid gap-3">
+            <div className="flex flex-wrap gap-3">
               <TextInput label="Image URL" value={selectedItem.image} onChange={(value) => changeItem(selectedItem.id, { image: value })} />
               <label className="grid gap-2 text-xs font-black uppercase tracking-[0.12em] text-rust">
                 Upload image
@@ -346,29 +346,26 @@ export function AdminCatalogEditor({
                 ["isTypicallyAvailable", "Usually available"],
                 ["isFeatured", "Feature on home"]
               ].map(([key, label]) => (
-                <label key={key} className="inline-flex items-center gap-2 text-sm font-bold text-espresso/72">
-                  <input
-                    type="checkbox"
-                    checked={Boolean(selectedItem[key as keyof BakeCatalogItem])}
-                    onChange={(event) => changeItem(selectedItem.id, { [key]: event.target.checked })}
-                    className="size-4 accent-rust"
-                  />
-                  {label}
-                </label>
+                <ToggleButton
+                  key={key}
+                  label={label}
+                  pressed={Boolean(selectedItem[key as keyof BakeCatalogItem])}
+                  onChange={(pressed) => changeItem(selectedItem.id, { [key]: pressed })}
+                />
               ))}
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
                 onClick={() => saveItem(selectedItem)}
-                className="inline-flex min-h-11 flex-1 items-center justify-center rounded-full bg-gold px-5 text-sm font-black text-espresso"
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-gold px-6 text-sm font-black text-espresso shadow-soft transition active:translate-y-px"
               >
                 Save item
               </button>
               <button
                 type="button"
                 onClick={() => removeItem(selectedItem.id)}
-                className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-5 text-sm font-black text-rust transition hover:bg-rust/12 active:translate-y-px"
               >
                 <Trash2 aria-hidden size={16} />
                 Delete item
@@ -426,6 +423,38 @@ export function AdminCatalogEditor({
         </div>
       ) : null}
     </div>
+  );
+}
+
+function ToggleButton({
+  label,
+  pressed,
+  onChange
+}: {
+  label: string;
+  pressed: boolean;
+  onChange: (pressed: boolean) => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={pressed}
+      onClick={() => onChange(!pressed)}
+      className={`inline-flex min-h-11 w-fit items-center justify-between gap-3 rounded-full border px-4 text-sm font-black transition active:translate-y-px ${
+        pressed
+          ? "border-espresso bg-espresso text-cream shadow-soft"
+          : "border-espresso/15 bg-white text-espresso/68 hover:border-rust/30 hover:text-rust"
+      }`}
+    >
+      <span>{label}</span>
+      <span
+        className={`inline-flex size-6 items-center justify-center rounded-full ${
+          pressed ? "bg-gold text-espresso" : "border border-espresso/18 bg-cream text-transparent"
+        }`}
+      >
+        <Check aria-hidden size={14} />
+      </span>
+    </button>
   );
 }
 
