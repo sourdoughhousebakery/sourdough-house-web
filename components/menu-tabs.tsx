@@ -21,14 +21,24 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTa
 
   if (!hasLiveHotplateItems) {
     return (
-      <div>
-        <div className="mb-6 rounded-[1.25rem] border border-gold/25 bg-gold/10 p-4 text-sm font-semibold leading-6 text-espresso/68">
-          No live Hotplate drop is open right now. Browse the regular catalog below, then check Hotplate when the next drop opens.
+      <div className="grid gap-6">
+        <div className="flex flex-col gap-3 border-y border-gold/25 py-4 text-sm font-semibold leading-6 text-espresso/68 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-rust">No live drop right now</p>
+            <p className="mt-1">Ordering opens through Hotplate when the next drop is available.</p>
+          </div>
+          <p className="font-bold text-espresso/70">Regular bakery catalog is below.</p>
         </div>
-        <p className="mb-5 text-sm font-semibold text-espresso/62">
-          These are the regular bakes Sourdough House is known for. Some may not be available in the current Hotplate drop.
-        </p>
-        <CatalogGrid items={catalogItems} />
+        <div>
+          <div className="mb-5">
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-rust">Bakery catalog</p>
+            <h2 className="mt-2 font-serif text-4xl leading-tight text-espresso">What we bake.</h2>
+            <p className="mt-3 max-w-3xl text-sm font-semibold leading-6 text-espresso/62">
+              A standing look at breads and sweets Sourdough House is known for. Availability changes by drop.
+            </p>
+          </div>
+          <CatalogGrid items={catalogItems} />
+        </div>
       </div>
     );
   }

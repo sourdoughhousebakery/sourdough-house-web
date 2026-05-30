@@ -13,7 +13,7 @@ export const pageIntros = {
     fallbackEyebrow: "Bakery menu",
     liveEyebrow: "Live menu",
     title: "What we bake for you.",
-    fallbackDescription: "Browse the bakery favorites, then open Hotplate for the current drop and checkout."
+    fallbackDescription: "Browse the regular bakery catalog, then check Hotplate when a fresh drop opens."
   },
   story: {
     eyebrow: "Our story",
