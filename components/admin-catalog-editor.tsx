@@ -14,6 +14,8 @@ import {
 
 type AdminCatalogEditorProps = {
   defaultItems: BakeCatalogItem[];
+  title?: string;
+  description?: string;
 };
 
 const storageKey = "sourdough-house-bake-catalog";
@@ -22,7 +24,11 @@ function toPublicItems(items: BakeCatalogItem[]): PublicCatalogItem[] {
   return getPublicCatalogItems(items);
 }
 
-export function AdminCatalogEditor({ defaultItems }: AdminCatalogEditorProps) {
+export function AdminCatalogEditor({
+  defaultItems,
+  title = "Menu and catalog",
+  description = "Add, update, feature, or hide the regular bakery items shown in the menu preview."
+}: AdminCatalogEditorProps) {
   const [items, setItems] = useState<BakeCatalogItem[]>(() => {
     if (typeof window === "undefined") return defaultItems;
     const raw = window.localStorage.getItem(storageKey);
@@ -70,9 +76,10 @@ export function AdminCatalogEditor({ defaultItems }: AdminCatalogEditorProps) {
   return (
     <div className="grid gap-8">
       <div className="rounded-[2rem] border border-rust/15 bg-white p-5 shadow-soft">
-        <h2 className="font-serif text-3xl text-espresso">Placeholder editor</h2>
-        <p className="mt-3 text-sm leading-6 text-espresso/68">
-          This admin screen saves changes to this browser only. It is the shape of the future Supabase admin, but it is not a secure shared CMS yet.
+        <h2 className="font-serif text-3xl text-espresso">{title}</h2>
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-espresso/68">{description}</p>
+        <p className="mt-3 text-sm font-bold text-espresso/60">
+          Save local preview to see catalog changes in this browser.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <button

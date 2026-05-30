@@ -17,9 +17,13 @@ import {
 
 type AdminContentEditorProps = {
   defaultContent: EditableAdminContent;
+  activeTab?: AdminContentTab;
+  title?: string;
+  description?: string;
+  showTabs?: boolean;
 };
 
-type AdminContentTab = "announcement" | "contact" | "testimonials";
+export type AdminContentTab = "announcement" | "contact" | "testimonials";
 
 const tabs = [
   { id: "announcement" as const, label: "Announcement", Icon: Megaphone },
@@ -27,8 +31,14 @@ const tabs = [
   { id: "testimonials" as const, label: "Testimonials", Icon: MessageSquareQuote }
 ];
 
-export function AdminContentEditor({ defaultContent }: AdminContentEditorProps) {
-  const [activeTab, setActiveTab] = useState<AdminContentTab>("announcement");
+export function AdminContentEditor({
+  defaultContent,
+  activeTab,
+  title = "Site content",
+  description = "Manage the content that changes most often.",
+  showTabs = true
+}: AdminContentEditorProps) {
+  const [selectedTab, setSelectedTab] = useState<AdminContentTab>("announcement");
   const [previewState, setPreviewState] = useState(() => {
     if (typeof window === "undefined") return { content: defaultContent, loadedLocalPreview: false };
     const raw = window.localStorage.getItem(adminContentStorageKey);
@@ -46,6 +56,7 @@ export function AdminContentEditor({ defaultContent }: AdminContentEditorProps) 
   });
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const { content, loadedLocalPreview } = previewState;
+  const currentTab = activeTab ?? selectedTab;
   const setContent = (update: (current: EditableAdminContent) => EditableAdminContent) => {
     setPreviewState((current) => ({
       ...current,
@@ -89,10 +100,8 @@ export function AdminContentEditor({ defaultContent }: AdminContentEditorProps) 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <p className="text-sm font-black uppercase tracking-[0.16em] text-rust">Site content</p>
-            <h2 className="mt-2 font-serif text-3xl text-espresso">Edit the practical stuff.</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-espresso/68">
-              Manage the content that changes most often. These changes are saved in this browser only until the shared database admin is connected.
-            </p>
+            <h2 className="mt-2 font-serif text-3xl text-espresso">{title}</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-espresso/68">{description}</p>
             <p className="mt-3 text-sm font-bold text-espresso/60">
               {loadedLocalPreview ? "Loaded saved local preview content from this browser." : "Showing code defaults. Save to create a local preview."}
             </p>
@@ -119,27 +128,29 @@ export function AdminContentEditor({ defaultContent }: AdminContentEditorProps) 
         {savedAt ? <p className="mt-4 text-sm font-bold text-sage">Saved locally at {savedAt}</p> : null}
       </div>
 
-      <div className="grid gap-4 rounded-[1.5rem] border border-espresso/10 bg-white/70 p-3 shadow-soft md:grid-cols-3">
-        {tabs.map(({ id, label, Icon }) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setActiveTab(id)}
-            className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-[1.1rem] px-4 text-sm font-black transition ${
-              activeTab === id ? "bg-espresso text-cream" : "text-espresso/68 hover:bg-white"
-            }`}
-          >
-            <Icon aria-hidden size={18} />
-            {label}
-          </button>
-        ))}
-      </div>
+      {showTabs ? (
+        <div className="grid gap-4 rounded-[1.5rem] border border-espresso/10 bg-white/70 p-3 shadow-soft md:grid-cols-3">
+          {tabs.map(({ id, label, Icon }) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setSelectedTab(id)}
+              className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-[1.1rem] px-4 text-sm font-black transition ${
+                currentTab === id ? "bg-espresso text-cream" : "text-espresso/68 hover:bg-white"
+              }`}
+            >
+              <Icon aria-hidden size={18} />
+              {label}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
-      {activeTab === "announcement" ? (
+      {currentTab === "announcement" ? (
         <AnnouncementPanel announcement={content.announcement} onChange={updateAnnouncement} />
       ) : null}
-      {activeTab === "contact" ? <ContactPanel contact={content.contact} onChange={updateContact} /> : null}
-      {activeTab === "testimonials" ? (
+      {currentTab === "contact" ? <ContactPanel contact={content.contact} onChange={updateContact} /> : null}
+      {currentTab === "testimonials" ? (
         <TestimonialsPanel content={content} setContent={setContent} setSavedAt={setSavedAt} />
       ) : null}
     </section>
