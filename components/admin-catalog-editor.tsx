@@ -1,151 +1,133 @@
 "use client";
 
-import { Eye, Pencil, Plus, RotateCcw, Save, Trash2, Upload, X } from "lucide-react";
+import { Eye, Pencil, Plus, Trash2, Upload, X } from "lucide-react";
 import Image from "next/image";
-import { useMemo, useState } from "react";
-import type { BakeCatalogItem, PublicCatalogItem } from "@/lib/catalog/types";
+import { useEffect, useState } from "react";
+import type { AdminDataSource } from "@/lib/admin-data/types";
+import type { BakeCatalogItem } from "@/lib/catalog/types";
 import { isDataImageSrc } from "@/lib/images";
-import { catalogPreviewStorageKey } from "@/lib/catalog/local-preview";
-import {
-  createCatalogItem,
-  deleteCatalogItem,
-  getPublicCatalogItems,
-  hydrateCatalogItems,
-  updateCatalogItem
-} from "@/lib/catalog/catalog";
+import { updateCatalogItem } from "@/lib/catalog/catalog";
 
 type AdminCatalogEditorProps = {
+  dataSource: AdminDataSource;
   defaultItems: BakeCatalogItem[];
   title?: string;
   description?: string;
 };
 
-const categoryStorageKey = "sourdough-house-bake-categories";
-const starterCategories = ["Bread", "Sweets", "Breakfast", "Specials", "Custom", "Bakery"];
-
-function toPublicItems(items: BakeCatalogItem[]): PublicCatalogItem[] {
-  return getPublicCatalogItems(items);
-}
-
-function getCatalogCategories(items: BakeCatalogItem[]) {
-  return Array.from(new Set([...starterCategories, ...items.map((item) => item.category).filter(Boolean)])).sort((a, b) =>
-    a.localeCompare(b)
-  );
-}
-
 export function AdminCatalogEditor({
+  dataSource,
   defaultItems,
   title = "Menu and catalog",
   description = "Add, update, feature, or hide the regular bakery items shown in the menu preview."
 }: AdminCatalogEditorProps) {
-  const initialItems = () => {
-    if (typeof window === "undefined") return defaultItems;
-    const raw = window.localStorage.getItem(catalogPreviewStorageKey);
-    if (!raw) return defaultItems;
-
-    try {
-      const publicItems = JSON.parse(raw) as PublicCatalogItem[];
-      if (!Array.isArray(publicItems)) return defaultItems;
-      return hydrateCatalogItems(defaultItems, publicItems);
-    } catch {
-      window.localStorage.removeItem(catalogPreviewStorageKey);
-      return defaultItems;
-    }
-  };
-
-  const [items, setItems] = useState<BakeCatalogItem[]>(initialItems);
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(() => initialItems()[0]?.id ?? null);
-  const [categories, setCategories] = useState<string[]>(() => {
-    if (typeof window === "undefined") return getCatalogCategories(defaultItems);
-    const raw = window.localStorage.getItem(categoryStorageKey);
-    if (!raw) return getCatalogCategories(initialItems());
-
-    try {
-      const parsed = JSON.parse(raw) as unknown;
-      return Array.isArray(parsed)
-        ? Array.from(new Set(parsed.filter((value): value is string => typeof value === "string" && value.trim().length > 0)))
-        : getCatalogCategories(initialItems());
-    } catch {
-      window.localStorage.removeItem(categoryStorageKey);
-      return getCatalogCategories(initialItems());
-    }
-  });
+  const [items, setItems] = useState<BakeCatalogItem[]>(defaultItems);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(() => defaultItems[0]?.id ?? null);
+  const [categories, setCategories] = useState<string[]>([]);
   const [newCategory, setNewCategory] = useState("");
   const [categoryToDelete, setCategoryToDelete] = useState("");
-  const [savedAt, setSavedAt] = useState<string | null>(null);
+  const [status, setStatus] = useState("Ready");
   const [previewItem, setPreviewItem] = useState<BakeCatalogItem | null>(null);
 
-  const publicItems = useMemo(() => toPublicItems(items), [items]);
   const selectedItem = items.find((item) => item.id === selectedItemId) ?? items[0] ?? null;
 
-  function updateItem(id: string, patch: Partial<BakeCatalogItem>) {
-    setItems((current) => updateCatalogItem(current, id, patch));
-  }
+  useEffect(() => {
+    let isCurrent = true;
 
-  function addItem() {
-    const id = `catalog-${Date.now().toString(36)}`;
-    setItems((current) => {
-      const nextItems = createCatalogItem(current, id);
-      const created = nextItems.at(-1);
-      return created && categories[0] ? updateCatalogItem(nextItems, created.id, { category: categories[0] }) : nextItems;
+    async function loadCatalog() {
+      const [loadedItems, loadedCategories] = await Promise.all([dataSource.catalog.list(), dataSource.categories.list()]);
+      if (!isCurrent) return;
+      setItems(loadedItems);
+      setCategories(loadedCategories);
+      setSelectedItemId((current) => current ?? loadedItems[0]?.id ?? null);
+    }
+
+    loadCatalog().catch(() => {
+      if (isCurrent) setStatus("Could not load catalog");
     });
-    setSelectedItemId(id);
-    setSavedAt(null);
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [dataSource]);
+
+  async function updateItem(id: string, patch: Partial<BakeCatalogItem>) {
+    setItems((current) => updateCatalogItem(current, id, patch));
+    setStatus("Saving...");
+    try {
+      const updated = await dataSource.catalog.update(id, patch);
+      setItems((current) => updateCatalogItem(current, id, updated));
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not save changes");
+    }
   }
 
-  function addCategory() {
+  async function addItem() {
+    setStatus("Saving...");
+    try {
+      const created = await dataSource.catalog.create(categories[0] ? { category: categories[0] } : undefined);
+      setItems((current) => [...current, created]);
+      setSelectedItemId(created.id);
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not add item");
+    }
+  }
+
+  async function addCategory() {
     const category = newCategory.trim();
     if (!category || categories.includes(category)) return;
-    setCategories((current) => [...current, category].sort((a, b) => a.localeCompare(b)));
-    setCategoryToDelete(category);
-    setNewCategory("");
-    setSavedAt(null);
+    setStatus("Saving...");
+    try {
+      const nextCategories = await dataSource.categories.create(category);
+      setCategories(nextCategories);
+      setCategoryToDelete(category);
+      setNewCategory("");
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not add category");
+    }
   }
 
-  function deleteCategory() {
+  async function deleteCategory() {
     if (!categoryToDelete) return;
     const isInUse = items.some((item) => item.category === categoryToDelete);
     if (isInUse) return;
-    setCategories((current) => current.filter((category) => category !== categoryToDelete));
-    setCategoryToDelete("");
-    setSavedAt(null);
+    setStatus("Saving...");
+    try {
+      const nextCategories = await dataSource.categories.delete(categoryToDelete);
+      setCategories(nextCategories);
+      setCategoryToDelete("");
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not delete category");
+    }
   }
 
-  function removeItem(id: string) {
-    setItems((current) => {
-      const nextItems = deleteCatalogItem(current, id);
-      if (selectedItemId === id) setSelectedItemId(nextItems[0]?.id ?? null);
-      return nextItems;
-    });
-    setSavedAt(null);
+  async function removeItem(id: string) {
+    setStatus("Saving...");
+    try {
+      await dataSource.catalog.delete(id);
+      setItems((current) => {
+        const nextItems = current.filter((item) => item.id !== id);
+        if (selectedItemId === id) setSelectedItemId(nextItems[0]?.id ?? null);
+        return nextItems;
+      });
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not delete item");
+    }
   }
 
-  function uploadImage(file: File, itemId: string) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        updateItem(itemId, { image: reader.result });
-        setSavedAt(null);
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function save() {
-    window.localStorage.setItem(catalogPreviewStorageKey, JSON.stringify(publicItems));
-    window.localStorage.setItem(categoryStorageKey, JSON.stringify(categories));
-    setSavedAt(new Date().toLocaleTimeString());
-  }
-
-  function reset() {
-    window.localStorage.removeItem(catalogPreviewStorageKey);
-    window.localStorage.removeItem(categoryStorageKey);
-    setItems(defaultItems);
-    setSelectedItemId(defaultItems[0]?.id ?? null);
-    setCategories(getCatalogCategories(defaultItems));
-    setNewCategory("");
-    setCategoryToDelete("");
-    setSavedAt(null);
+  async function uploadImage(file: File, itemId: string) {
+    setStatus("Saving image...");
+    try {
+      const asset = await dataSource.assets.upload(file);
+      await updateItem(itemId, { image: asset.url });
+    } catch {
+      setStatus("Could not upload image");
+    }
   }
 
   return (
@@ -153,18 +135,8 @@ export function AdminCatalogEditor({
       <div className="rounded-[2rem] border border-rust/15 bg-white p-5 shadow-soft">
         <h2 className="font-serif text-3xl text-espresso">{title}</h2>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-espresso/68">{description}</p>
-        <p className="mt-3 text-sm font-bold text-espresso/60">
-          Save local preview to see catalog changes in this browser.
-        </p>
+        <p className="mt-3 text-sm font-bold text-espresso/60">Changes save through the admin data API.</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={save}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-espresso px-5 text-sm font-black text-cream"
-          >
-            <Save aria-hidden size={17} />
-            Save local preview
-          </button>
           <button
             type="button"
             onClick={addItem}
@@ -173,15 +145,7 @@ export function AdminCatalogEditor({
             <Plus aria-hidden size={17} />
             Add item
           </button>
-          <button
-            type="button"
-            onClick={reset}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-espresso/15 bg-white px-5 text-sm font-black text-espresso"
-          >
-            <RotateCcw aria-hidden size={17} />
-            Reset
-          </button>
-          {savedAt ? <p className="self-center text-sm font-bold text-sage">Saved locally at {savedAt}</p> : null}
+          <p className="self-center text-sm font-bold text-sage">{status}</p>
         </div>
       </div>
 

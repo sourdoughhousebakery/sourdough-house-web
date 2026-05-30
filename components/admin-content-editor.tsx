@@ -1,21 +1,17 @@
 "use client";
 
-import { Megaphone, MessageSquareQuote, Plus, RotateCcw, Save, Trash2, UserRoundCog } from "lucide-react";
-import { useState } from "react";
+import { Megaphone, MessageSquareQuote, Plus, Trash2, UserRoundCog } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { AdminDataSource } from "@/lib/admin-data/types";
 import {
-  createEditableTestimonial,
-  adminContentChangeEvent,
-  adminContentStorageKey,
-  deleteEditableTestimonial,
-  hydrateAdminContent,
-  updateEditableTestimonial,
   type EditableAdminContent,
   type EditableAnnouncement,
   type EditableContact,
-  type PersistedAdminContent
+  type EditableTestimonial
 } from "@/lib/admin-content/content";
 
 type AdminContentEditorProps = {
+  dataSource: AdminDataSource;
   defaultContent: EditableAdminContent;
   activeTab?: AdminContentTab;
   title?: string;
@@ -32,6 +28,7 @@ const tabs = [
 ];
 
 export function AdminContentEditor({
+  dataSource,
   defaultContent,
   activeTab,
   title = "Site content",
@@ -39,59 +36,105 @@ export function AdminContentEditor({
   showTabs = true
 }: AdminContentEditorProps) {
   const [selectedTab, setSelectedTab] = useState<AdminContentTab>("announcement");
-  const [previewState, setPreviewState] = useState(() => {
-    if (typeof window === "undefined") return { content: defaultContent, loadedLocalPreview: false };
-    const raw = window.localStorage.getItem(adminContentStorageKey);
-    if (!raw) return { content: defaultContent, loadedLocalPreview: false };
-
-    try {
-      return {
-        content: hydrateAdminContent(defaultContent, JSON.parse(raw) as PersistedAdminContent),
-        loadedLocalPreview: true
-      };
-    } catch {
-      window.localStorage.removeItem(adminContentStorageKey);
-      return { content: defaultContent, loadedLocalPreview: false };
-    }
-  });
-  const [savedAt, setSavedAt] = useState<string | null>(null);
-  const { content, loadedLocalPreview } = previewState;
+  const [content, setContent] = useState(defaultContent);
+  const [status, setStatus] = useState("Ready");
   const currentTab = activeTab ?? selectedTab;
-  const setContent = (update: (current: EditableAdminContent) => EditableAdminContent) => {
-    setPreviewState((current) => ({
-      ...current,
-      content: update(current.content)
-    }));
-  };
 
-  function updateAnnouncement(patch: Partial<EditableAnnouncement>) {
+  useEffect(() => {
+    let isCurrent = true;
+
+    async function loadContent() {
+      const [announcement, contact, testimonials] = await Promise.all([
+        dataSource.announcement.get(),
+        dataSource.contact.get(),
+        dataSource.testimonials.list()
+      ]);
+      if (!isCurrent) return;
+      setContent({ announcement, contact, testimonials });
+    }
+
+    loadContent().catch(() => {
+      if (isCurrent) setStatus("Could not load content");
+    });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [dataSource]);
+
+  async function updateAnnouncement(patch: Partial<EditableAnnouncement>) {
     setContent((current) => ({
       ...current,
       announcement: { ...current.announcement, ...patch }
     }));
-    setSavedAt(null);
+    setStatus("Saving...");
+    try {
+      const announcement = await dataSource.announcement.update(patch);
+      setContent((current) => ({ ...current, announcement }));
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not save announcement");
+    }
   }
 
-  function updateContact(patch: Partial<EditableContact>) {
+  async function updateContact(patch: Partial<EditableContact>) {
     setContent((current) => ({
       ...current,
       contact: { ...current.contact, ...patch }
     }));
-    setSavedAt(null);
+    setStatus("Saving...");
+    try {
+      const contact = await dataSource.contact.update(patch);
+      setContent((current) => ({ ...current, contact }));
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not save contact");
+    }
   }
 
-  function save() {
-    window.localStorage.setItem(adminContentStorageKey, JSON.stringify(content));
-    window.dispatchEvent(new Event(adminContentChangeEvent));
-    setPreviewState((current) => ({ ...current, loadedLocalPreview: true }));
-    setSavedAt(new Date().toLocaleTimeString());
+  async function addTestimonial() {
+    setStatus("Saving...");
+    try {
+      const testimonial = await dataSource.testimonials.create();
+      setContent((current) => ({ ...current, testimonials: [...current.testimonials, testimonial] }));
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not add testimonial");
+    }
   }
 
-  function reset() {
-    window.localStorage.removeItem(adminContentStorageKey);
-    window.dispatchEvent(new Event(adminContentChangeEvent));
-    setPreviewState({ content: defaultContent, loadedLocalPreview: false });
-    setSavedAt(null);
+  async function updateTestimonial(id: string, patch: Partial<EditableTestimonial>) {
+    setContent((current) => ({
+      ...current,
+      testimonials: current.testimonials.map((testimonial) =>
+        testimonial.id === id ? { ...testimonial, ...patch, id: testimonial.id } : testimonial
+      )
+    }));
+    setStatus("Saving...");
+    try {
+      const updated = await dataSource.testimonials.update(id, patch);
+      setContent((current) => ({
+        ...current,
+        testimonials: current.testimonials.map((testimonial) => (testimonial.id === id ? updated : testimonial))
+      }));
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not save testimonial");
+    }
+  }
+
+  async function deleteTestimonial(id: string) {
+    setStatus("Saving...");
+    try {
+      await dataSource.testimonials.delete(id);
+      setContent((current) => ({
+        ...current,
+        testimonials: current.testimonials.filter((testimonial) => testimonial.id !== id)
+      }));
+      setStatus("Saved");
+    } catch {
+      setStatus("Could not delete testimonial");
+    }
   }
 
   return (
@@ -102,30 +145,10 @@ export function AdminContentEditor({
             <p className="text-sm font-black uppercase tracking-[0.16em] text-rust">Site content</p>
             <h2 className="mt-2 font-serif text-3xl text-espresso">{title}</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-espresso/68">{description}</p>
-            <p className="mt-3 text-sm font-bold text-espresso/60">
-              {loadedLocalPreview ? "Loaded saved local preview content from this browser." : "Showing code defaults. Save to create a local preview."}
-            </p>
+            <p className="mt-3 text-sm font-bold text-espresso/60">Changes save through the admin data API.</p>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={save}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-espresso px-5 text-sm font-black text-cream"
-            >
-              <Save aria-hidden size={17} />
-              Save local preview
-            </button>
-            <button
-              type="button"
-              onClick={reset}
-              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-espresso/15 bg-white px-5 text-sm font-black text-espresso"
-            >
-              <RotateCcw aria-hidden size={17} />
-              Reset
-            </button>
-          </div>
+          <p className="text-sm font-bold text-sage lg:pt-2">{status}</p>
         </div>
-        {savedAt ? <p className="mt-4 text-sm font-bold text-sage">Saved locally at {savedAt}</p> : null}
       </div>
 
       {showTabs ? (
@@ -151,7 +174,12 @@ export function AdminContentEditor({
       ) : null}
       {currentTab === "contact" ? <ContactPanel contact={content.contact} onChange={updateContact} /> : null}
       {currentTab === "testimonials" ? (
-        <TestimonialsPanel content={content} setContent={setContent} setSavedAt={setSavedAt} />
+        <TestimonialsPanel
+          testimonials={content.testimonials}
+          onAdd={addTestimonial}
+          onUpdate={updateTestimonial}
+          onDelete={deleteTestimonial}
+        />
       ) : null}
     </section>
   );
@@ -206,26 +234,22 @@ function ContactPanel({
 }
 
 function TestimonialsPanel({
-  content,
-  setContent,
-  setSavedAt
+  testimonials,
+  onAdd,
+  onUpdate,
+  onDelete
 }: {
-  content: EditableAdminContent;
-  setContent: (update: (current: EditableAdminContent) => EditableAdminContent) => void;
-  setSavedAt: (value: string | null) => void;
+  testimonials: EditableTestimonial[];
+  onAdd: () => void;
+  onUpdate: (id: string, patch: Partial<EditableTestimonial>) => void;
+  onDelete: (id: string) => void;
 }) {
   return (
     <div className="grid gap-5">
       <div>
         <button
           type="button"
-          onClick={() => {
-            setContent((current) => ({
-              ...current,
-              testimonials: createEditableTestimonial(current.testimonials)
-            }));
-            setSavedAt(null);
-          }}
+          onClick={onAdd}
           className="inline-flex min-h-11 items-center gap-2 rounded-full bg-gold px-5 text-sm font-black text-espresso"
         >
           <Plus aria-hidden size={17} />
@@ -233,21 +257,13 @@ function TestimonialsPanel({
         </button>
       </div>
 
-      {content.testimonials.map((testimonial) => (
+      {testimonials.map((testimonial) => (
         <article key={testimonial.id} className="grid gap-4 rounded-[1.5rem] border border-espresso/10 bg-white p-5 shadow-soft">
           <label className="inline-flex items-center gap-2 text-sm font-bold text-espresso/72">
             <input
               type="checkbox"
               checked={testimonial.isActive}
-              onChange={(event) => {
-                setContent((current) => ({
-                  ...current,
-                  testimonials: updateEditableTestimonial(current.testimonials, testimonial.id, {
-                    isActive: event.target.checked
-                  })
-                }));
-                setSavedAt(null);
-              }}
+              onChange={(event) => onUpdate(testimonial.id, { isActive: event.target.checked })}
               className="size-4 accent-rust"
             />
             Show testimonial
@@ -256,47 +272,23 @@ function TestimonialsPanel({
             <TextInput
               label="Name"
               value={testimonial.name}
-              onChange={(value) => {
-                setContent((current) => ({
-                  ...current,
-                  testimonials: updateEditableTestimonial(current.testimonials, testimonial.id, { name: value })
-                }));
-                setSavedAt(null);
-              }}
+              onChange={(value) => onUpdate(testimonial.id, { name: value })}
             />
             <TextInput
               label="Source"
               value={testimonial.source}
-              onChange={(value) => {
-                setContent((current) => ({
-                  ...current,
-                  testimonials: updateEditableTestimonial(current.testimonials, testimonial.id, { source: value })
-                }));
-                setSavedAt(null);
-              }}
+              onChange={(value) => onUpdate(testimonial.id, { source: value })}
             />
           </div>
           <TextArea
             label="Quote"
             value={testimonial.quote}
-            onChange={(value) => {
-              setContent((current) => ({
-                ...current,
-                testimonials: updateEditableTestimonial(current.testimonials, testimonial.id, { quote: value })
-              }));
-              setSavedAt(null);
-            }}
+            onChange={(value) => onUpdate(testimonial.id, { quote: value })}
           />
           <div>
             <button
               type="button"
-              onClick={() => {
-                setContent((current) => ({
-                  ...current,
-                  testimonials: deleteEditableTestimonial(current.testimonials, testimonial.id)
-                }));
-                setSavedAt(null);
-              }}
+              onClick={() => onDelete(testimonial.id)}
               className="inline-flex min-h-10 items-center gap-2 rounded-full border border-rust/20 bg-rust/8 px-4 text-sm font-black text-rust"
             >
               <Trash2 aria-hidden size={16} />

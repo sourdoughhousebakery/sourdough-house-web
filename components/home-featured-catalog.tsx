@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { CatalogGrid } from "@/components/catalog-grid";
+import { localCatalogChangeEvent } from "@/lib/admin-data/local";
 import { catalogPreviewStorageKey, getFeaturedLocalCatalogItems } from "@/lib/catalog/local-preview";
 import type { PublicCatalogItem } from "@/lib/catalog/types";
 
@@ -19,7 +20,11 @@ export function HomeFeaturedCatalog({ fallbackItems, limit = 3 }: HomeFeaturedCa
 
 function subscribeToCatalogPreview(onStoreChange: () => void) {
   window.addEventListener("storage", onStoreChange);
-  return () => window.removeEventListener("storage", onStoreChange);
+  window.addEventListener(localCatalogChangeEvent, onStoreChange);
+  return () => {
+    window.removeEventListener("storage", onStoreChange);
+    window.removeEventListener(localCatalogChangeEvent, onStoreChange);
+  };
 }
 
 function getCatalogPreviewSnapshot() {

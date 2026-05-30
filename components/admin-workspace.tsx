@@ -1,8 +1,9 @@
 "use client";
 
 import { Megaphone, MessageSquareQuote, ShoppingBag, UserRoundCog } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { EditableAdminContent } from "@/lib/admin-content/content";
+import { LocalAdminDataSource } from "@/lib/admin-data/local";
 import type { BakeCatalogItem } from "@/lib/catalog/types";
 import { AdminCatalogEditor } from "./admin-catalog-editor";
 import { AdminContentEditor, type AdminContentTab } from "./admin-content-editor";
@@ -55,6 +56,10 @@ const adminSections = [
 
 export function AdminWorkspace({ defaultCatalogItems, defaultContent }: AdminWorkspaceProps) {
   const [activeSection, setActiveSection] = useState<AdminSectionId>("catalog");
+  const dataSource = useMemo(
+    () => new LocalAdminDataSource({ defaultCatalogItems, defaultContent }),
+    [defaultCatalogItems, defaultContent]
+  );
   const section = adminSections.find((item) => item.id === activeSection) ?? adminSections[0];
 
   return (
@@ -63,7 +68,7 @@ export function AdminWorkspace({ defaultCatalogItems, defaultContent }: AdminWor
         <p className="text-sm font-black uppercase tracking-[0.16em] text-rust">Admin preview</p>
         <h2 className="mt-2 font-serif text-3xl text-espresso">Pick one thing to edit.</h2>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-espresso/68">
-          Choose a tab, make changes, then use that section&apos;s Save local preview button. These previews are saved only in this browser until a shared database is connected.
+          Choose a tab and make changes. The admin uses a data API, so this screen can move from browser-local data to a shared backend later without changing the editor workflow.
         </p>
       </div>
 
@@ -92,12 +97,14 @@ export function AdminWorkspace({ defaultCatalogItems, defaultContent }: AdminWor
 
       {activeSection === "catalog" ? (
         <AdminCatalogEditor
+          dataSource={dataSource}
           defaultItems={defaultCatalogItems}
           title="Menu and catalog"
           description="Edit the items customers see in the What we bake menu preview. Use Feature on home for the items you want highlighted on the homepage."
         />
       ) : (
         <AdminContentEditor
+          dataSource={dataSource}
           defaultContent={defaultContent}
           activeTab={activeSection}
           showTabs={false}

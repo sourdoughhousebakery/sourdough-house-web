@@ -1,7 +1,8 @@
 "use client";
 
 import { ShoppingBag, Wheat } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
+import { localCatalogChangeEvent } from "@/lib/admin-data/local";
 import type { PublicCatalogItem } from "@/lib/catalog/types";
 import { catalogPreviewStorageKey } from "@/lib/catalog/local-preview";
 import type { FallbackMenuItem, HotplateMenuItem, MenuResult } from "@/lib/hotplate/types";
@@ -18,21 +19,18 @@ type MenuTabsProps = {
 
 export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTabsProps) {
   const [activeTab, setActiveTab] = useState<"hotplate" | "catalog">("hotplate");
-  const [localCatalog] = useState<PublicCatalogItem[] | null>(() => {
-    if (typeof window === "undefined") return null;
-    const raw = window.localStorage.getItem(catalogPreviewStorageKey);
-    if (!raw) return null;
+  const rawCatalog = useSyncExternalStore(subscribeToCatalogPreview, getCatalogPreviewSnapshot, getServerCatalogPreviewSnapshot);
+  const visibleCatalog = useMemo(() => {
+    if (!rawCatalog) return catalogItems;
 
     try {
-      const parsed = JSON.parse(raw) as PublicCatalogItem[];
-      return Array.isArray(parsed) ? parsed : null;
+      const parsed = JSON.parse(rawCatalog) as PublicCatalogItem[];
+      return Array.isArray(parsed) ? parsed : catalogItems;
     } catch {
       window.localStorage.removeItem(catalogPreviewStorageKey);
-      return null;
+      return catalogItems;
     }
-  });
-
-  const visibleCatalog = useMemo(() => localCatalog ?? catalogItems, [catalogItems, localCatalog]);
+  }, [catalogItems, rawCatalog]);
 
   return (
     <div>
@@ -78,4 +76,21 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTa
       )}
     </div>
   );
+}
+
+function subscribeToCatalogPreview(onStoreChange: () => void) {
+  window.addEventListener("storage", onStoreChange);
+  window.addEventListener(localCatalogChangeEvent, onStoreChange);
+  return () => {
+    window.removeEventListener("storage", onStoreChange);
+    window.removeEventListener(localCatalogChangeEvent, onStoreChange);
+  };
+}
+
+function getCatalogPreviewSnapshot() {
+  return window.localStorage.getItem(catalogPreviewStorageKey);
+}
+
+function getServerCatalogPreviewSnapshot() {
+  return null;
 }
