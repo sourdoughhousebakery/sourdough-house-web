@@ -13,9 +13,10 @@ type MenuTabsProps = {
   hotplateItems: DisplayMenuItem[];
   hotplateSource: MenuResult["source"];
   catalogItems: PublicCatalogItem[];
+  hotplateUrl: string;
 };
 
-export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTabsProps) {
+export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplateUrl }: MenuTabsProps) {
   const hasLiveHotplateItems = hotplateSource === "live" && hotplateItems.length > 0;
   const [activeTab, setActiveTab] = useState<"hotplate" | "catalog">("hotplate");
 
@@ -71,7 +72,7 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems }: MenuTa
       {activeTab === "hotplate" ? (
         <div>
           <p className="mb-5 text-sm font-semibold text-espresso/62">These items are loaded from the current Hotplate drop.</p>
-          <MenuGrid items={hotplateItems} />
+          <MenuGrid items={hotplateItems} hotplateUrl={hotplateUrl} />
         </div>
       ) : (
         <div>

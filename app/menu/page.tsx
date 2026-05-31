@@ -50,7 +50,7 @@ export default async function MenuPage() {
               .
             </div>
           ) : null}
-          <MenuTabs hotplateItems={menu.displayItems} hotplateSource={menu.source} catalogItems={catalogItems} />
+          <MenuTabs hotplateItems={menu.displayItems} hotplateSource={menu.source} catalogItems={catalogItems} hotplateUrl={getHotplateUrl()} />
         </div>
       </section>
     </>

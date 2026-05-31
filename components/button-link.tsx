@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 
 type ButtonLinkProps = {
   href: string;
@@ -7,6 +7,7 @@ type ButtonLinkProps = {
   variant?: "primary" | "secondary" | "dark" | "light";
   external?: boolean;
   className?: string;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 };
 
 const variants = {
@@ -25,22 +26,22 @@ export function ButtonLink({
   children,
   variant = "primary",
   external = false,
-  className = ""
+  className = "",
+  onClick
 }: ButtonLinkProps) {
   const sharedClass = `inline-flex min-h-12 items-center justify-center rounded-full px-5 text-sm font-bold transition duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust ${variants[variant]} ${className}`;
 
   if (external) {
     return (
-      <a className={sharedClass} href={href} target="_blank" rel="noreferrer">
+      <a className={sharedClass} href={href} target="_blank" rel="noreferrer" onClick={onClick}>
         {children}
       </a>
     );
   }
 
   return (
-    <Link className={sharedClass} href={href}>
+    <Link className={sharedClass} href={href} onClick={onClick}>
       {children}
     </Link>
   );
 }
-

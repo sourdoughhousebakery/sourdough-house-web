@@ -9,6 +9,7 @@ import { ButtonLink } from "@/components/button-link";
 import { homeContent } from "@/content/site-content";
 import { adminDataSource } from "@/lib/admin-data/source";
 import { getDisplayMenu } from "@/lib/hotplate/api";
+import { getHotplateUrl } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -43,7 +44,7 @@ export default async function HomePage() {
           {menu.source === "fallback" ? (
             <HomeFeaturedCatalog fallbackItems={featuredCatalog} />
           ) : (
-            <MenuGrid items={menu.displayItems} compact />
+            <MenuGrid items={menu.displayItems} hotplateUrl={getHotplateUrl()} />
           )}
         </div>
       </MotionSection>
