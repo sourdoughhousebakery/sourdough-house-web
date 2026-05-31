@@ -27,6 +27,18 @@ describe("admin editor save flow", () => {
     expect(contentEditor).not.toContain("onUpdate={updateTestimonial}");
   });
 
+  it("only shows fields used by the current homepage hero layout", () => {
+    expect(contentEditor).toContain('TextInput label="Eyebrow"');
+    expect(contentEditor).toContain('TextInput label="Headline"');
+    expect(contentEditor).toContain('TextArea label="Subheadline"');
+    expect(contentEditor).toContain('TextInput label="First highlight"');
+    expect(contentEditor).toContain('TextInput label="Second highlight"');
+    expect(contentEditor).not.toContain("Upload hero image");
+    expect(contentEditor).not.toContain('TextInput label="Image URL"');
+    expect(contentEditor).not.toContain('TextInput label="Image badge"');
+    expect(contentEditor).not.toContain('TextInput label="Image note"');
+  });
+
   it("shows toast feedback for admin saves, deletes, uploads, and errors", () => {
     expect(adminWorkspace).toContain("AdminToastStack");
     expect(adminWorkspace).toContain("notifyAdmin");

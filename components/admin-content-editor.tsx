@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ImageIcon, Megaphone, MessageSquareQuote, Plus, Trash2, Upload, UserRoundCog } from "lucide-react";
+import { Check, ImageIcon, Megaphone, MessageSquareQuote, Plus, Trash2, UserRoundCog } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { AdminToastInput } from "@/components/admin-toast";
 import type { AdminDataSource } from "@/lib/admin-data/types";
@@ -89,19 +89,6 @@ export function AdminContentEditor({
     } catch (error) {
       setStatus("Could not save hero");
       onNotify?.({ tone: "error", title: "Hero was not saved", message: getErrorMessage(error) });
-    }
-  }
-
-  async function uploadHeroImage(file: File) {
-    setStatus("Preparing image...");
-    try {
-      const asset = await dataSource.assets.upload(file);
-      changeHero({ imageSrc: asset.url });
-      setStatus("Image ready. Save hero to publish.");
-      onNotify?.({ tone: "success", title: "Hero image uploaded", message: "Save the hero to publish the new image." });
-    } catch (error) {
-      setStatus("Could not upload hero image");
-      onNotify?.({ tone: "error", title: "Hero image was not uploaded", message: getErrorMessage(error) });
     }
   }
 
@@ -237,7 +224,7 @@ export function AdminContentEditor({
       ) : null}
 
       {currentTab === "hero" ? (
-        <HeroPanel hero={content.hero} onChange={changeHero} onSave={saveHero} onUploadImage={uploadHeroImage} />
+        <HeroPanel hero={content.hero} onChange={changeHero} onSave={saveHero} />
       ) : null}
       {currentTab === "announcement" ? (
         <AnnouncementPanel announcement={content.announcement} onChange={changeAnnouncement} onSave={saveAnnouncement} />
@@ -263,20 +250,15 @@ function getErrorMessage(error: unknown) {
 function HeroPanel({
   hero,
   onChange,
-  onSave,
-  onUploadImage
+  onSave
 }: {
   hero: EditableHero;
   onChange: (patch: Partial<EditableHero>) => void;
   onSave: () => void;
-  onUploadImage: (file: File) => void;
 }) {
   return (
     <div className="grid gap-4 rounded-[1.5rem] border border-espresso/10 bg-white p-5 shadow-soft">
-      <div className="grid gap-3 md:grid-cols-2">
-        <TextInput label="Eyebrow" value={hero.eyebrow} onChange={(value) => onChange({ eyebrow: value })} />
-        <TextInput label="Image badge" value={hero.imageBadge} onChange={(value) => onChange({ imageBadge: value })} />
-      </div>
+      <TextInput label="Eyebrow" value={hero.eyebrow} onChange={(value) => onChange({ eyebrow: value })} />
       <TextInput label="Headline" value={hero.title} onChange={(value) => onChange({ title: value })} />
       <TextArea label="Subheadline" value={hero.description} onChange={(value) => onChange({ description: value })} />
 
@@ -291,34 +273,6 @@ function HeroPanel({
         <TextInput label="First highlight" value={hero.firstHighlight} onChange={(value) => onChange({ firstHighlight: value })} />
         <TextInput label="Second highlight" value={hero.secondHighlight} onChange={(value) => onChange({ secondHighlight: value })} />
       </div>
-
-      <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
-        <TextInput label="Image URL" value={hero.imageSrc} onChange={(value) => onChange({ imageSrc: value })} />
-        <TextInput label="Image alt text" value={hero.imageAlt} onChange={(value) => onChange({ imageAlt: value })} />
-      </div>
-      <label className="grid gap-2 text-xs font-black uppercase tracking-[0.12em] text-rust">
-        Upload hero image
-        <span className="text-sm font-semibold normal-case leading-6 tracking-normal text-espresso/60">
-          Use a hosted image URL above, or upload a local image. Save the hero after uploading.
-        </span>
-        <span className="inline-flex min-h-11 w-fit cursor-pointer items-center justify-center gap-2 rounded-full border border-espresso/15 bg-white px-5 text-sm font-black normal-case tracking-normal text-espresso hover:border-rust/30 hover:text-rust">
-          <Upload aria-hidden size={16} />
-          Choose image file
-          <input
-            type="file"
-            accept="image/*"
-            className="sr-only"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-              event.currentTarget.value = "";
-              if (!file) return;
-              onUploadImage(file);
-            }}
-          />
-        </span>
-      </label>
-
-      <TextInput label="Image note" value={hero.imageNote} onChange={(value) => onChange({ imageNote: value })} />
 
       <div>
         <button
