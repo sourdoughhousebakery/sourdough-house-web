@@ -3,6 +3,7 @@ import { navItems } from "@/content/site-content";
 import { adminDataSource } from "@/lib/admin-data/source";
 import { getHotplateUrl, siteConfig } from "@/lib/site";
 import { AdminPreviewContactIconLinks } from "./admin-preview-content";
+import { BrandLogoLockup } from "./brand-logo-lockup";
 
 export async function SiteFooter() {
   const [hero, announcement, contact, testimonials] = await Promise.all([
@@ -16,13 +17,10 @@ export async function SiteFooter() {
   return (
     <footer className="border-t border-espresso/10 bg-cream px-5 py-10">
       <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-[1.2fr_1fr_1fr]">
-        <div>
-          <Link href="/" className="font-hand text-3xl font-bold text-espresso">
-            {siteConfig.shortName}
+        <div className="flex max-w-sm flex-col items-center text-center">
+          <Link href="/" className="inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust" aria-label={`${siteConfig.name} home`}>
+            <BrandLogoLockup orientation="vertical" width={170} color="#5a4639" />
           </Link>
-          <p className="mt-3 max-w-sm text-sm leading-6 text-espresso/68">
-            Slow-fermented breads, sweets, and seasonal bakes released through local Hotplate drops.
-          </p>
         </div>
 
         <div>
