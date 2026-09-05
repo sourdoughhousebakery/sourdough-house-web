@@ -16,7 +16,7 @@ const layoutStyles = {
   },
   vertical: {
     wrapper: "inline-flex flex-col items-center gap-0",
-    mark: "relative z-10 -mb-[13%] w-[92%] origin-top translate-x-[4%] translate-y-[20%] scale-y-[0.8]",
+    mark: "relative z-10 -mb-[13%] w-[92%] origin-top translate-x-[3%] translate-y-[20%] scale-y-[0.8]",
     text: "relative z-20 w-full"
   }
 };
