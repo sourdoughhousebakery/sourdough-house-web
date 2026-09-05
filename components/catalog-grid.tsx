@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 import type { PublicCatalogItem } from "@/lib/catalog/types";
 import { isDataImageSrc } from "@/lib/images";
-import { ButtonLink } from "./button-link";
 import { MenuItemDetailModal, type MenuItemDetail } from "./menu-item-detail-modal";
 
 type CatalogGridProps = {
@@ -33,11 +32,9 @@ export function CatalogGrid({ items }: CatalogGridProps) {
                   description: item.description,
                   image: item.image,
                   imageAlt,
-                  priceLabel: item.displayPrice ?? "Ask for availability",
+                  priceLabel: item.displayPrice ?? "Price varies by drop",
                   statusLabel: item.availabilityLabel,
-                  note: item.note,
-                  actionHref: item.displayPrice ? "/order" : undefined,
-                  actionLabel: item.displayPrice ? "Order info" : undefined
+                  note: item.note
                 })
               }
               onKeyDown={(event) => {
@@ -72,13 +69,8 @@ export function CatalogGrid({ items }: CatalogGridProps) {
                 </div>
                 <div className="mt-auto flex items-center justify-between gap-4 pt-1">
                   <span className="font-hand text-2xl font-bold text-rust">
-                    {item.displayPrice ?? "Ask for availability"}
+                    {item.displayPrice ?? "Price varies by drop"}
                   </span>
-                  {item.displayPrice ? (
-                    <ButtonLink href="/order" variant="secondary" className="min-h-10 px-4" onClick={(event) => event.stopPropagation()}>
-                      Order info
-                    </ButtonLink>
-                  ) : null}
                 </div>
               </div>
             </article>

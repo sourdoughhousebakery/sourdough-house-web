@@ -26,7 +26,7 @@ Open `http://localhost:3000`.
 Copy `.env.example` to `.env.local` when local overrides are needed.
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://sourdough-house-bakery.vercel.app
+NEXT_PUBLIC_SITE_URL=https://sourdough-house-web.vercel.app
 HOTPLATE_CHEF_ID=sourdoughhouse43
 ADMIN_DATA_SOURCE=disk
 ADMIN_EMAILS=owner@example.com
@@ -85,16 +85,13 @@ npm run build
 
 ## Deployment
 
-This is Vercel-ready but not deployed yet because the final GitHub/Vercel account is not available.
-
-Future flow:
+Production is deployed at https://sourdough-house-web.vercel.app from the GitHub repository `sourdoughhousebakery/sourdough-house-web`. Pushing `main` triggers the connected Vercel production deployment.
 
 ```bash
-git remote add origin <github-repo-url>
 git push -u origin main
 ```
 
-Then import the GitHub repo into the target Vercel account and set:
+The Vercel project uses these environment variables:
 
 - `NEXT_PUBLIC_SITE_URL`
 - `HOTPLATE_CHEF_ID`

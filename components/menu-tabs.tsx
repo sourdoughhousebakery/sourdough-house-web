@@ -1,7 +1,7 @@
 "use client";
 
 import { ShoppingBag, Wheat } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { PublicCatalogItem } from "@/lib/catalog/types";
 import type { FallbackMenuItem, HotplateMenuItem, MenuResult } from "@/lib/hotplate/types";
 import { CatalogGrid } from "./catalog-grid";
@@ -19,6 +19,7 @@ type MenuTabsProps = {
 export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplateUrl }: MenuTabsProps) {
   const hasLiveHotplateItems = hotplateSource === "live" && hotplateItems.length > 0;
   const [activeTab, setActiveTab] = useState<"hotplate" | "catalog">("hotplate");
+  const liveTabRef = useRef<HTMLButtonElement>(null);
 
   if (!hasLiveHotplateItems) {
     return (
@@ -49,6 +50,8 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplate
       <div className="mb-8 flex flex-col gap-4 rounded-[1.5rem] border border-espresso/10 bg-white/70 p-3 shadow-soft sm:flex-row">
         <button
           type="button"
+          ref={liveTabRef}
+          aria-pressed={activeTab === "hotplate"}
           onClick={() => setActiveTab("hotplate")}
           className={`inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-[1.1rem] px-4 text-sm font-black transition ${
             activeTab === "hotplate" ? "bg-espresso text-cream" : "text-espresso/68 hover:bg-white"
@@ -59,6 +62,7 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplate
         </button>
         <button
           type="button"
+          aria-pressed={activeTab === "catalog"}
           onClick={() => setActiveTab("catalog")}
           className={`inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-[1.1rem] px-4 text-sm font-black transition ${
             activeTab === "catalog" ? "bg-espresso text-cream" : "text-espresso/68 hover:bg-white"
@@ -76,9 +80,21 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplate
         </div>
       ) : (
         <div>
-          <p className="mb-5 text-sm font-semibold text-espresso/62">
-            These are the regular bakes Sourdough House is known for. Some may not be available in the current Hotplate drop.
-          </p>
+          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+            <p className="text-sm font-semibold text-espresso/62">
+              Explore our bakes, package sizes, and reference prices. Availability changes by drop.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab("hotplate");
+                liveTabRef.current?.focus();
+              }}
+              className="inline-flex min-h-11 shrink-0 items-center self-start text-left text-sm font-bold text-rust underline underline-offset-4 hover:text-espresso focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+            >
+              See what’s currently available
+            </button>
+          </div>
           <CatalogGrid items={catalogItems} />
         </div>
       )}
