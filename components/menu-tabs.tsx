@@ -6,6 +6,9 @@ import type { PublicCatalogItem } from "@/lib/catalog/types";
 import type { FallbackMenuItem, HotplateMenuItem, MenuResult } from "@/lib/hotplate/types";
 import { CatalogGrid } from "./catalog-grid";
 import { MenuGrid } from "./menu-grid";
+import { DropOrderCallout } from "./drop-order-callout";
+import { DropAlertsLink } from "./drop-alerts-link";
+import type { DropScheduleSummary } from "@/lib/hotplate/schedule";
 
 type DisplayMenuItem = FallbackMenuItem | (HotplateMenuItem & { image: string });
 
@@ -14,9 +17,12 @@ type MenuTabsProps = {
   hotplateSource: MenuResult["source"];
   catalogItems: PublicCatalogItem[];
   hotplateUrl: string;
+  orderUrl: string;
+  alertsUrl: string | null;
+  schedule: DropScheduleSummary;
 };
 
-export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplateUrl }: MenuTabsProps) {
+export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplateUrl, orderUrl, alertsUrl, schedule }: MenuTabsProps) {
   const hasLiveHotplateItems = hotplateSource === "live" && hotplateItems.length > 0;
   const [activeTab, setActiveTab] = useState<"hotplate" | "catalog">("hotplate");
   const liveTabRef = useRef<HTMLButtonElement>(null);
@@ -29,7 +35,10 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplate
             <p className="text-xs font-black uppercase tracking-[0.14em] text-rust">Find your next bake</p>
             <p className="mt-1">Check Hotplate for the latest menu, pickup times, and notifications for the next bake.</p>
           </div>
-          <a href={hotplateUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 shrink-0 items-center font-bold text-rust underline underline-offset-4">Visit Hotplate →</a>
+          <div className="flex shrink-0 flex-col items-start md:items-end">
+            <DropAlertsLink href={alertsUrl} />
+            <a href={hotplateUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center font-bold text-rust underline underline-offset-4">Visit Hotplate →</a>
+          </div>
         </div>
         <div>
           <div className="mb-5">
@@ -75,8 +84,8 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplate
 
       {activeTab === "hotplate" ? (
         <div>
-          <p className="mb-5 text-sm font-semibold text-espresso/62">From our current Hotplate menu. Final availability and pickup times are confirmed at checkout.</p>
-          <MenuGrid items={hotplateItems} hotplateUrl={hotplateUrl} />
+          <DropOrderCallout hotplateUrl={orderUrl} alertsUrl={alertsUrl} schedule={schedule} />
+          <MenuGrid items={hotplateItems} hotplateUrl={orderUrl} />
         </div>
       ) : (
         <div>
@@ -96,6 +105,7 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplate
             </button>
           </div>
           <CatalogGrid items={catalogItems} />
+          <div className="mt-6 flex justify-center"><DropAlertsLink href={alertsUrl} /></div>
         </div>
       )}
     </div>

@@ -1,3 +1,5 @@
+import type { HotplateSchedule } from "./schedule";
+
 export type HotplateMenuItem = {
   id: string;
   name: string;
@@ -29,6 +31,7 @@ export type MenuResult = {
 };
 
 export type HotplateEvent = {
+  schedule?: HotplateSchedule;
   id: string;
   title: string;
   description: string;
@@ -63,4 +66,3 @@ export type Testimonial = {
   name: string;
   source: string;
 };
-

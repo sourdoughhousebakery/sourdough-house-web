@@ -1,6 +1,5 @@
 import { Bell, CreditCard, ShoppingBag, Timer } from "lucide-react";
 import { orderPanelContent } from "@/content/site-content";
-import { getHotplateUrl } from "@/lib/site";
 import { ButtonLink } from "./button-link";
 import { MotionSection } from "./motion-section";
 
@@ -11,7 +10,7 @@ const iconByName = {
   Timer
 };
 
-export function OrderPanel() {
+export function OrderPanel({ hotplateUrl }: { hotplateUrl: string }) {
   return (
     <MotionSection className="px-5 py-16">
       <div className="mx-auto grid max-w-6xl gap-8 rounded-[2rem] bg-espresso p-6 text-white shadow-lift md:p-10 lg:grid-cols-[0.9fr_1.1fr]">
@@ -20,7 +19,7 @@ export function OrderPanel() {
           <h2 className="mt-3 font-serif text-5xl leading-none">{orderPanelContent.title}</h2>
           <p className="mt-5 text-lg leading-8 text-white/82">{orderPanelContent.description}</p>
           <div className="mt-7">
-            <ButtonLink href={getHotplateUrl()} external variant="dark">
+            <ButtonLink href={hotplateUrl} external variant="dark">
               {orderPanelContent.ctaLabel}
             </ButtonLink>
           </div>

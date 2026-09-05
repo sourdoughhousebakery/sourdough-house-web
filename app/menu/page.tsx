@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { AdminPreviewAnnouncement } from "@/components/admin-preview-content";
 import { MenuTabs } from "@/components/menu-tabs";
+import { MenuRefresh } from "@/components/menu-refresh";
 import { PageIntro } from "@/components/page-intro";
 import { pageIntros } from "@/content/site-content";
 import { adminDataSource } from "@/lib/admin-data/source";
 import { getDisplayMenu } from "@/lib/hotplate/api";
-import { getHotplateUrl } from "@/lib/site";
+import { getHotplateAlertsUrl, getHotplateUrl } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ export default async function MenuPage() {
 
   return (
     <>
+      <MenuRefresh />
       <PageIntro
         eyebrow={menu.source === "fallback" ? pageIntros.menu.fallbackEyebrow : pageIntros.menu.liveEyebrow}
         title={pageIntros.menu.title}
@@ -50,7 +52,7 @@ export default async function MenuPage() {
               .
             </div>
           ) : null}
-          <MenuTabs hotplateItems={menu.displayItems} hotplateSource={menu.source} catalogItems={catalogItems} hotplateUrl={getHotplateUrl()} />
+          <MenuTabs hotplateItems={menu.displayItems} hotplateSource={menu.source} catalogItems={catalogItems} hotplateUrl={getHotplateUrl()} orderUrl={menu.orderUrl} alertsUrl={getHotplateAlertsUrl()} schedule={menu.schedule} />
         </div>
       </section>
     </>

@@ -106,3 +106,8 @@ export function getHotplateUrl() {
   if (!siteConfig.hotplateChefId) return "https://hotplate.com";
   return `https://hotplate.com/${siteConfig.hotplateChefId}`;
 }
+
+export function getHotplateAlertsUrl() {
+  if (!siteConfig.hotplateChefId) return null;
+  return `${getHotplateUrl()}?sms_reminder=true`;
+}

@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { FallbackMenuItem, HotplateMenuItem } from "@/lib/hotplate/types";
-import { ButtonLink } from "./button-link";
+import { formatInventoryLabel } from "@/lib/hotplate/inventory";
 import { MenuItemDetailModal, type MenuItemDetail } from "./menu-item-detail-modal";
 
 type DisplayMenuItem = FallbackMenuItem | (HotplateMenuItem & { image: string });
@@ -18,7 +18,29 @@ type MenuGridProps = {
 };
 
 export function MenuGrid({ items, hotplateUrl }: MenuGridProps) {
-  const [selectedItem, setSelectedItem] = useState<MenuItemDetail | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const selectedItem = useMemo<MenuItemDetail | null>(() => {
+    const item = items.find((candidate) => candidate.id === selectedItemId);
+    if (!item) return null;
+    const isHotplate = hasHotplateSource(item);
+    const isAvailable = isHotplate ? item.isAvailable : true;
+    return {
+      id: item.id,
+      name: item.name,
+      category: item.category,
+      description: item.description || "Fresh from the Sourdough House kitchen.",
+      image: item.image,
+      imageAlt: `${item.name} from Sourdough House Bakery`,
+      priceLabel: isAvailable ? item.price : "Sold out",
+      statusLabel: isHotplate ? formatInventoryLabel(item.available) : item.badge,
+      actionHref: hotplateUrl,
+      actionLabel: isAvailable ? "Shop this drop on Hotplate" : "Browse other bakes on Hotplate",
+      note: isAvailable
+        ? "Select this item, quantities, and pickup on Hotplate."
+        : "This item is sold out. Check the drop for other available bakes.",
+      actionExternal: true
+    };
+  }, [items, selectedItemId, hotplateUrl]);
 
   return (
     <>
@@ -27,29 +49,16 @@ export function MenuGrid({ items, hotplateUrl }: MenuGridProps) {
           const isHotplate = hasHotplateSource(item);
           const isAvailable = isHotplate ? item.isAvailable : true;
           const imageAlt = `${item.name} from Sourdough House Bakery`;
-          const statusLabel = isHotplate && item.sold > 0 ? `${item.sold} sold` : "badge" in item ? item.badge : undefined;
+          const statusLabel = isHotplate ? formatInventoryLabel(item.available) : item.badge;
           const description = item.description || "Fresh from the Sourdough House kitchen.";
 
           return (
             <article
               key={item.id}
               role="button"
+              aria-label={`View details for ${item.name}${statusLabel ? `, ${statusLabel}` : ""}`}
               tabIndex={0}
-              onClick={() =>
-                setSelectedItem({
-                  id: item.id,
-                  name: item.name,
-                  category: item.category,
-                  description,
-                  image: item.image,
-                  imageAlt,
-                  priceLabel: isAvailable ? item.price : "Sold out",
-                  statusLabel,
-                  actionHref: hotplateUrl,
-                  actionLabel: "Order",
-                  actionExternal: true
-                })
-              }
+              onClick={() => setSelectedItemId(item.id)}
               onKeyDown={(event) => {
                 if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) {
                   event.preventDefault();
@@ -84,16 +93,16 @@ export function MenuGrid({ items, hotplateUrl }: MenuGridProps) {
                   <span className="font-hand text-2xl font-bold text-rust">
                     {isAvailable ? item.price : "Sold out"}
                   </span>
-                  <ButtonLink href={hotplateUrl} external variant="secondary" className="min-h-10 px-4" onClick={(event) => event.stopPropagation()}>
-                    Order
-                  </ButtonLink>
+                  <span className="inline-flex min-h-11 shrink-0 items-center rounded-full border border-espresso/18 bg-white/70 px-4 text-sm font-bold text-espresso transition group-hover:border-espresso/35 group-hover:bg-white">
+                    View details
+                  </span>
                 </div>
               </div>
             </article>
           );
         })}
       </div>
-      <MenuItemDetailModal item={selectedItem} onClose={() => setSelectedItem(null)} />
+      <MenuItemDetailModal item={selectedItem} onClose={() => setSelectedItemId(null)} />
     </>
   );
 }

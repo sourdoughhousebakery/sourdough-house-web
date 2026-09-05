@@ -28,9 +28,10 @@ type MenuItemDetailModalProps = {
 
 export function MenuItemDetailModal({ item, onClose }: MenuItemDetailModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const itemId = item?.id;
 
   useEffect(() => {
-    if (!item) return;
+    if (!itemId) return;
     const dialog = dialogRef.current;
     const previousFocus = document.activeElement;
     const previousOverflow = document.body.style.overflow;
@@ -41,7 +42,7 @@ export function MenuItemDetailModal({ item, onClose }: MenuItemDetailModalProps)
       document.body.style.overflow = previousOverflow;
       if (previousFocus instanceof HTMLElement) previousFocus.focus();
     };
-  }, [item]);
+  }, [itemId]);
 
   if (!item) return null;
 

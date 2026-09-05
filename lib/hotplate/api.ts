@@ -1,10 +1,12 @@
 import { cache } from "react";
 import { fallbackMenuItems } from "@/content/site-content";
-import { siteConfig } from "@/lib/site";
+import { getHotplateUrl, siteConfig } from "@/lib/site";
 import type { HotplateEvent, HotplateMenuItem, MenuResult } from "./types";
+import { parseAvailableInventory } from "./inventory";
+import { parseHotplateSchedule, summarizeHotplateSchedule } from "./schedule";
 
 const HOTPLATE_API_BASE = "https://bets.hotplate.com/trpc";
-const REVALIDATE_SECONDS = 300;
+const REVALIDATE_SECONDS = 60;
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -59,9 +61,7 @@ export function parseMenuFromEventDetail(detail: unknown): HotplateMenuItem[] {
     .sort((a, b) => asNumber(a.sectionIndex) - asNumber(b.sectionIndex))
     .map((item) => {
       const inventory = isRecord(item.inventoryInfo) ? item.inventoryInfo : {};
-      const availableRaw = inventory.available;
-      const available =
-        availableRaw === "Infinity" || availableRaw === undefined ? null : asNumber(availableRaw, 0);
+      const available = parseAvailableInventory(inventory.available);
 
       return {
         id: asString(item.id, crypto.randomUUID()),
@@ -71,7 +71,7 @@ export function parseMenuFromEventDetail(detail: unknown): HotplateMenuItem[] {
         image: asString(item.image) || null,
         sold: asNumber(inventory.sold),
         available,
-        isAvailable: availableRaw === "Infinity" || availableRaw === undefined || asNumber(availableRaw, 0) > 0,
+        isAvailable: available === null || available > 0,
         category: sectionName(sections, item.sectionIndex),
         source: "hotplate" as const
       };
@@ -91,13 +91,15 @@ function parseEvent(event: unknown, detail: unknown): HotplateEvent | null {
     status: asString(detailRecord.status ?? eventRecord.status, "open"),
     goLiveTime: asString(detailRecord.goLiveTime ?? eventRecord.goLiveTime) || null,
     isPickupEnabled: asBoolean(detailRecord.isPickupEnabled ?? eventRecord.isPickupEnabled),
-    isDeliveryEnabled: asBoolean(detailRecord.isDeliveryEnabled ?? eventRecord.isDeliveryEnabled)
+    isDeliveryEnabled: asBoolean(detailRecord.isDeliveryEnabled ?? eventRecord.isDeliveryEnabled),
+    schedule: parseHotplateSchedule(detailRecord)
   };
 }
 
 async function hotplateFetch<T>(endpoint: string, input: UnknownRecord): Promise<T> {
   const url = `${HOTPLATE_API_BASE}/${endpoint}?input=${encodeURIComponent(JSON.stringify(input))}`;
   const response = await fetch(url, {
+    signal: AbortSignal.timeout(5000),
     next: { revalidate: REVALIDATE_SECONDS },
     headers: { accept: "application/json" }
   });
@@ -166,11 +168,19 @@ export function resolveDisplayMenuItems(menu: MenuResult, limit?: number) {
   return typeof limit === "number" ? items.slice(0, limit) : items;
 }
 
+export function resolveHotplateOrderUrl(menu: MenuResult, storefrontUrl: string) {
+  const eventId = menu.event?.id.trim();
+  if (menu.source !== "live" || menu.items.length === 0 || !eventId) return storefrontUrl;
+  return `${storefrontUrl.replace(/\/$/, "")}/${encodeURIComponent(eventId)}`;
+}
+
 export async function getDisplayMenu(limit?: number) {
   const menu = await getHotplateMenu();
 
   return {
     ...menu,
+    orderUrl: resolveHotplateOrderUrl(menu, getHotplateUrl()),
+    schedule: summarizeHotplateSchedule(menu.source === "live" ? menu.event?.schedule : null),
     displayItems: resolveDisplayMenuItems(menu, limit)
   };
 }

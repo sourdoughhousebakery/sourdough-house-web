@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { StickyOrder } from "@/components/sticky-order";
-import { getHotplateUrl, siteConfig } from "@/lib/site";
+import { siteConfig } from "@/lib/site";
+import { getDisplayMenu } from "@/lib/hotplate/api";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -62,17 +63,17 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-  const hotplateUrl = getHotplateUrl();
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const { orderUrl } = await getDisplayMenu();
 
   return (
     <html lang="en" className={`${dmSans.variable} ${dmSerif.variable} ${caveat.variable}`}>
       <body className="font-sans antialiased">
         <a href="#main-content" className="skip-link">Skip to content</a>
-        <SiteHeader hotplateUrl={hotplateUrl} />
+        <SiteHeader hotplateUrl={orderUrl} />
         <main id="main-content" tabIndex={-1}>{children}</main>
         <SiteFooter />
-        <StickyOrder hotplateUrl={hotplateUrl} />
+        <StickyOrder hotplateUrl={orderUrl} />
       </body>
     </html>
   );

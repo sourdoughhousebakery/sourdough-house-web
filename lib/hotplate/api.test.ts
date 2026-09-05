@@ -1,5 +1,39 @@
 import { describe, expect, it } from "vitest";
-import { formatHotplatePrice, parseMenuFromEventDetail, resolveDisplayMenuItems } from "./api";
+import { formatHotplatePrice, parseMenuFromEventDetail, resolveDisplayMenuItems, resolveHotplateOrderUrl } from "./api";
+import type { MenuResult } from "./types";
+
+describe("resolveHotplateOrderUrl", () => {
+  const storefront = "https://hotplate.com/bakery";
+  const liveMenu: MenuResult = {
+    source: "live",
+    items: parseMenuFromEventDetail({ menuItems: { bread: { id: "bread", title: "Bread" } } }),
+    event: {
+      id: "current-drop",
+      title: "Current bake",
+      description: "",
+      image: null,
+      status: "live",
+      goLiveTime: null,
+      isPickupEnabled: true,
+      isDeliveryEnabled: false
+    }
+  };
+
+  it("opens the same live drop as the displayed products", () => {
+    expect(resolveHotplateOrderUrl(liveMenu, storefront)).toBe(`${storefront}/current-drop`);
+    expect(resolveHotplateOrderUrl({ ...liveMenu, event: { ...liveMenu.event!, id: "next-drop" } }, storefront)).toBe(`${storefront}/next-drop`);
+  });
+
+  it.each(["fallback", "past"] as const)("uses the storefront for a %s menu even if an old event remains", (source) => {
+    expect(resolveHotplateOrderUrl({ ...liveMenu, source }, storefront)).toBe(storefront);
+  });
+
+  it("uses the storefront when the live menu or event is missing", () => {
+    expect(resolveHotplateOrderUrl({ ...liveMenu, items: [] }, storefront)).toBe(storefront);
+    expect(resolveHotplateOrderUrl({ ...liveMenu, event: null }, storefront)).toBe(storefront);
+    expect(resolveHotplateOrderUrl({ ...liveMenu, event: { ...liveMenu.event!, id: "" } }, storefront)).toBe(storefront);
+  });
+});
 
 describe("formatHotplatePrice", () => {
   it("formats numeric Hotplate prices", () => {

@@ -3,13 +3,16 @@ import { Hero } from "@/components/hero";
 import { HomeFeaturedCatalog } from "@/components/home-featured-catalog";
 import { HomeNextSteps } from "@/components/home-next-steps";
 import { MenuGrid } from "@/components/menu-grid";
+import { MenuRefresh } from "@/components/menu-refresh";
+import { DropOrderCallout } from "@/components/drop-order-callout";
+import { DropAlertsLink } from "@/components/drop-alerts-link";
 import { MotionSection } from "@/components/motion-section";
 import { TestimonialBand } from "@/components/testimonial-band";
 import { ButtonLink } from "@/components/button-link";
 import { homeContent } from "@/content/site-content";
 import { adminDataSource } from "@/lib/admin-data/source";
 import { getDisplayMenu } from "@/lib/hotplate/api";
-import { getHotplateUrl } from "@/lib/site";
+import { getHotplateAlertsUrl } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +29,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <MenuRefresh />
       <Hero content={hero} />
       <AdminPreviewAnnouncement defaultContent={defaultContent} />
       <MotionSection id="fresh-bakes" className="px-5 pb-16 pt-10">
@@ -47,9 +51,15 @@ export default async function HomePage() {
             </ButtonLink>
           </div>
           {menu.source === "fallback" ? (
-            <HomeFeaturedCatalog fallbackItems={featuredCatalog} />
+            <>
+              <HomeFeaturedCatalog fallbackItems={featuredCatalog} />
+              <div className="mt-6 flex justify-center"><DropAlertsLink href={getHotplateAlertsUrl()} /></div>
+            </>
           ) : (
-            <MenuGrid items={menu.displayItems} hotplateUrl={getHotplateUrl()} />
+            <>
+              <DropOrderCallout hotplateUrl={menu.orderUrl} alertsUrl={getHotplateAlertsUrl()} schedule={menu.schedule} />
+              <MenuGrid items={menu.displayItems} hotplateUrl={menu.orderUrl} />
+            </>
           )}
         </div>
       </MotionSection>
