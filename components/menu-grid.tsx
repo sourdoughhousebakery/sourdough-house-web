@@ -51,7 +51,7 @@ export function MenuGrid({ items, hotplateUrl }: MenuGridProps) {
                 })
               }
               onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
+                if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) {
                   event.preventDefault();
                   event.currentTarget.click();
                 }

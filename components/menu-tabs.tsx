@@ -26,10 +26,10 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplate
       <div className="grid gap-6">
         <div className="flex flex-col gap-3 border-y border-gold/25 py-4 text-sm font-semibold leading-6 text-espresso/68 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.14em] text-rust">No live drop right now</p>
-            <p className="mt-1">Ordering opens through Hotplate when the next drop is available.</p>
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-rust">Find your next bake</p>
+            <p className="mt-1">Check Hotplate for the latest menu, pickup times, and notifications for the next bake.</p>
           </div>
-          <p className="font-bold text-espresso/70">Regular bakery catalog is below.</p>
+          <a href={hotplateUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-11 shrink-0 items-center font-bold text-rust underline underline-offset-4">Visit Hotplate →</a>
         </div>
         <div>
           <div className="mb-5">
@@ -75,7 +75,7 @@ export function MenuTabs({ hotplateItems, hotplateSource, catalogItems, hotplate
 
       {activeTab === "hotplate" ? (
         <div>
-          <p className="mb-5 text-sm font-semibold text-espresso/62">These items are loaded from the current Hotplate drop.</p>
+          <p className="mb-5 text-sm font-semibold text-espresso/62">From our current Hotplate menu. Final availability and pickup times are confirmed at checkout.</p>
           <MenuGrid items={hotplateItems} hotplateUrl={hotplateUrl} />
         </div>
       ) : (

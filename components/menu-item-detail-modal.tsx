@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { isDataImageSrc } from "@/lib/images";
 import { ButtonLink } from "./button-link";
@@ -26,21 +27,53 @@ type MenuItemDetailModalProps = {
 };
 
 export function MenuItemDetailModal({ item, onClose }: MenuItemDetailModalProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (!item) return;
+    const dialog = dialogRef.current;
+    const previousFocus = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    dialog?.showModal();
+    document.body.style.overflow = "hidden";
+    return () => {
+      dialog?.close();
+      document.body.style.overflow = previousOverflow;
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    };
+  }, [item]);
+
   if (!item) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-[110] grid place-items-center bg-espresso/70 p-4 backdrop-blur-sm"
-      role="dialog"
+    <dialog
+      ref={dialogRef}
+      className="menu-detail-dialog"
       aria-modal="true"
       aria-labelledby="menu-item-detail-title"
-      onClick={onClose}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
       onKeyDown={(event) => {
-        if (event.key === "Escape") onClose();
+        if (event.key !== "Tab") return;
+        const controls = event.currentTarget.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex="0"]');
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }}
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
       }}
     >
       <article
-        className="relative grid max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-[1.5rem] bg-cream shadow-lift md:grid-cols-[0.95fr_1.05fr]"
+        className="relative grid w-full max-w-4xl rounded-[1.5rem] bg-cream shadow-lift md:grid-cols-[0.95fr_1.05fr]"
         onClick={(event) => event.stopPropagation()}
       >
         <button
@@ -52,7 +85,7 @@ export function MenuItemDetailModal({ item, onClose }: MenuItemDetailModalProps)
           <X aria-hidden size={20} />
         </button>
 
-        <div className="relative min-h-72 bg-gold/10 md:min-h-full">
+        <div className="relative min-h-48 bg-gold/10 md:min-h-full">
           <Image
             src={item.image}
             alt={item.imageAlt}
@@ -63,7 +96,7 @@ export function MenuItemDetailModal({ item, onClose }: MenuItemDetailModalProps)
           />
         </div>
 
-        <div className="grid max-h-[92vh] gap-5 overflow-y-auto p-5 md:p-7">
+        <div className="grid gap-5 p-5 md:p-7">
           <div className="pr-12 md:pr-14">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.14em] text-sage">{item.category}</p>
@@ -91,6 +124,6 @@ export function MenuItemDetailModal({ item, onClose }: MenuItemDetailModalProps)
           </div>
         </div>
       </article>
-    </div>
+    </dialog>
   );
 }

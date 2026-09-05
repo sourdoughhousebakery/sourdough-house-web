@@ -16,7 +16,7 @@ describe("page content registry", () => {
   it("keeps homepage section copy in named content objects", () => {
     expect(homeContent.featuredMenu.title).toBe("This week's table.");
     expect(homeNextStepsContent.items).toHaveLength(3);
-    expect(homeNextStepsContent.items.map((item) => item.href)).toEqual(["/menu", "/story", "/order"]);
+    expect(homeNextStepsContent.items.map((item) => item.href)).toEqual(["/menu", "/order", "/contact"]);
     expect(storyPreviewContent.title).toContain("starter");
     expect(processBandContent.title).toContain("better bread");
   });

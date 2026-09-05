@@ -3,7 +3,7 @@
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { navItems } from "@/content/site-content";
 import { siteConfig } from "@/lib/site";
 import { ButtonLink } from "./button-link";
@@ -15,16 +15,22 @@ type SiteHeaderProps = {
 export function SiteHeader({ hotplateUrl }: SiteHeaderProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 px-4 pt-4">
+    <header className="fixed left-0 right-0 top-0 z-50 px-4 pt-4" onKeyDown={(event) => {
+      if (event.key === "Escape" && isOpen) {
+        setIsOpen(false);
+        menuButton.current?.focus();
+      }
+    }}>
       <nav
         aria-label="Primary navigation"
         className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-gold/20 bg-cream/88 px-4 py-3 shadow-soft backdrop-blur-xl"
       >
         <Link
           href="/"
-          className="font-hand text-2xl font-bold text-espresso focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
+          className="font-hand text-xl font-bold sm:text-2xl text-espresso focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust"
           onClick={() => setIsOpen(false)}
         >
           {siteConfig.shortName}
@@ -35,6 +41,7 @@ export function SiteHeader({ hotplateUrl }: SiteHeaderProps) {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={pathname === item.href ? "page" : undefined}
               className={`text-sm font-bold transition hover:text-rust focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust ${
                 pathname === item.href ? "text-rust" : "text-espresso/68"
               }`}
@@ -55,7 +62,8 @@ export function SiteHeader({ hotplateUrl }: SiteHeaderProps) {
           className="inline-flex size-11 items-center justify-center rounded-full border border-espresso/10 bg-white text-espresso md:hidden"
           aria-expanded={isOpen}
           aria-controls="mobile-menu"
-          aria-label="Toggle menu"
+          ref={menuButton}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
           onClick={() => setIsOpen((value) => !value)}
         >
           {isOpen ? <X aria-hidden size={20} /> : <Menu aria-hidden size={20} />}
@@ -71,13 +79,14 @@ export function SiteHeader({ hotplateUrl }: SiteHeaderProps) {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={pathname === item.href ? "page" : undefined}
               className="rounded-2xl px-4 py-3 text-sm font-bold text-espresso hover:bg-white"
               onClick={() => setIsOpen(false)}
             >
               {item.label}
             </Link>
           ))}
-          <ButtonLink href={hotplateUrl} external className="w-full">
+          <ButtonLink href={hotplateUrl} external className="w-full" onClick={() => setIsOpen(false)}>
             Order on Hotplate
           </ButtonLink>
         </div>

@@ -34,7 +34,7 @@ export default async function MenuPage() {
       >
         <p>
           {event?.title
-            ? `${event.title} is loaded from Hotplate.`
+            ? `${event.title}. Browse the bakes below, then order and choose your pickup on Hotplate.`
             : pageIntros.menu.fallbackDescription}
         </p>
       </PageIntro>
@@ -43,7 +43,7 @@ export default async function MenuPage() {
         <div className="mx-auto max-w-6xl">
           {menu.error ? (
             <div className="mb-6 rounded-3xl border border-rust/15 bg-white p-5 text-sm leading-6 text-espresso/70">
-              Live Hotplate data is temporarily unavailable, so this page is showing fallback menu content. Checkout remains available at{" "}
+              We couldn’t check the latest menu just now. Browse our bakery favorites below, or check availability directly on{" "}
               <a className="font-bold text-rust" href={getHotplateUrl()} target="_blank" rel="noreferrer">
                 Hotplate
               </a>

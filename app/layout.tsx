@@ -68,8 +68,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${dmSans.variable} ${dmSerif.variable} ${caveat.variable}`}>
       <body className="font-sans antialiased">
+        <a href="#main-content" className="skip-link">Skip to content</a>
         <SiteHeader hotplateUrl={hotplateUrl} />
-        <main>{children}</main>
+        <main id="main-content" tabIndex={-1}>{children}</main>
         <SiteFooter />
         <StickyOrder hotplateUrl={hotplateUrl} />
       </body>

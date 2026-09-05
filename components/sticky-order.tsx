@@ -22,6 +22,8 @@ export function StickyOrder({ hotplateUrl }: StickyOrderProps) {
       className={`fixed bottom-0 left-0 right-0 z-40 border-t border-gold/20 bg-cream/92 px-4 py-3 shadow-[0_-14px_40px_rgba(54,36,25,0.12)] backdrop-blur-xl transition-transform duration-300 md:hidden ${
         visible ? "translate-y-0" : "translate-y-full"
       }`}
+      inert={!visible}
+      aria-hidden={!visible}
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
       <a
@@ -31,7 +33,7 @@ export function StickyOrder({ hotplateUrl }: StickyOrderProps) {
         className="mx-auto flex max-w-md items-center justify-center gap-2 rounded-full bg-espresso px-5 py-3 text-sm font-black text-cream"
       >
         <ShoppingBag aria-hidden size={18} />
-        Order this week&apos;s bake
+        Order on Hotplate
       </a>
     </div>
   );

@@ -15,7 +15,7 @@ export async function SiteFooter() {
   const defaultContent = { hero, announcement, contact, testimonials };
 
   return (
-    <footer className="border-t border-espresso/10 bg-cream px-5 py-10">
+    <footer className="border-t border-espresso/10 bg-cream px-5 pb-28 pt-10 md:pb-10">
       <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-[1.2fr_1fr_1fr]">
         <div className="flex max-w-sm flex-col items-center text-center">
           <Link href="/" className="inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rust" aria-label={`${siteConfig.name} home`}>
@@ -42,8 +42,9 @@ export async function SiteFooter() {
           <div className="mt-4 flex gap-3">
             <AdminPreviewContactIconLinks defaultContent={defaultContent} />
           </div>
-          <p className="mt-5 text-xs text-espresso/50">
-            © 2026 {siteConfig.name}. Baked in small batches.
+          <p className="mt-4 text-sm leading-6 text-espresso/75">{contact.pickupArea}. Pickup details are confirmed on Hotplate.</p>
+          <p className="mt-5 text-xs text-espresso/70">
+            © {new Date().getFullYear()} {siteConfig.name}. Baked in small batches.
           </p>
         </div>
       </div>

@@ -50,30 +50,27 @@ export const homeContent = {
 };
 
 export const homeNextStepsContent = {
-  eyebrow: "Start here",
-  title: "Choose what you need next.",
-  description: "Jump to today's bake, the bakery story, or the order details without digging around.",
+  eyebrow: "From our oven to your table",
+  title: "Your next favorite bake is a few clicks away.",
+  description: "We bake in small batches. Hotplate is where you’ll find the latest menu, place your order, and choose your pickup.",
   items: [
     {
-      title: "See the menu",
-      description: "Check the current Hotplate drop or browse the regular bakery catalog.",
+      title: "Find your favorites",
+      description: "A loaf for the week, something sweet for the weekend. Explore the menu and see what catches your eye.",
       href: "/menu",
-      ctaLabel: "Open menu",
-      icon: "Wheat"
+      ctaLabel: "Explore the menu"
     },
     {
-      title: "Meet the bakery",
-      description: "Read the short story behind the starter, small batches, and pickup rhythm.",
-      href: "/story",
-      ctaLabel: "Read story",
-      icon: "BookOpen"
-    },
-    {
-      title: "Plan an order",
-      description: "Find the Hotplate link, pickup details, and the path for custom requests.",
+      title: "Make it yours",
+      description: "Visit our Hotplate shop to check availability, select a pickup time, and complete your order.",
       href: "/order",
-      ctaLabel: "Order info",
-      icon: "ShoppingBag"
+      ctaLabel: "How ordering works"
+    },
+    {
+      title: "Pick up & enjoy",
+      description: "Your order confirmation has the pickup details. Bring your appetite. We’ll take care of the baking.",
+      href: "/contact",
+      ctaLabel: "Questions? Get in touch"
     }
   ]
 } as const;
@@ -280,7 +277,7 @@ export const processSteps: ProcessStep[] = [
 export const processBandContent = {
   eyebrow: "The rhythm",
   title: "No shortcuts. Just better bread.",
-  description: "The site can get flashier, but the bakery should stay honest: starter, time, heat, and pickup that works."
+  description: "Good bread takes time. We give every batch the care it deserves, from feeding the starter to the final bake."
 };
 
 export const storyPreviewContent = {
@@ -302,7 +299,7 @@ export const orderPanelContent = {
   steps: [
     { title: "Watch the drop", description: "Hotplate shows what is available this week.", icon: "Bell" },
     { title: "Reserve favorites", description: "Pick bread, sweets, and seasonal specials before they sell out.", icon: "ShoppingBag" },
-    { title: "Pay securely", description: "Checkout runs through Hotplate, not a loose form or DM thread.", icon: "CreditCard" },
+    { title: "Pay securely", description: "Complete your order and payment securely on Hotplate.", icon: "CreditCard" },
     { title: "Pickup fresh", description: "Arrive at the pickup window and take home the good stuff.", icon: "Timer" }
   ]
 } as const;

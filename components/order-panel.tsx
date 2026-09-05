@@ -14,7 +14,7 @@ const iconByName = {
 export function OrderPanel() {
   return (
     <MotionSection className="px-5 py-16">
-      <div className="mx-auto grid max-w-6xl gap-8 rounded-[2rem] bg-gradient-to-br from-gold to-rust p-6 text-white shadow-lift md:p-10 lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="mx-auto grid max-w-6xl gap-8 rounded-[2rem] bg-espresso p-6 text-white shadow-lift md:p-10 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="text-sm font-black uppercase tracking-[0.18em] text-white/75">{orderPanelContent.eyebrow}</p>
           <h2 className="mt-3 font-serif text-5xl leading-none">{orderPanelContent.title}</h2>

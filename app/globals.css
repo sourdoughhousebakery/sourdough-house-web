@@ -57,3 +57,52 @@ img {
   }
 }
 
+
+:where(a, button, summary, input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-rust);
+  outline-offset: 4px;
+}
+
+:where(a, button, summary) {
+  touch-action: manipulation;
+}
+
+:where(h1, h2, h3, [id]) {
+  scroll-margin-top: 7rem;
+}
+
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 150;
+  transform: translateY(-200%);
+  border-radius: 0.75rem;
+  background: var(--color-espresso);
+  color: var(--color-cream);
+  padding: 0.9rem 1.25rem;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.menu-detail-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(56rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-radius: 1.5rem;
+  padding: 0;
+  background: var(--color-cream);
+  color: var(--color-espresso);
+}
+
+.menu-detail-dialog::backdrop {
+  background: rgb(57 39 27 / 70%);
+  backdrop-filter: blur(4px);
+}
