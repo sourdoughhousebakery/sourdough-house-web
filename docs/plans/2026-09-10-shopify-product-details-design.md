@@ -29,7 +29,7 @@ On smaller screens the panel loses the desktop card treatment and uses reduced s
 - Apply the redesign through the shared product template so current and future products inherit it.
 - Do not invent size, shipping, returns, or fit information.
 - Keep product-specific descriptions sourced from Shopify.
-- Keep the size guide compact in the normal layout; the modal lists the product's available sizes and explains how to compare a similar garment without inventing manufacturer measurements.
+- Keep the size guide compact in the normal layout. The modal uses the exact Printful garment measurement tables already stored in the product description, with a generic measuring fallback only when a size-based product has no chart.
 - Develop and test on the unpublished `Sourdough House - design preview` theme.
 
 ## Validation
