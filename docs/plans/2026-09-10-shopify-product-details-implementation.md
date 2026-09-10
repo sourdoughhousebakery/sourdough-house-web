@@ -14,6 +14,8 @@
 
 **Files:**
 - Modify: `/private/tmp/sdh-shopify-theme/shopify/theme/templates/product.json`
+- Modify: `/private/tmp/sdh-shopify-theme/shopify/theme/snippets/variant-main-picker.liquid`
+- Create: `/private/tmp/sdh-shopify-theme/shopify/theme/snippets/sdh-size-guide.liquid`
 
 **Step 1: Update the title and price blocks**
 
@@ -27,7 +29,11 @@ Reduce the large gaps between controls while retaining a divider between identit
 
 Replace the raw description text block with a native accordion containing a `Product details` row whose text remains bound to `{{ closest.product.description }}`.
 
-**Step 4: Validate JSON**
+**Step 4: Add the conditional size guide**
+
+Show a Size guide link in the Size legend only when the product has a Size option. Open a native Shopify dialog that lists the product's available sizes and concise measuring guidance.
+
+**Step 5: Validate JSON**
 
 Run: `python3 -m json.tool shopify/theme/templates/product.json >/dev/null`
 
@@ -76,6 +82,8 @@ Expected: only the approved hierarchy and scoped product-detail styles are added
 **Files:**
 - Upload: `assets/sdh-brand.css`
 - Upload: `templates/product.json`
+- Upload: `snippets/variant-main-picker.liquid`
+- Upload: `snippets/sdh-size-guide.liquid`
 
 **Step 1: Validate the Admin GraphQL mutation**
 
@@ -96,7 +104,7 @@ Check the new hierarchy, swatches, Size and Logo color controls, media updates, 
 
 **Step 2: Verify a many-color shirt**
 
-Check color and size selection, selected-value labels, media updates, option wrapping, and purchase controls.
+Check color and size selection, selected-value labels, media updates, option wrapping, the Size guide modal, and purchase controls.
 
 **Step 3: Verify responsive behavior**
 
