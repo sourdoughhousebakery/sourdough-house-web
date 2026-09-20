@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="128mm" viewBox="0 0 210 128" version="1.1">
+  <title>Sourdough House Bakery dragonfly, embroidery simplified</title>
+  <desc>Reduced-detail dragonfly mark with continuous wing contours and major veins only.</desc>
+  <g fill="none" stroke="#39271b" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke-width="2.4" d="M104.4 39C84 24 58 10 32 7C18 5.5 9 9 5 16.5C19 34 53 43 101 50"/>
+    <path stroke-width="2.4" d="M105.6 39C126 24 152 10 178 7C192 5.5 201 9 205 16.5C191 34 157 43 109 50"/>
+    <path stroke-width="2.4" d="M101 58C73 52 42 52 17 58C8 60 4 66 7 73.5C24 87 59 84 101 68"/>
+    <path stroke-width="2.4" d="M109 58C137 52 168 52 193 58C202 60 206 66 203 73.5C186 87 151 84 109 68"/>
+    <path stroke-width="1.8" d="M101 48C76 37 48 24 18 17"/>
+    <path stroke-width="1.8" d="M101 48C71 45 42 39 14 30"/>
+    <path stroke-width="1.8" d="M101 50C70 51 42 57 12 68"/>
+    <path stroke-width="1.8" d="M109 48C134 37 162 24 192 17"/>
+    <path stroke-width="1.8" d="M109 48C139 45 168 39 196 30"/>
+    <path stroke-width="1.8" d="M109 50C140 51 168 57 198 68"/>
+  </g>
+  <g fill="#39271b">
+    <ellipse cx="105" cy="32" rx="4.1" ry="4.7"/>
+    <path d="M102.7 36.2C101.4 47 101.8 61 102.8 76.5C103.2 87 102.1 99.5 104 116.5C104.2 118.4 105.8 118.4 106 116.5C107.9 99.5 106.8 87 107.2 76.5C108.2 61 108.6 47 107.3 36.2Z"/>
+  </g>
+</svg>

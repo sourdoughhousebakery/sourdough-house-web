@@ -5,7 +5,7 @@
     "price": "$13",
     "description": "This loaf is a tribute to old-world flavors, infused with the rustic charm of Italian countryside kitchens.\nA medley of Italian herbs—think basil, oregano, thyme, and rosemary—shine through in every slice along with sharp cheddar cheese.\n\nContains Dairy.",
     "category": "Bread",
-    "image": "https://2g5xmdu6hp.ucarecd.net/37e70c77-b72f-4658-9d8d-257e08b052a5/-/scale_crop/800x800/center/",
+    "image": "https://2g5xmdu6hp.ucarecd.net/37e70c77-b72f-4658-9d8d-257e08b052a5/-/resize/1200x/-/format/auto/-/quality/smart/-/scale_crop/800x800/center/",
     "isActive": true,
     "isFeatured": false,
     "isTypicallyAvailable": false,
@@ -31,12 +31,12 @@
     "price": "From $5",
     "description": "A Tart & Buttery Dream\n\nSoft, buttery, and melt-in-your-mouth delicious, these scones made with fresh blueberries, sourdough starter, and just the right touch of lemon and honey, each bite delivers a perfect balance of tangy and sweet. Forget dry, crumbly scones — these are fluffy, tender, cookie like pastry treats.\n\nContains Dairy and Eggs.",
     "category": "Scones",
-    "image": "https://2g5xmdu6hp.ucarecd.net/aea0e26a-021c-4c24-8b3d-1472cf7f3260/-/scale_crop/800x800/center/",
+    "image": "https://2g5xmdu6hp.ucarecd.net/de8a1454-3943-41fe-aa94-e9f97713cd8b/-/scale_crop/800x800/center/",
     "isActive": true,
     "isFeatured": false,
     "isTypicallyAvailable": false,
     "showPrice": true,
-    "note": "3 petites: $5 · 6 petites: $10. Not currently on sale."
+    "note": "3 scones: $5 · 6 petites: $10. Not currently on sale."
   },
   {
     "id": "hotplate-cherry-pecan-scones",

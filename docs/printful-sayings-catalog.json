@@ -1,0 +1,860 @@
+{
+  "captured": "2026-09-09",
+  "source": "Live Printful product templates API and browser",
+  "excluded_template": {
+    "id": 107264829,
+    "title": "Templates - Tshirt - 3413"
+  },
+  "sayings": [
+    {
+      "saying": "Born to Bake",
+      "template_id": 107213309,
+      "template_title": "LVL 3 | Saying - Born to Bake | Tee BELLA+CANVAS 3413 | DTFlex",
+      "catalog_product_id": 162,
+      "technique": "DTFILM",
+      "colors": [
+        "Solid Black Triblend",
+        "Brown Triblend",
+        "True Royal Triblend",
+        "Navy Triblend",
+        "Teal Triblend",
+        "Maroon Triblend",
+        "Berry Triblend",
+        "Purple Triblend",
+        "Red Triblend",
+        "Blue Triblend",
+        "Olive Triblend",
+        "Mauve Triblend",
+        "Tan Triblend",
+        "Oatmeal Triblend",
+        "White Fleck Triblend",
+        "Solid White Triblend"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "variant_count": 96,
+      "placements": [
+        {
+          "placement": "front_large_dtf",
+          "display_name": "Large front print",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        },
+        {
+          "placement": "short_sleeve_left_dtf",
+          "display_name": "Short left sleeve",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        }
+      ],
+      "status": "published; production, gallery, variant image, fulfillment and storefront checks passed",
+      "front_artwork_file": {
+        "filename": "02-born-to-bake.png",
+        "width_inches": 11,
+        "height_inches": 9.97,
+        "dpi": 409,
+        "printful_production_file_id": 1064797276
+      },
+      "sleeve_artwork_file": {
+        "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+        "width_inches": 4,
+        "height_inches": 3.41,
+        "dpi": 1125,
+        "placement": "short_sleeve_left_dtf"
+      },
+      "shopify_product_id": 7544547606613,
+      "printful_sync_product_id": 469446908,
+      "shopify_handle": "short-sleeve-t-shirt-1",
+      "sleeve_color_mapping": [
+        {
+          "colors": [
+            "Tan Triblend",
+            "Oatmeal Triblend",
+            "White Fleck Triblend",
+            "Solid White Triblend"
+          ],
+          "filename": "01-sourdough-house-logo-signature-brown-alignment-v2.png",
+          "printful_file_id": 1063172327,
+          "variant_count": 24
+        },
+        {
+          "colors": [
+            "Solid Black Triblend",
+            "Brown Triblend",
+            "True Royal Triblend",
+            "Navy Triblend",
+            "Teal Triblend",
+            "Maroon Triblend",
+            "Berry Triblend",
+            "Purple Triblend",
+            "Red Triblend",
+            "Blue Triblend",
+            "Olive Triblend",
+            "Mauve Triblend"
+          ],
+          "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+          "printful_file_id": 1063172331,
+          "variant_count": 72
+        }
+      ],
+      "verification": {
+        "production_variants": 96,
+        "gallery_images": 32,
+        "corrected_light_variant_images": 24,
+        "shopify_status": "ACTIVE",
+        "fulfillment_location": "Printful",
+        "shipping_profile": "Printful: Tshirts (#PF-FRG1)",
+        "browser_dark_and_light_selection": true,
+        "source_front_and_geometry_preserved": true
+      },
+      "prices_usd": {
+        "XS": 29,
+        "S": 29,
+        "M": 29,
+        "L": 29,
+        "XL": 29,
+        "2XL": 31.5
+      },
+      "composite_status": "pending explicit user choice: use original-photo script or keep separate views; generative test rejected for changed artwork"
+    },
+    {
+      "saying": "Crumb Queen",
+      "template_id": 107222489,
+      "template_title": "LVL 3 | Saying - Crumb Queen | Tee BELLA+CANVAS 3413 | DTFlex",
+      "catalog_product_id": 162,
+      "technique": "DTFILM",
+      "colors": [
+        "Solid Black Triblend",
+        "Brown Triblend",
+        "True Royal Triblend",
+        "Navy Triblend",
+        "Teal Triblend",
+        "Maroon Triblend",
+        "Berry Triblend",
+        "Purple Triblend",
+        "Red Triblend",
+        "Blue Triblend",
+        "Olive Triblend",
+        "Mauve Triblend",
+        "Tan Triblend",
+        "Oatmeal Triblend",
+        "White Fleck Triblend",
+        "Solid White Triblend"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "variant_count": 96,
+      "placements": [
+        {
+          "placement": "front_large_dtf",
+          "display_name": "Large front print",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        },
+        {
+          "placement": "short_sleeve_left_dtf",
+          "display_name": "Short left sleeve",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        }
+      ],
+      "status": "published; production, gallery, variant image, fulfillment and storefront checks passed",
+      "front_artwork_file": {
+        "filename": "05-crumb-queen-text-only-v2.png",
+        "width_inches": 11.25,
+        "height_inches": 8.08,
+        "dpi": 400,
+        "printful_production_file_id": 1064799071
+      },
+      "sleeve_artwork_file": {
+        "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+        "width_inches": 4,
+        "height_inches": 3.41,
+        "dpi": 1125,
+        "placement": "short_sleeve_left_dtf"
+      },
+      "shopify_product_id": 7544559534165,
+      "printful_sync_product_id": 469448473,
+      "shopify_handle": "short-sleeve-t-shirt-2",
+      "sleeve_color_mapping": [
+        {
+          "colors": [
+            "Tan Triblend",
+            "Oatmeal Triblend",
+            "White Fleck Triblend",
+            "Solid White Triblend"
+          ],
+          "filename": "01-sourdough-house-logo-signature-brown-alignment-v2.png",
+          "printful_file_id": 1063172327,
+          "variant_count": 24
+        },
+        {
+          "colors": [
+            "Solid Black Triblend",
+            "Brown Triblend",
+            "True Royal Triblend",
+            "Navy Triblend",
+            "Teal Triblend",
+            "Maroon Triblend",
+            "Berry Triblend",
+            "Purple Triblend",
+            "Red Triblend",
+            "Blue Triblend",
+            "Olive Triblend",
+            "Mauve Triblend"
+          ],
+          "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+          "printful_file_id": 1063172331,
+          "variant_count": 72
+        }
+      ],
+      "verification": {
+        "production_variants": 96,
+        "gallery_images": 32,
+        "corrected_light_variant_images": 24,
+        "shopify_status": "ACTIVE",
+        "fulfillment_location": "Printful",
+        "shipping_profile": "Printful: Tshirts (#PF-FRG1)",
+        "browser_dark_and_light_selection": true,
+        "source_front_and_geometry_preserved": true
+      },
+      "prices_usd": {
+        "XS": 29,
+        "S": 29,
+        "M": 29,
+        "L": 29,
+        "XL": 29,
+        "2XL": 31.5
+      },
+      "composite_status": "pending explicit user choice: use original-photo script or keep separate views; generative test rejected for changed artwork"
+    },
+    {
+      "saying": "Dough Dealer",
+      "template_id": 107223314,
+      "template_title": "LVL 3 | Saying - Dough Dealer | Tee BELLA+CANVAS 3413 | DTFlex",
+      "catalog_product_id": 162,
+      "technique": "DTFILM",
+      "colors": [
+        "Solid Black Triblend",
+        "Brown Triblend",
+        "True Royal Triblend",
+        "Navy Triblend",
+        "Teal Triblend",
+        "Maroon Triblend",
+        "Berry Triblend",
+        "Purple Triblend",
+        "Red Triblend",
+        "Blue Triblend",
+        "Olive Triblend",
+        "Mauve Triblend",
+        "Tan Triblend",
+        "Oatmeal Triblend",
+        "White Fleck Triblend",
+        "Solid White Triblend"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "variant_count": 96,
+      "placements": [
+        {
+          "placement": "front_large_dtf",
+          "display_name": "Large front print",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        },
+        {
+          "placement": "short_sleeve_left_dtf",
+          "display_name": "Short left sleeve",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        }
+      ],
+      "status": "published; production, gallery, variant image, fulfillment and storefront checks passed",
+      "front_artwork_file": {
+        "filename": "06-dough-dealer-text-only-v2.png",
+        "width_inches": 11.25,
+        "height_inches": 8.97,
+        "dpi": 400,
+        "printful_production_file_id": 1064803110
+      },
+      "sleeve_artwork_file": {
+        "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+        "width_inches": 4,
+        "height_inches": 3.41,
+        "dpi": 1125,
+        "placement": "short_sleeve_left_dtf"
+      },
+      "shopify_product_id": 7544615075925,
+      "printful_sync_product_id": 469453322,
+      "shopify_handle": "short-sleeve-t-shirt-3",
+      "sleeve_color_mapping": [
+        {
+          "colors": [
+            "Tan Triblend",
+            "Oatmeal Triblend",
+            "White Fleck Triblend",
+            "Solid White Triblend"
+          ],
+          "filename": "01-sourdough-house-logo-signature-brown-alignment-v2.png",
+          "printful_file_id": 1063172327,
+          "variant_count": 24
+        },
+        {
+          "colors": [
+            "Solid Black Triblend",
+            "Brown Triblend",
+            "True Royal Triblend",
+            "Navy Triblend",
+            "Teal Triblend",
+            "Maroon Triblend",
+            "Berry Triblend",
+            "Purple Triblend",
+            "Red Triblend",
+            "Blue Triblend",
+            "Olive Triblend",
+            "Mauve Triblend"
+          ],
+          "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+          "printful_file_id": 1063172331,
+          "variant_count": 72
+        }
+      ],
+      "verification": {
+        "production_variants": 96,
+        "gallery_images": 16,
+        "corrected_light_variant_images": 24,
+        "shopify_status": "ACTIVE",
+        "fulfillment_location": "Printful",
+        "shipping_profile": "Printful: Tshirts (#PF-FRG1)",
+        "browser_dark_and_light_selection": true,
+        "source_front_and_geometry_preserved": true,
+        "gallery_views_per_color": 1,
+        "storefront_sleeve_mockup": false,
+        "sleeve_fulfillment_file_preserved": true
+      },
+      "prices_usd": {
+        "XS": 29,
+        "S": 29,
+        "M": 29,
+        "L": 29,
+        "XL": 29,
+        "2XL": 31.5
+      },
+      "composite_status": "pending explicit user choice: use original-photo script or keep separate views; generative test rejected for changed artwork"
+    },
+    {
+      "saying": "Flour Water Magic",
+      "template_id": 107224316,
+      "template_title": "LVL 3 | Saying - Flour Water Magic | Tee BELLA+CANVAS 3413 | DTFlex",
+      "catalog_product_id": 162,
+      "technique": "DTFILM",
+      "colors": [
+        "Solid Black Triblend",
+        "Brown Triblend",
+        "True Royal Triblend",
+        "Navy Triblend",
+        "Teal Triblend",
+        "Maroon Triblend",
+        "Berry Triblend",
+        "Purple Triblend",
+        "Red Triblend",
+        "Blue Triblend",
+        "Olive Triblend",
+        "Mauve Triblend",
+        "Tan Triblend",
+        "Oatmeal Triblend",
+        "White Fleck Triblend",
+        "Solid White Triblend"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "variant_count": 96,
+      "placements": [
+        {
+          "placement": "front_large_dtf",
+          "display_name": "Large front print",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        },
+        {
+          "placement": "short_sleeve_left_dtf",
+          "display_name": "Short left sleeve",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        }
+      ],
+      "status": "published; production, gallery, variant image, fulfillment and storefront checks passed",
+      "front_artwork_file": {
+        "filename": "09-flour-water-magic-text-only-v1.png",
+        "width_inches": 10.75,
+        "height_inches": 12.9,
+        "dpi": 419,
+        "printful_production_file_id": 1063716210
+      },
+      "sleeve_artwork_file": {
+        "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+        "width_inches": 4,
+        "height_inches": 3.41,
+        "dpi": 1125,
+        "placement": "short_sleeve_left_dtf"
+      },
+      "shopify_product_id": 7544620974165,
+      "printful_sync_product_id": 469454057,
+      "shopify_handle": "short-sleeve-t-shirt-4",
+      "sleeve_color_mapping": [
+        {
+          "colors": [
+            "Tan Triblend",
+            "Oatmeal Triblend",
+            "White Fleck Triblend",
+            "Solid White Triblend"
+          ],
+          "filename": "01-sourdough-house-logo-signature-brown-alignment-v2.png",
+          "printful_file_id": 1063172327,
+          "variant_count": 24
+        },
+        {
+          "colors": [
+            "Solid Black Triblend",
+            "Brown Triblend",
+            "True Royal Triblend",
+            "Navy Triblend",
+            "Teal Triblend",
+            "Maroon Triblend",
+            "Berry Triblend",
+            "Purple Triblend",
+            "Red Triblend",
+            "Blue Triblend",
+            "Olive Triblend",
+            "Mauve Triblend"
+          ],
+          "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+          "printful_file_id": 1063172331,
+          "variant_count": 72
+        }
+      ],
+      "verification": {
+        "production_variants": 96,
+        "gallery_images": 16,
+        "corrected_light_variant_images": 24,
+        "shopify_status": "ACTIVE",
+        "fulfillment_location": "Printful",
+        "shipping_profile": "Printful: Tshirts (#PF-FRG1)",
+        "browser_dark_and_light_selection": true,
+        "source_front_and_geometry_preserved": true,
+        "gallery_views_per_color": 1,
+        "storefront_sleeve_mockup": false,
+        "sleeve_fulfillment_file_preserved": true
+      },
+      "prices_usd": {
+        "XS": 29,
+        "S": 29,
+        "M": 29,
+        "L": 29,
+        "XL": 29,
+        "2XL": 31.5
+      },
+      "composite_status": "pending explicit user choice: use original-photo script or keep separate views; generative test rejected for changed artwork"
+    },
+    {
+      "saying": "I Bake Bread. I Know Things",
+      "template_id": 107224522,
+      "template_title": "LVL 3 | Saying - I Bake Bread. I Know Things | Tee BELLA+CANVAS 3413 | DTFlex",
+      "catalog_product_id": 162,
+      "technique": "DTFILM",
+      "colors": [
+        "Solid Black Triblend",
+        "Brown Triblend",
+        "True Royal Triblend",
+        "Navy Triblend",
+        "Teal Triblend",
+        "Maroon Triblend",
+        "Berry Triblend",
+        "Purple Triblend",
+        "Red Triblend",
+        "Blue Triblend",
+        "Olive Triblend",
+        "Mauve Triblend",
+        "Tan Triblend",
+        "Oatmeal Triblend",
+        "White Fleck Triblend",
+        "Solid White Triblend"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "variant_count": 96,
+      "placements": [
+        {
+          "placement": "front_large_dtf",
+          "display_name": "Large front print",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        },
+        {
+          "placement": "short_sleeve_left_dtf",
+          "display_name": "Short left sleeve",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        }
+      ],
+      "status": "published; production, gallery, variant image, fulfillment and storefront checks passed",
+      "front_artwork_file": {
+        "filename": "10-i-bake-bread-i-know-things-text-only-v1.png",
+        "width_inches": 11.25,
+        "height_inches": 13.5,
+        "dpi": 400,
+        "printful_production_file_id": 1063716262
+      },
+      "sleeve_artwork_file": {
+        "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+        "width_inches": 4,
+        "height_inches": 3.41,
+        "dpi": 1125,
+        "placement": "short_sleeve_left_dtf"
+      },
+      "shopify_product_id": 7544626839637,
+      "printful_sync_product_id": 469455218,
+      "shopify_handle": "short-sleeve-t-shirt-5",
+      "sleeve_color_mapping": [
+        {
+          "colors": [
+            "Tan Triblend",
+            "Oatmeal Triblend",
+            "White Fleck Triblend",
+            "Solid White Triblend"
+          ],
+          "filename": "01-sourdough-house-logo-signature-brown-alignment-v2.png",
+          "printful_file_id": 1063172327,
+          "variant_count": 24
+        },
+        {
+          "colors": [
+            "Solid Black Triblend",
+            "Brown Triblend",
+            "True Royal Triblend",
+            "Navy Triblend",
+            "Teal Triblend",
+            "Maroon Triblend",
+            "Berry Triblend",
+            "Purple Triblend",
+            "Red Triblend",
+            "Blue Triblend",
+            "Olive Triblend",
+            "Mauve Triblend"
+          ],
+          "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+          "printful_file_id": 1063172331,
+          "variant_count": 72
+        }
+      ],
+      "verification": {
+        "production_variants": 96,
+        "gallery_images": 16,
+        "corrected_light_variant_images": 24,
+        "shopify_status": "ACTIVE",
+        "fulfillment_location": "Printful",
+        "shipping_profile": "Printful: Tshirts (#PF-FRG1)",
+        "browser_dark_and_light_selection": true,
+        "source_front_and_geometry_preserved": true,
+        "gallery_views_per_color": 1,
+        "storefront_sleeve_mockup": false,
+        "sleeve_fulfillment_file_preserved": true
+      },
+      "prices_usd": {
+        "XS": 29,
+        "S": 29,
+        "M": 29,
+        "L": 29,
+        "XL": 29,
+        "2XL": 31.5
+      },
+      "composite_status": "pending explicit user choice: use original-photo script or keep separate views; generative test rejected for changed artwork"
+    },
+    {
+      "saying": "Please Don't Rush Me. I'm Proofing.",
+      "template_id": 107225958,
+      "template_title": "LVL 3 | Saying - Please Don't Rush Me. I'm Proofing. | Tee BELLA+CANVAS 3413 | DTFlex",
+      "catalog_product_id": 162,
+      "technique": "DTFILM",
+      "colors": [
+        "Solid Black Triblend",
+        "Brown Triblend",
+        "True Royal Triblend",
+        "Navy Triblend",
+        "Teal Triblend",
+        "Maroon Triblend",
+        "Berry Triblend",
+        "Purple Triblend",
+        "Red Triblend",
+        "Blue Triblend",
+        "Olive Triblend",
+        "Mauve Triblend",
+        "Tan Triblend",
+        "Oatmeal Triblend",
+        "White Fleck Triblend",
+        "Solid White Triblend"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "variant_count": 96,
+      "placements": [
+        {
+          "placement": "front_large_dtf",
+          "display_name": "Large front print",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        },
+        {
+          "placement": "short_sleeve_left_dtf",
+          "display_name": "Short left sleeve",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        }
+      ],
+      "status": "published; production, gallery, variant image, fulfillment and storefront checks passed",
+      "front_artwork_file": {
+        "filename": "17-please-dont-rush-me-im-proofing-text-only-v1.png",
+        "width_inches": 10.75,
+        "height_inches": 12.9,
+        "dpi": 419,
+        "printful_production_file_id": 1063716163
+      },
+      "sleeve_artwork_file": {
+        "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+        "width_inches": 4,
+        "height_inches": 3.41,
+        "dpi": 1125,
+        "placement": "short_sleeve_left_dtf"
+      },
+      "shopify_product_id": 7544631689301,
+      "printful_sync_product_id": 469456505,
+      "shopify_handle": "short-sleeve-t-shirt-6",
+      "sleeve_color_mapping": [
+        {
+          "colors": [
+            "Tan Triblend",
+            "Oatmeal Triblend",
+            "White Fleck Triblend",
+            "Solid White Triblend"
+          ],
+          "filename": "01-sourdough-house-logo-signature-brown-alignment-v2.png",
+          "printful_file_id": 1063172327,
+          "variant_count": 24
+        },
+        {
+          "colors": [
+            "Solid Black Triblend",
+            "Brown Triblend",
+            "True Royal Triblend",
+            "Navy Triblend",
+            "Teal Triblend",
+            "Maroon Triblend",
+            "Berry Triblend",
+            "Purple Triblend",
+            "Red Triblend",
+            "Blue Triblend",
+            "Olive Triblend",
+            "Mauve Triblend"
+          ],
+          "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+          "printful_file_id": 1063172331,
+          "variant_count": 72
+        }
+      ],
+      "verification": {
+        "production_variants": 96,
+        "gallery_images": 16,
+        "corrected_light_variant_images": 24,
+        "shopify_status": "ACTIVE",
+        "fulfillment_location": "Printful",
+        "shipping_profile": "Printful: Tshirts (#PF-FRG1)",
+        "browser_dark_and_light_selection": true,
+        "source_front_and_geometry_preserved": true,
+        "gallery_views_per_color": 1,
+        "storefront_sleeve_mockup": false,
+        "sleeve_fulfillment_file_preserved": true
+      },
+      "prices_usd": {
+        "XS": 29,
+        "S": 29,
+        "M": 29,
+        "L": 29,
+        "XL": 29,
+        "2XL": 31.5
+      },
+      "composite_status": "pending explicit user choice: use original-photo script or keep separate views; generative test rejected for changed artwork"
+    },
+    {
+      "saying": "Sourdough Is My Superpower",
+      "template_id": 107226078,
+      "template_title": "LVL 3 | Saying - Sourdough Is My Superpower | Tee BELLA+CANVAS 3413 | DTFlex",
+      "catalog_product_id": 162,
+      "technique": "DTFILM",
+      "colors": [
+        "Solid Black Triblend",
+        "Brown Triblend",
+        "True Royal Triblend",
+        "Navy Triblend",
+        "Teal Triblend",
+        "Maroon Triblend",
+        "Berry Triblend",
+        "Purple Triblend",
+        "Red Triblend",
+        "Blue Triblend",
+        "Olive Triblend",
+        "Mauve Triblend",
+        "Tan Triblend",
+        "Oatmeal Triblend",
+        "White Fleck Triblend",
+        "Solid White Triblend"
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "2XL"
+      ],
+      "variant_count": 96,
+      "placements": [
+        {
+          "placement": "front_large_dtf",
+          "display_name": "Large front print",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        },
+        {
+          "placement": "short_sleeve_left_dtf",
+          "display_name": "Short left sleeve",
+          "technique_key": "DTFILM",
+          "technique_display_name": "DTF printing",
+          "options": []
+        }
+      ],
+      "status": "published; production, gallery, variant image, fulfillment and storefront checks passed",
+      "front_artwork_file": {
+        "filename": "18-sourdough-is-my-superpower-text-only-v1.png",
+        "width_inches": 10.75,
+        "height_inches": 12.9,
+        "dpi": 419,
+        "printful_production_file_id": 1063716173
+      },
+      "sleeve_artwork_file": {
+        "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+        "width_inches": 4,
+        "height_inches": 3.41,
+        "dpi": 1125,
+        "placement": "short_sleeve_left_dtf"
+      },
+      "shopify_product_id": 7544636866645,
+      "printful_sync_product_id": 469457515,
+      "shopify_handle": "short-sleeve-t-shirt-7",
+      "sleeve_color_mapping": [
+        {
+          "colors": [
+            "Tan Triblend",
+            "Oatmeal Triblend",
+            "White Fleck Triblend",
+            "Solid White Triblend"
+          ],
+          "filename": "01-sourdough-house-logo-signature-brown-alignment-v2.png",
+          "printful_file_id": 1063172327,
+          "variant_count": 24
+        },
+        {
+          "colors": [
+            "Solid Black Triblend",
+            "Brown Triblend",
+            "True Royal Triblend",
+            "Navy Triblend",
+            "Teal Triblend",
+            "Maroon Triblend",
+            "Berry Triblend",
+            "Purple Triblend",
+            "Red Triblend",
+            "Blue Triblend",
+            "Olive Triblend",
+            "Mauve Triblend"
+          ],
+          "filename": "04-sourdough-house-logo-warm-cream-alignment-v2.png",
+          "printful_file_id": 1063172331,
+          "variant_count": 72
+        }
+      ],
+      "verification": {
+        "production_variants": 96,
+        "gallery_images": 16,
+        "corrected_light_variant_images": 24,
+        "shopify_status": "ACTIVE",
+        "fulfillment_location": "Printful",
+        "shipping_profile": "Printful: Tshirts (#PF-FRG1)",
+        "browser_dark_and_light_selection": true,
+        "source_front_and_geometry_preserved": true,
+        "gallery_views_per_color": 1,
+        "storefront_sleeve_mockup": false,
+        "sleeve_fulfillment_file_preserved": true
+      },
+      "prices_usd": {
+        "XS": 29,
+        "S": 29,
+        "M": 29,
+        "L": 29,
+        "XL": 29,
+        "2XL": 31.5
+      },
+      "composite_status": "pending explicit user choice: use original-photo script or keep separate views; generative test rejected for changed artwork"
+    }
+  ],
+  "future_reuse": "Wait for the user to specify destination garments. Reuse these exact approved sayings and artwork; inspect print areas per product and size.",
+  "verification_date": "2026-09-09"
+}

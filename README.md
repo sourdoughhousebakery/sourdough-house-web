@@ -1,5 +1,8 @@
 # Sourdough House Bakery
 
+
+For this store's Printful merchandise, start with [sourdough-house-printful](/Users/mattbruce/.codex/skills/sourdough-house-printful/SKILL.md), which supplies store context and calls the store-neutral platform skills. Generic skills do not load store-specific companions.
+
 Production Next.js site for Sourdough House Bakery, rebuilt from the v3 static prototype into a maintainable multi-route app.
 
 ## Stack

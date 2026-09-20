@@ -16,3 +16,8 @@ coverage/
 .brv/
 memory/
 .worktrees/
+
+# Local generate artifacts
+output/
+tmp/
+public/brand/printful/

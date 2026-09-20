@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-15",
+  "authorization": "Owner accepted recommended internal TopDog plus bakery Chrome setup and installed Chrome extension.",
+  "browser": {
+    "family": "chrome",
+    "type": "extension",
+    "profile_name": "sourdoughhousebakery.com"
+  },
+  "observed": {
+    "printful": {
+      "email": "admin@sourdoughhousebakery.com",
+      "display_name": "Mindy Camarena",
+      "store_id": 18715291,
+      "store_label": "My Store",
+      "email_source": "My Account rendered screenshot; DOM/accessibility omitted email value",
+      "store_source": "Published products selected store and product links"
+    },
+    "shopify": {
+      "email": "admin@sourdoughhousebakery.com",
+      "display_name": "Mindy Camarena",
+      "shop_name": "Sourdough House Bakery",
+      "shop_domain": "ku4tbz-mj.myshopify.com",
+      "source": "Live account menu and selected shop"
+    }
+  },
+  "topdog_browser": "internal; no new account check this turn",
+  "second_chrome_profile": "not exposed or tested",
+  "provider_changes": false,
+  "logouts_or_account_switches": false,
+  "tabs": "Existing user tabs restored to products/home; no tabs closed",
+  "scope": "Browser assignment and read-only identity verification; not authorization to modify products"
+}
