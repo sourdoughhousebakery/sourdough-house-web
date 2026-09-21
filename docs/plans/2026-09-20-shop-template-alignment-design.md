@@ -16,7 +16,7 @@ At a 1,835 px viewport, the branded header is 1,152 px wide and begins at x=341.
 
 ## Approved design
 
-Use the first approach. Add `--narrow-page-width: 72rem` to the existing `body.sdh-store` rule in `assets/sdh-brand.css`. Do not change Shopify template JSON or native section settings.
+Use the first approach. Add a bakery-scoped `body.sdh-store { --narrow-page-width: 72rem; }` rule through Horizon's supported theme-wide Custom CSS setting. Preserve its existing `.card` rule. Do not change Shopify template JSON, section settings, or theme assets.
 
 The resulting desktop system is:
 
@@ -29,5 +29,4 @@ The resulting desktop system is:
 
 ## Verification
 
-Verify the active theme file contains the bakery-scoped token, then measure the live collection and product DOM at desktop width. The collection grid, product component, and recommendation list must share the header's left and right edges. Confirm the collection grid resolves to four columns and that neither collection nor product pages introduces horizontal overflow at desktop or mobile widths.
-
+Verify the active theme's rendered CSS applies the bakery-scoped token, then measure the live collection and product DOM at desktop width. The collection grid, product component, and recommendation list must share the header's left and right edges. Confirm the collection grid resolves to four columns and that neither collection nor product pages introduces horizontal overflow at desktop or mobile widths.
