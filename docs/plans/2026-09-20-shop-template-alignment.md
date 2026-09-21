@@ -4,7 +4,7 @@
 
 **Goal:** Make collection and product templates use the same 1,152 px centered desktop content width as the bakery homepage and header.
 
-**Architecture:** Override Horizon's existing `--narrow-page-width` token through the supported theme-wide Custom CSS setting instead of patching individual template sections. The native collection grid's existing `auto-fill` rule will reduce the grid from five columns to four at the new width.
+**Architecture:** Override Horizon's existing `--narrow-page-width` token through the supported theme-wide Custom CSS setting instead of patching individual template sections. The native collection grid's existing `auto-fill` rule will reduce the grid from five columns to four at the new width. Refine Horizon's desktop product split within that frame so its option controls remain usable without affecting the mobile stack.
 
 **Tech Stack:** Shopify Horizon theme, theme-wide Custom CSS, CSS custom properties, Shopify theme editor, browser DOM measurements
 
@@ -44,6 +44,16 @@ Preserve the existing `.card` rule and append:
 body.sdh-store {
   --narrow-page-width: 72rem;
 }
+
+@media screen and (min-width: 750px) {
+  .sdh-store
+    .product-information__grid:not(
+      .product-information__grid--half,
+      .product-information--media-none
+    ).product-information--media-left {
+    grid-template-columns: minmax(0, 16fr) minmax(0, 9fr);
+  }
+}
 ```
 
 Do not change template JSON, section settings, or unrelated styles.
@@ -72,7 +82,7 @@ Expected: matching 1,152 px width and matching horizontal edges; four product co
 
 Measure the header, `.product-information__grid`, and recommendation `.resource-list` bounding boxes.
 
-Expected: matching 1,152 px width and matching horizontal edges.
+Expected: matching 1,152 px width and matching horizontal edges. The media/details columns resolve to approximately 737/415 px and `S`, `M`, `L`, `XL`, and `2XL` remain on one row.
 
 **Step 4: Verify responsive safety**
 

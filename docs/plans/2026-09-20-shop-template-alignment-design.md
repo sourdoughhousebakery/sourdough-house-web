@@ -18,15 +18,18 @@ At a 1,835 px viewport, the branded header is 1,152 px wide and begins at x=341.
 
 Use the first approach. Add a bakery-scoped `body.sdh-store { --narrow-page-width: 72rem; }` rule through Horizon's supported theme-wide Custom CSS setting. Preserve its existing `.card` rule. Do not change Shopify template JSON, section settings, or theme assets.
 
+At 72rem, Horizon's default desktop product split (`2fr 1fr`) leaves the option panel too narrow and wraps `2XL` onto a second row. Keep the entire product component inside the shared frame while changing only its desktop column ratio to `16fr 9fr`. The resulting media/details widths are approximately 737/415 px at the verified viewport, and all five size options remain on one row. Scope the rule to the bakery store body and Horizon's existing media-left product selector; keep it behind the existing 750 px desktop breakpoint so mobile remains unchanged.
+
 The resulting desktop system is:
 
 - Header: 72rem.
 - Branded shell and breadcrumbs: 72rem inner content plus their existing 1.5rem gutters.
 - Collection heading, filters, and product grid: 72rem.
 - Product gallery/details and recommendations: 72rem.
+- Product media/details desktop split: 16:9 inside the 72rem frame.
 - Collection cards: four columns where the existing 250 px minimum permits it.
 - Mobile and tablet: retain Horizon's existing fluid width and breakpoints.
 
 ## Verification
 
-Verify the active theme's rendered CSS applies the bakery-scoped token, then measure the live collection and product DOM at desktop width. The collection grid, product component, and recommendation list must share the header's left and right edges. Confirm the collection grid resolves to four columns and that neither collection nor product pages introduces horizontal overflow at desktop or mobile widths.
+Verify the active theme's rendered CSS applies the bakery-scoped token, then measure the live collection and product DOM at desktop width. The collection grid, product component, and recommendation list must share the header's left and right edges. Confirm the collection grid resolves to four columns, the product size choices remain on one row, and neither collection nor product pages introduces horizontal overflow at desktop or mobile widths.
